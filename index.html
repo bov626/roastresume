@@ -1,0 +1,1936 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Please Roast My Resume</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --black: #0a0a0a;
+      --grey:  #111111;
+      --border:#1e1e1e;
+      --muted: #555;
+      --text:  #ffffff;
+      --red:   #d91e1e;
+      --red-dark: #8b0000;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--black);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+
+    /* ── FLOATING SCRIBBLES ── */
+    .scribble-layer {
+      position: absolute; inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .scribble {
+      position: absolute;
+      color: rgba(217,30,30,0.22);
+      font-size: 18px;
+      font-weight: 800;
+      animation: floatDown linear infinite;
+      user-select: none;
+      line-height: 1;
+    }
+    @keyframes floatDown {
+      0%   { transform: translateY(-40px) rotate(var(--rot)); opacity: 0; }
+      10%  { opacity: 1; }
+      90%  { opacity: 0.6; }
+      100% { transform: translateY(110vh) rotate(var(--rot)); opacity: 0; }
+    }
+    /* Make sure hero content sits above scribbles */
+    #hero > *:not(.scribble-layer) { position: relative; z-index: 1; }
+
+    /* ── RED HIGHLIGHT BOX (Wilson's trademark) ── */
+    .hl {
+      background: var(--red);
+      color: #fff;
+      padding: 2px 12px 5px;
+      border-radius: 5px;
+      display: inline;
+      box-decoration-break: clone;
+      -webkit-box-decoration-break: clone;
+    }
+
+    /* ─────────────────────────────────────────────
+       HERO
+    ───────────────────────────────────────────── */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 24px 100px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      /* Gradient ONLY in bottom-right corner */
+      background:
+        radial-gradient(ellipse 55% 45% at 100% 100%, rgba(160,0,0,0.28) 0%, transparent 65%),
+        var(--black);
+    }
+
+    .badge {
+      display: inline-block;
+      border: 1px solid rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.55);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 6px 16px;
+      border-radius: 100px;
+      margin-bottom: 36px;
+    }
+
+    .hero-headline {
+      font-size: clamp(28px, 4vw, 52px);
+      font-weight: 900;
+      line-height: 1.07;
+      letter-spacing: -0.035em;
+      max-width: 860px;
+      margin-bottom: 22px;
+    }
+
+    .hero-sub {
+      font-size: clamp(15px, 2vw, 18px);
+      color: rgba(255,255,255,0.45);
+      max-width: 460px;
+      line-height: 1.65;
+      margin-bottom: 52px;
+      font-weight: 400;
+    }
+
+    /* Video */
+    .video-wrap {
+      width: 100%;
+      max-width: 720px;
+      aspect-ratio: 16/9;
+      background: #0f0f0f;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      overflow: hidden;
+      position: relative;
+      margin-bottom: 52px;
+      box-shadow: 0 0 80px rgba(180,0,0,0.10);
+    }
+    .video-inner {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 14px;
+    }
+    .play-btn {
+      width: 68px; height: 68px;
+      background: var(--red);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 0 40px rgba(217,30,30,0.45);
+      transition: transform 0.2s;
+    }
+    .play-btn:hover { transform: scale(1.06); }
+    .play-btn svg { margin-left: 4px; }
+    .video-caption { font-size: 12px; color: var(--muted); letter-spacing: 0.04em; }
+
+    /* CTA */
+    .cta-btn {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: var(--red);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 700;
+      padding: 17px 38px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      letter-spacing: -0.01em;
+      box-shadow: 0 4px 36px rgba(217,30,30,0.38);
+      transition: transform 0.15s, box-shadow 0.15s;
+      text-decoration: none;
+    }
+    .cta-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 48px rgba(217,30,30,0.52); }
+    .cta-note { margin-top: 13px; font-size: 12px; color: var(--muted); }
+
+    /* ─────────────────────────────────────────────
+       WHAT YOU GET
+    ───────────────────────────────────────────── */
+    #what-you-get {
+      padding: 130px 24px;
+      max-width: 840px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .section-eyebrow {
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--red); margin-bottom: 14px;
+    }
+    .section-title {
+      font-size: clamp(28px, 4vw, 50px);
+      font-weight: 900; letter-spacing: -0.03em;
+      line-height: 1.13; margin-bottom: 64px;
+    }
+
+    .get-item {
+      display: flex; align-items: flex-start; gap: 22px;
+      text-align: left;
+      background: #0e0e0e;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 26px 30px;
+      margin-bottom: 14px;
+      opacity: 0; transform: translateY(20px);
+      transition: opacity 0.55s ease, transform 0.55s ease;
+    }
+    .get-item.vis { opacity: 1; transform: none; }
+
+    .get-num {
+      flex-shrink: 0;
+      width: 36px; height: 36px;
+      background: var(--red);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 800; color: #fff;
+      margin-top: 2px;
+    }
+    .get-body h3 { font-size: 17px; font-weight: 700; margin-bottom: 5px; }
+    .get-body p  { font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.6; }
+    .get-tag {
+      display: inline-block; margin-top: 9px;
+      font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+      border: 1px solid rgba(217,30,30,0.35);
+      color: var(--red); padding: 3px 9px; border-radius: 100px;
+    }
+
+    /* ─────────────────────────────────────────────
+       TEMPLATE / ANNOTATION SECTION
+    ───────────────────────────────────────────── */
+    #template-section {
+      padding: 120px 0 160px;
+      position: relative;
+      overflow: hidden;
+      background: radial-gradient(ellipse 70% 50% at 0% 50%, rgba(130,0,0,0.10) 0%, transparent 60%);
+    }
+
+    .ts-head {
+      text-align: center;
+      padding: 0 24px;
+      margin-bottom: 80px;
+    }
+
+    /* Three-column layout: annotation | resume | annotation */
+    .anno-stage {
+      position: relative;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .resume-col {
+      width: 480px;
+      margin: 0 auto;
+      position: sticky;
+      top: 120px;
+      flex-shrink: 0;
+    }
+
+    /* The fixed resume doc */
+    .resume-doc {
+      background: #fff;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 0 60px rgba(0,0,0,0.5), 0 0 120px rgba(217,30,30,0.08);
+      position: relative;
+    }
+    .resume-doc-inner { padding: 48px 52px; color: #111; font-family: 'Inter', sans-serif; }
+    .r-name  { font-size: 28px; font-weight: 800; color: #111; margin-bottom: 2px; }
+    .r-title { font-size: 14px; color: #666; margin-bottom: 8px; }
+    .r-contact{ font-size: 12px; color: #999; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 14px; }
+
+    .r-section { margin-bottom: 14px; }
+    .r-section-title {
+      font-size: 11px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase;
+      color: #111; border-bottom: 1.5px solid #111; padding-bottom: 3px; margin-bottom: 8px;
+    }
+    .r-summary { font-size: 13px; line-height: 1.65; color: #444; background: #fafafa; border-left: 2.5px solid var(--red); padding: 8px 10px; border-radius: 0 4px 4px 0; }
+    .r-exp { margin-bottom: 10px; }
+    .r-exp-header { display: flex; justify-content: space-between; }
+    .r-exp-role { font-size: 14px; font-weight: 700; color: #111; }
+    .r-exp-date { font-size: 12px; color: #999; }
+    .r-exp-co   { font-size: 13px; color: #666; margin: 1px 0 5px; }
+    .r-bullets  { list-style: none; }
+    .r-bullets li { font-size: 13px; color: #444; padding: 2px 0 2px 11px; position: relative; line-height: 1.5; }
+    .r-bullets li::before { content:'▸'; position: absolute; left: 0; color: var(--red); font-size: 8px; top: 3px; }
+    .skills-row { display: flex; flex-wrap: wrap; gap: 5px; }
+    .s-pill { background: #f3f3f3; border-radius: 4px; padding: 4px 10px; font-size: 11px; font-weight: 500; color: #333; }
+
+    /* Section highlight rings on resume */
+    .r-section[data-ann].active-ann { outline: 2px solid rgba(217,30,30,0.5); outline-offset: 3px; border-radius: 4px; }
+
+    /* ── Scroll-driven annotation system ── */
+    .anno-block {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 120px;
+      gap: 0;
+      position: relative;
+      min-height: 160px;
+    }
+    /* left-side annotations */
+    .anno-block.left  { flex-direction: row; padding-right: calc(50% + 20px); }
+    /* right-side annotations */
+    .anno-block.right { flex-direction: row-reverse; padding-left: calc(50% + 20px); }
+
+    .anno-card {
+      background: #111;
+      border: 1px solid #222;
+      border-radius: 12px;
+      padding: 18px 20px;
+      width: 260px;
+      flex-shrink: 0;
+      position: relative;
+      opacity: 0.2;
+      transform: translateX(0);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .anno-block.left  .anno-card { border-right: 3px solid var(--red); border-left: none; }
+    .anno-block.right .anno-card { border-left:  3px solid var(--red); border-right: none; }
+    .anno-card.ann-active { opacity: 1; }
+
+    .anno-card h4 { font-size: 13px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+    .anno-card p  { font-size: 12px; line-height: 1.6; color: rgba(255,255,255,0.5); }
+
+    /* Dotted line */
+    .anno-line {
+      flex: 1;
+      height: 2px;
+      background: repeating-linear-gradient(to right, rgba(255,255,255,0.15) 0px, rgba(255,255,255,0.15) 6px, transparent 6px, transparent 12px);
+      align-self: center;
+      margin: 0 12px;
+      opacity: 0.2;
+      transition: opacity 0.5s ease;
+    }
+    .anno-block.ann-active .anno-line { opacity: 0.6; }
+
+    /* Anchors (invisible) for scroll detection */
+    .anno-anchor { position: absolute; top: 50%; transform: translateY(-50%); pointer-events: none; width: 1px; height: 1px; }
+    .anno-block.left  .anno-anchor { right: calc(50% - 10px); }
+    .anno-block.right .anno-anchor { left:  calc(50% - 10px); }
+
+    /* ─────────────────────────────────────────────
+       TESTIMONIALS
+    ───────────────────────────────────────────── */
+    #testimonials {
+      padding: 100px 24px;
+      max-width: 980px; margin: 0 auto; text-align: center;
+    }
+    .testi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+      gap: 14px; margin-top: 52px; text-align: left;
+    }
+    .testi-card {
+      background: #0e0e0e;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 26px 24px;
+    }
+    .testi-quote { font-size: 14px; line-height: 1.7; color: rgba(255,255,255,0.65); margin-bottom: 18px; font-style: italic; }
+    .testi-quote::before { content: '\201C'; color: var(--red); font-size: 20px; font-style: normal; vertical-align: -3px; margin-right: 2px; }
+    .testi-name { font-size: 13px; font-weight: 700; }
+    .testi-name span { font-weight: 400; color: var(--muted); }
+
+    /* ─────────────────────────────────────────────
+       BOTTOM CTA
+    ───────────────────────────────────────────── */
+    #cta-bottom {
+      padding: 130px 24px;
+      text-align: center;
+      background: radial-gradient(ellipse 60% 60% at 100% 100%, rgba(160,0,0,0.22) 0%, transparent 65%);
+    }
+    .cta-b-title { font-size: clamp(28px, 4.5vw, 58px); font-weight: 900; letter-spacing: -0.03em; margin-bottom: 16px; }
+    .cta-b-sub   { color: rgba(255,255,255,0.4); font-size: 15px; margin-bottom: 40px; }
+
+    /* ─────────────────────────────────────────────
+       FORM FLOW, full-screen typeform style
+    ───────────────────────────────────────────── */
+    #form-overlay {
+      display: none;
+      position: fixed; inset: 0; z-index: 900;
+      background: #000;
+      background-image: radial-gradient(ellipse 55% 50% at 100% 100%, rgba(100,0,0,0.35) 0%, transparent 60%);
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    #form-overlay.open { display: flex; }
+
+    .fo-close {
+      position: fixed; top: 20px; right: 20px;
+      background: none; border: none;
+      color: rgba(255,255,255,0.25); font-size: 20px;
+      width: 36px; height: 36px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: color 0.15s;
+      z-index: 902;
+    }
+    .fo-close:hover { color: rgba(255,255,255,0.7); }
+
+    /* Progress bar, top */
+    .fo-progress {
+      position: fixed; top: 0; left: 0; right: 0;
+      height: 2px; background: var(--border); z-index: 901;
+    }
+    .fo-progress-fill {
+      height: 100%;
+      background: var(--red);
+      transition: width 0.5s ease;
+      width: 0%;
+    }
+
+    /* Step container */
+    .fo-steps { width: 100%; max-width: 480px; }
+
+    .fo-step {
+      display: none;
+      flex-direction: column;
+      align-items: stretch;
+      animation: slideUp 0.38s ease;
+    }
+    .fo-step.active { display: flex; }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+
+
+    .fo-q {
+      font-size: clamp(22px, 3vw, 30px);
+      font-weight: 800; letter-spacing: -0.02em;
+      line-height: 1.25; margin-bottom: 24px;
+      color: #fff;
+      text-align: center;
+    }
+
+    .fo-input {
+      width: 100%;
+      background: transparent;
+      border: 1.5px solid rgba(180,0,0,0.7);
+      border-radius: 8px;
+      color: #fff;
+      font-size: 17px;
+      font-family: 'Inter', sans-serif;
+      font-weight: 400;
+      padding: 16px 18px;
+      outline: none;
+      text-align: center;
+      transition: border-color 0.2s;
+      caret-color: var(--red);
+      margin-bottom: 10px;
+    }
+    .fo-input::placeholder { color: rgba(255,255,255,0.25); }
+    .fo-input:focus { border-color: var(--red); }
+
+    .fo-error {
+      font-size: 12px; color: #ff6b6b;
+      margin-top: 8px; min-height: 18px;
+      font-weight: 500;
+    }
+
+    .fo-hint { margin-top: 14px; font-size: 12px; color: rgba(255,255,255,0.25); }
+    kbd { background: rgba(255,255,255,0.08); border-radius: 4px; padding: 1px 6px; font-size: 11px; font-family: inherit; }
+
+    .fo-btn {
+      display: flex; align-items: center; justify-content: center; gap: 9px;
+      width: 100%;
+      background: rgba(100,0,0,0.6);
+      color: rgba(255,255,255,0.3); font-size: 16px; font-weight: 600;
+      padding: 16px 20px; border: none; border-radius: 8px;
+      cursor: default;
+      transition: background 0.2s, color 0.2s;
+      letter-spacing: 0.01em;
+      pointer-events: none;
+    }
+    .fo-btn.ready {
+      background: var(--red);
+      color: #fff;
+      cursor: pointer;
+      pointer-events: all;
+    }
+    .fo-btn.ready:hover { background: #f02525; }
+
+    /* Upload zone */
+    .fo-upload-zone {
+      border: 1.5px dashed rgba(255,255,255,0.18);
+      border-radius: 12px;
+      padding: 36px 24px;
+      text-align: center;
+      cursor: pointer;
+      position: relative;
+      transition: border-color 0.3s, background 0.3s;
+    }
+    .fo-upload-zone:hover, .fo-upload-zone.drag { border-color: rgba(255,255,255,0.35); }
+    .fo-upload-zone input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; }
+    .fo-upload-icon { font-size: 32px; margin-bottom: 10px; transition: all 0.4s; }
+    .fo-upload-main { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+    .fo-upload-sub  { font-size: 12px; color: rgba(255,255,255,0.3); }
+
+    /* Upload scanning state */
+    .fo-upload-zone.scanning {
+      background: rgba(180,0,0,0.15);
+      border: 1.5px solid rgba(217,30,30,0.7);
+      cursor: default;
+    }
+    .fo-upload-zone.scanning .fo-upload-icon { filter: drop-shadow(0 0 8px rgba(217,30,30,0.6)); }
+
+    /* Upload success state */
+    .fo-upload-zone.success {
+      background: rgba(0,120,60,0.15);
+      border: 1.5px solid rgba(0,200,80,0.7);
+      cursor: default;
+    }
+    .fo-upload-zone.success .fo-upload-icon { filter: drop-shadow(0 0 8px rgba(0,200,80,0.5)); }
+
+    .fo-upload-filename {
+      font-size: 13px; font-weight: 600; margin-top: 8px;
+      transition: color 0.4s;
+    }
+    .scanning .fo-upload-filename { color: rgba(217,30,30,0.9); }
+    .success  .fo-upload-filename { color: rgba(0,220,80,0.9); }
+
+    .fo-upload-status {
+      font-size: 13px; margin-top: 14px; min-height: 20px;
+      color: rgba(255,255,255,0.4); transition: opacity 0.4s;
+      text-align: center;
+    }
+
+    /* Analysis state inside upload zone */
+    .fo-scan {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px;
+    }
+    .fo-scan-bar-outer {
+      width: 100%; height: 3px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 100px; overflow: hidden; margin: 16px 0 10px;
+    }
+    .fo-scan-bar-fill {
+      height: 100%;
+      background: var(--red);
+      width: 0%; border-radius: 100px;
+      transition: width 0.08s linear;
+    }
+    .fo-scan-status { font-size: 12px; color: rgba(255,255,255,0.4); }
+
+    .fo-punchline { display: none; text-align: center; padding: 8px 0; }
+    .fo-punchline-big { font-size: clamp(22px, 3.5vw, 30px); font-weight: 800; letter-spacing: -0.02em; margin-bottom: 6px; }
+    .fo-punchline-sub { font-size: 14px; color: rgba(255,255,255,0.45); margin-bottom: 24px; }
+
+    /* ── Queue screen ── */
+    #fo-fireworks {
+      position: absolute; inset: 0;
+      pointer-events: none; z-index: 0;
+      width: 100%; height: 100%;
+    }
+    /* Lift steps above canvas */
+    .fo-steps { position: relative; z-index: 1; }
+
+    #fo-3 {
+      position: relative;
+      align-items: center !important;
+      text-align: center;
+    }
+    /* Red ambient glow behind check */
+    #fo-3::before {
+      content: ''; position: absolute; top: 35%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 340px; height: 340px;
+      background: radial-gradient(circle, rgba(217,30,30,0.14) 0%, transparent 70%);
+      pointer-events: none; opacity: 0; transition: opacity 1s ease 0.2s;
+    }
+    #fo-3.q-live::before { opacity: 1; }
+
+    .fo-q-inner { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 420px; }
+
+    /* SVG check */
+    .fo-chk-wrap { margin-bottom: 22px; opacity: 0; transform: scale(0.4); }
+    #fo-3.q-live .fo-chk-wrap {
+      animation: chkPop 0.65s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s both;
+    }
+    .fo-chk-svg { width: 72px; height: 72px; }
+    .fo-chk-circle {
+      fill: none; stroke: var(--red); stroke-width: 2;
+      stroke-dasharray: 166; stroke-dashoffset: 166;
+    }
+    #fo-3.q-live .fo-chk-circle { animation: drawCircle 0.55s ease 0.1s both; }
+    .fo-chk-mark {
+      fill: none; stroke: var(--red); stroke-width: 2.8;
+      stroke-linecap: round; stroke-linejoin: round;
+      stroke-dasharray: 48; stroke-dashoffset: 48;
+    }
+    #fo-3.q-live .fo-chk-mark { animation: drawCheck 0.38s ease 0.55s both; }
+
+    @keyframes chkPop    { to { opacity: 1; transform: scale(1); } }
+    @keyframes drawCircle{ to { stroke-dashoffset: 0; } }
+    @keyframes drawCheck { to { stroke-dashoffset: 0; } }
+
+    /* Headline */
+    .fo-q-headline {
+      font-size: clamp(30px, 4.5vw, 40px); font-weight: 900;
+      letter-spacing: -0.03em; color: #fff; margin-bottom: 18px;
+      opacity: 0; transform: translateY(16px);
+    }
+    #fo-3.q-live .fo-q-headline { animation: qFadeUp 0.52s ease 0.55s both; }
+
+    /* Count row */
+    .fo-q-count {
+      display: flex; align-items: center; justify-content: center;
+      gap: 10px; flex-wrap: wrap; margin-bottom: 10px;
+      font-size: 16px; color: rgba(255,255,255,0.45);
+      opacity: 0; transform: translateY(16px);
+    }
+    #fo-3.q-live .fo-q-count { animation: qFadeUp 0.52s ease 0.78s both; }
+    #fo-queue-num { font-size: 18px !important; padding: 2px 13px 5px !important; font-weight: 900 !important; }
+
+    /* Sub copy */
+    .fo-q-sub {
+      font-size: 14px; color: rgba(255,255,255,0.28);
+      margin-bottom: 34px; margin-top: 4px;
+      opacity: 0; transform: translateY(16px);
+    }
+    #fo-3.q-live .fo-q-sub { animation: qFadeUp 0.52s ease 1.0s both; }
+
+    /* Button */
+    .fo-q-btn {
+      max-width: 260px; align-self: center;
+      opacity: 0; transform: translateY(16px);
+    }
+    #fo-3.q-live .fo-q-btn { animation: qFadeUp 0.52s ease 1.25s both, qBtnGlow 2.6s ease 2.5s infinite; }
+
+    @keyframes qFadeUp  { to { opacity: 1; transform: translateY(0); } }
+    @keyframes qBtnGlow {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(217,30,30,0); }
+      50%       { box-shadow: 0 0 0 10px rgba(217,30,30,0.18), 0 0 28px rgba(217,30,30,0.1); }
+    }
+
+    /* ─────────────────────────────────────────────
+       TEMPLATE REVEAL, full screen
+    ───────────────────────────────────────────── */
+    #template-reveal {
+      display: none;
+      position: fixed; inset: 0; z-index: 1000;
+      background: #0a0a0a;
+      overflow-y: scroll;
+      overflow-x: hidden;
+      isolation: isolate;
+    }
+    #template-reveal.open { display: block; animation: fadeIn 0.45s ease; }
+
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    .tr-header {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 80px 24px 60px;
+      position: relative;
+      background: radial-gradient(ellipse 70% 60% at 50% 50%, rgba(140,0,0,0.18) 0%, transparent 65%);
+    }
+    .tr-header h2 {
+      font-size: clamp(36px, 4.5vw, 62px);
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      line-height: 1.08;
+      margin-bottom: 20px;
+    }
+    .tr-header p  { color: rgba(255,255,255,0.35); font-size: 18px; max-width: 480px; margin: 0 auto; line-height: 1.6; }
+
+    /* Resume section highlight overlays */
+    #tr-resume { position: relative; }
+    .r-hl {
+      position: absolute; left: 0.5%; right: 0.5%;
+      pointer-events: none;
+      border: 3px solid transparent;
+      border-radius: 4px;
+      background: transparent;
+      transition: border-color 0.35s ease, background 0.35s ease, box-shadow 0.35s ease;
+    }
+    .r-hl.active {
+      border-color: rgba(217,30,30,0.85);
+      background: rgba(217,30,30,0.06);
+      box-shadow: 0 0 0 4px rgba(217,30,30,0.1), inset 0 0 20px rgba(217,30,30,0.04);
+    }
+
+    /* Annotation cards */
+    .tr-ann-card {
+      background: #111;
+      border: 1px solid #1e1e1e;
+      border-left: 3px solid var(--red);
+      border-radius: 12px;
+      padding: 16px 18px;
+    }
+    .tr-ann-card h4 {
+      font-size: 12px; font-weight: 700;
+      color: #fff; margin-bottom: 6px; margin-top: 0;
+    }
+    .tr-ann-card p {
+      font-size: 11.5px; line-height: 1.7;
+      color: rgba(255,255,255,0.48); margin: 0;
+    }
+
+    /* Scroll hint */
+    .tr-scroll-hint {
+      position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+      pointer-events: none;
+    }
+    .tr-mouse {
+      width: 26px; height: 42px;
+      border: 1.5px solid rgba(255,255,255,0.22);
+      border-radius: 13px;
+      display: flex; justify-content: center;
+      padding-top: 7px;
+      box-sizing: border-box;
+    }
+    .tr-wheel {
+      width: 3px; height: 7px;
+      background: rgba(255,255,255,0.35);
+      border-radius: 2px;
+      animation: trWheel 2s ease infinite;
+    }
+    @keyframes trWheel {
+      0%   { transform: translateY(0);   opacity: 0.8; }
+      60%  { transform: translateY(7px); opacity: 0.1; }
+      100% { transform: translateY(0);   opacity: 0.1; }
+    }
+
+    /* The 3-col annotation layout */
+    .tr-stage {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 0 40px;
+      position: relative;
+    }
+
+    /* Sticky resume in center */
+    .tr-center {
+      position: sticky;
+      top: 100px;
+      width: 420px;
+      margin: 0 auto;
+      pointer-events: none;
+    }
+
+    /* Full annotation row */
+    .tr-row {
+      display: grid;
+      grid-template-columns: 1fr 420px 1fr;
+      gap: 0;
+      align-items: center;
+      margin-bottom: 130px;
+      position: relative;
+    }
+    .tr-row:first-child { margin-top: -500px; } /* overlap with sticky */
+
+    .tr-ann {
+      padding: 0 28px;
+      opacity: 0.18;
+      transition: opacity 0.5s ease;
+    }
+    .tr-ann.ann-on { opacity: 1; }
+
+    .tr-ann-card {
+      background: #111;
+      border: 1px solid #1e1e1e;
+      border-radius: 12px;
+      padding: 18px 20px;
+    }
+    .tr-ann.left  .tr-ann-card { border-right: 3px solid var(--red); }
+    .tr-ann.right .tr-ann-card { border-left:  3px solid var(--red); }
+
+    .tr-ann h4 { font-size: 13px; font-weight: 700; margin-bottom: 6px; color: #fff; }
+    .tr-ann p  { font-size: 12px; line-height: 1.65; color: rgba(255,255,255,0.5); }
+
+    /* Dotted connector */
+    .tr-dot {
+      height: 2px;
+      background: repeating-linear-gradient(to right, rgba(255,255,255,0.12) 0, rgba(255,255,255,0.12) 5px, transparent 5px, transparent 10px);
+      opacity: 0.2;
+      transition: opacity 0.5s ease;
+    }
+    .tr-row.ann-on .tr-dot { opacity: 0.5; }
+
+    /* Empty cell for opposite side */
+    .tr-empty { }
+
+    .tr-resume-ghost {
+      /* Spacer that matches resume height for scroll flow */
+      width: 420px;
+    }
+
+    /* Section highlight on resume */
+    .r-section[data-s].s-active { box-shadow: 0 0 0 2px rgba(217,30,30,0.45); border-radius: 4px; }
+
+    /* Footer of template reveal */
+    .tr-footer {
+      padding: 60px 24px 100px;
+      text-align: center;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+    .tr-note {
+      background: rgba(217,30,30,0.07);
+      border: 1px solid rgba(217,30,30,0.18);
+      border-radius: 12px;
+      padding: 18px 22px;
+      font-size: 14px;
+      color: rgba(255,255,255,0.6);
+      line-height: 1.6;
+      margin-bottom: 32px;
+      text-align: left;
+    }
+    .tr-note strong { color: var(--red); }
+    .tr-actions { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+    .btn-outline {
+      display: inline-flex; align-items: center; gap: 8px;
+      border: 1.5px solid rgba(255,255,255,0.15);
+      color: #fff; font-size: 15px; font-weight: 600;
+      padding: 14px 28px; border-radius: 10px;
+      cursor: pointer; background: none; text-decoration: none;
+      transition: border-color 0.15s;
+    }
+    .btn-outline:hover { border-color: rgba(255,255,255,0.35); }
+
+    .tr-exit {
+      position: fixed; top: 20px; right: 20px; z-index: 1001;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--border);
+      color: rgba(255,255,255,0.5);
+      font-size: 12px; font-weight: 500;
+      padding: 7px 14px; border-radius: 8px;
+      cursor: pointer; transition: color 0.15s;
+    }
+    .tr-exit:hover { color: #fff; }
+
+    @media (max-width: 900px) {
+      #template-reveal > div[style] { grid-template-columns: 1fr !important; }
+      #tr-ann-left, #tr-ann-right { padding-top: 0 !important; }
+      #tr-ann-left  .tr-ann-block,
+      #tr-ann-right .tr-ann-block { margin-bottom: 32px !important; opacity: 1 !important; }
+      .tr-ann { padding: 0 8px; }
+    }
+  </style>
+
+  <!-- GSAP + ScrollTrigger -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+  <style>
+  /* ══════════════════════════════════════════
+     RESUME AUTOPSY SECTION
+  ══════════════════════════════════════════ */
+  #autopsy {
+    background: #060606;
+    position: relative;
+    overflow: hidden;
+  }
+  .autopsy-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 60px 20px;
+    position: relative;
+    z-index: 2;
+  }
+  .autopsy-label {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: #d91e1e;
+    margin-bottom: 28px;
+    opacity: 0.7;
+  }
+  .autopsy-resume {
+    background: #fff;
+    color: #111;
+    max-width: 480px;
+    width: 100%;
+    border-radius: 4px;
+    padding: 36px 40px 40px;
+    font-family: 'Georgia', serif;
+    box-shadow: 0 8px 60px rgba(0,0,0,0.8), 0 0 0 1px rgba(217,30,30,0.08);
+    position: relative;
+    transition: box-shadow 0.3s;
+  }
+  .ar-name   { font-size: 22px; font-weight: 700; color: #111; margin-bottom: 3px; font-family: 'Inter',sans-serif; }
+  .ar-title  { font-size: 13px; color: #555; margin-bottom: 6px; font-family: 'Inter',sans-serif; }
+  .ar-contact{ font-size: 11px; color: #888; padding-bottom: 12px; border-bottom: 1px solid #ddd; margin-bottom: 14px; font-family: 'Inter',sans-serif; }
+  .ar-section{ margin-bottom: 14px; }
+  .ar-stitle { font-size: 10px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: #111; border-bottom: 1.5px solid #111; padding-bottom: 3px; margin-bottom: 8px; font-family: 'Inter',sans-serif; }
+  .ar-summary{ font-size: 12px; line-height: 1.65; color: #444; }
+  .ar-job    { margin-bottom: 10px; }
+  .ar-jrow   { display: flex; justify-content: space-between; }
+  .ar-role   { font-size: 13px; font-weight: 700; color: #111; font-family: 'Inter',sans-serif; }
+  .ar-date   { font-size: 11px; color: #999; font-family: 'Inter',sans-serif; }
+  .ar-company{ font-size: 12px; color: #666; margin: 2px 0 6px; font-family: 'Inter',sans-serif; }
+  .ar-bullets{ list-style: none; padding: 0; margin: 0; }
+  .ar-bullets li { font-size: 11.5px; color: #444; padding: 2px 0 2px 12px; position: relative; line-height: 1.5; }
+  .ar-bullets li::before { content:'•'; position: absolute; left: 0; color: #999; }
+  .ar-skills { font-size: 11.5px; color: #555; line-height: 1.7; font-family: 'Inter',sans-serif; }
+
+  /* Annotation marks — hidden until triggered */
+  .a-mark { position: absolute; pointer-events: none; }
+
+  /* Mark 1: Wobbly red circle around summary */
+  .a-mark-1 {
+    top: 94px; left: -8px; right: -8px;
+    height: 70px;
+    opacity: 0;
+  }
+  .a-mark-1 svg { width: 100%; height: 100%; }
+
+  /* Mark 2: Red strikethrough on first bullet */
+  .a-mark-2 {
+    top: 280px; left: 24px; right: 24px; height: 6px;
+    background: rgba(217,30,30,0.85);
+    transform-origin: left center;
+    transform: scaleX(0);
+    opacity: 0;
+    border-radius: 2px;
+  }
+
+  /* Mark 3: Red X on skills */
+  .a-mark-3 {
+    bottom: 50px; left: 20px;
+    width: 36px; height: 36px;
+    opacity: 0;
+    transform: scale(0) rotate(-10deg);
+  }
+  .a-mark-3 svg { width: 100%; height: 100%; }
+
+  /* Mark 4: Red arrow near contact */
+  .a-mark-4 {
+    top: 38px; right: -18px;
+    width: 48px; height: 48px;
+    opacity: 0;
+    transform: rotate(-30deg) scale(0);
+  }
+  .a-mark-4 svg { width: 100%; height: 100%; }
+
+  /* Annotation bubble callouts */
+  .a-bubble {
+    position: absolute;
+    background: #d91e1e;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.4;
+    padding: 7px 11px;
+    border-radius: 4px;
+    font-family: 'Inter', sans-serif;
+    white-space: nowrap;
+    opacity: 0;
+    transform: scale(0.7);
+    transform-origin: bottom left;
+    z-index: 10;
+    pointer-events: none;
+  }
+  .a-bubble::before {
+    content: '';
+    position: absolute;
+    width: 8px; height: 8px;
+    background: #d91e1e;
+  }
+  .a-bubble-1 { top: 80px; right: -148px; }
+  .a-bubble-1::before { left: -6px; top: 50%; margin-top: -4px; clip-path: polygon(100% 0,100% 100%,0 50%); }
+  .a-bubble-2 { top: 264px; right: -132px; }
+  .a-bubble-2::before { left: -6px; top: 50%; margin-top: -4px; clip-path: polygon(100% 0,100% 100%,0 50%); }
+  .a-bubble-3 { bottom: 42px; left: 56px; }
+  .a-bubble-3::before { bottom: -6px; left: 10px; clip-path: polygon(0 0,100% 0,50% 100%); }
+  .a-bubble-4 { top: 24px; right: 28px; transform-origin: bottom right; }
+  .a-bubble-4::before { right: 6px; bottom: -6px; clip-path: polygon(0 0,100% 0,50% 100%); }
+
+  /* Final callout */
+  .a-callout-final {
+    margin-top: 40px;
+    font-size: clamp(18px, 3vw, 26px);
+    font-weight: 900;
+    color: #d91e1e;
+    text-align: center;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    opacity: 0;
+    transform: translateY(20px);
+    max-width: 520px;
+  }
+
+  /* CTA heartbeat */
+  @keyframes ctaPulse {
+    0%, 100% { box-shadow: 0 4px 28px rgba(217,30,30,0.35), 0 0 0 0 rgba(217,30,30,0.4); }
+    50%       { box-shadow: 0 4px 28px rgba(217,30,30,0.55), 0 0 0 10px rgba(217,30,30,0); }
+  }
+  #cta-bottom .cta-btn { animation: ctaPulse 2.4s ease-in-out infinite; }
+
+  @media (max-width: 600px) {
+    .autopsy-resume { padding: 24px 20px; }
+    .a-bubble { display: none; }
+  }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════ HERO ═══════════════════════ -->
+<section id="hero">
+  <h1 class="hero-headline">
+    Your resume is <span class="hl">sh*t.</span>
+  </h1>
+
+  <p class="hero-sub">
+    Submit yours. We'll tell you exactly why it's not working — on camera, no filter, no script. Template included while you wait.
+  </p>
+
+  <div class="video-wrap">
+    <div class="video-inner">
+      <div class="play-btn">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><polygon points="5,3 19,12 5,21"/></svg>
+      </div>
+      <span class="video-caption">Wilson on why your resume isn't working</span>
+    </div>
+  </div>
+
+  <button class="cta-btn" onclick="openForm()">
+    Roast My Resume
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+  </button>
+
+</section>
+
+
+<!-- ═══════════════════════ AUTOPSY ═══════════════════════ -->
+<section id="autopsy">
+  <div class="autopsy-inner">
+    <div class="autopsy-label">Why It's Not Working</div>
+
+    <div class="autopsy-resume">
+      <!-- Resume content -->
+      <div class="ar-name">Alex Johnson</div>
+      <div class="ar-title">Project Manager / Operations Lead</div>
+      <div class="ar-contact">alex.johnson@gmail.com &nbsp;•&nbsp; (312) 555-0184 &nbsp;•&nbsp; Chicago, IL</div>
+
+      <div class="ar-section">
+        <div class="ar-stitle">Summary</div>
+        <div class="ar-summary">Experienced professional with a strong background in project management and cross-functional team leadership. Proven track record of delivering results and driving business outcomes in fast-paced environments.</div>
+      </div>
+
+      <div class="ar-section">
+        <div class="ar-stitle">Experience</div>
+        <div class="ar-job">
+          <div class="ar-jrow">
+            <span class="ar-role">Senior Project Manager</span>
+            <span class="ar-date">Jan 2020 – Present</span>
+          </div>
+          <div class="ar-company">TechCorp Inc. — Chicago, IL</div>
+          <ul class="ar-bullets">
+            <li>Led cross-functional teams to deliver multiple projects on time and within budget</li>
+            <li>Collaborated with stakeholders to drive strategic initiatives across the organization</li>
+            <li>Managed relationships with key vendors and external partners to ensure success</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="ar-section">
+        <div class="ar-stitle">Skills</div>
+        <div class="ar-skills">Project Management &nbsp;•&nbsp; Agile &nbsp;•&nbsp; Scrum &nbsp;•&nbsp; Excel &nbsp;•&nbsp; PowerPoint &nbsp;•&nbsp; Leadership &nbsp;•&nbsp; Communication &nbsp;•&nbsp; Problem Solving &nbsp;•&nbsp; Strategic Planning</div>
+      </div>
+
+      <!-- Annotation marks (animated by JS) -->
+
+      <!-- Mark 1: Circle around summary -->
+      <div class="a-mark a-mark-1">
+        <svg viewBox="0 0 496 68" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+          <ellipse cx="248" cy="34" rx="244" ry="30" fill="none" stroke="#d91e1e" stroke-width="3"
+            stroke-dasharray="1570" stroke-dashoffset="1570" stroke-linecap="round"
+            style="transform-origin:center;"/>
+        </svg>
+      </div>
+
+      <!-- Mark 2: Strikethrough on first bullet -->
+      <div class="a-mark a-mark-2"></div>
+
+      <!-- Mark 3: X on skills -->
+      <div class="a-mark a-mark-3">
+        <svg viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+          <line class="a-x-1" x1="4" y1="4" x2="32" y2="32" stroke="#d91e1e" stroke-width="4" stroke-linecap="round" stroke-dasharray="40" stroke-dashoffset="40"/>
+          <line class="a-x-2" x1="32" y1="4" x2="4" y2="32" stroke="#d91e1e" stroke-width="4" stroke-linecap="round" stroke-dasharray="40" stroke-dashoffset="40"/>
+        </svg>
+      </div>
+
+      <!-- Mark 4: Arrow at contact area -->
+      <div class="a-mark a-mark-4">
+        <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+          <path d="M8 40 L40 8" stroke="#d91e1e" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-dasharray="45" stroke-dashoffset="45"/>
+          <path d="M40 8 L28 10 M40 8 L38 20" stroke="#d91e1e" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-dasharray="30" stroke-dashoffset="30"/>
+        </svg>
+      </div>
+
+      <!-- Annotation bubbles -->
+      <div class="a-bubble a-bubble-1">Generic summary.<br>Nobody cares.</div>
+      <div class="a-bubble a-bubble-2">Where are<br>the numbers?</div>
+      <div class="a-bubble a-bubble-3">ATS is eating<br>this alive.</div>
+      <div class="a-bubble a-bubble-4">Missing LinkedIn.</div>
+    </div>
+
+    <div class="a-callout-final">This is why you're not getting callbacks.</div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════ WHAT YOU GET ═══════════════════════ -->
+<section id="what-you-get">
+  <div class="section-eyebrow">What you get</div>
+  <h2 class="section-title">Submit once.<br>Leave with <span class="hl">three things.</span></h2>
+
+  <div class="get-item" id="gi-1">
+    <div class="get-num">1</div>
+    <div class="get-body">
+      <h3>We Tell You Exactly What's Wrong With It.</h3>
+      <p>We go through real resumes on camera and explain exactly why they're not working — the specific things killing your response rate. No script, no filler. Every submission gets watched. If yours makes the cut, you'll know precisely what to fix.</p>
+      <span class="get-tag">The Main Event</span>
+    </div>
+  </div>
+
+  <div class="get-item" id="gi-2">
+    <div class="get-num">2</div>
+    <div class="get-body">
+      <h3>The Resume Template. While You Wait.</h3>
+      <p>As a thank you for submitting, you get the exact template we use for every client — annotated section by section. Not a generic download. The real one. Use it now. Don't wait for the roast to fix your resume.</p>
+      <span class="get-tag">Instant Access</span>
+    </div>
+  </div>
+
+  <div class="get-item" id="gi-3">
+    <div class="get-num">3</div>
+    <div class="get-body">
+      <h3>Your Name Stays Off It</h3>
+      <p>We black out your name and employer before anything goes live. Your resume doesn't go to recruiters, isn't sold to anyone, doesn't end up in a database. It gets reviewed and that's it.</p>
+      <span class="get-tag">Private</span>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- ═══════════════════════ HOW IT WORKS ═══════════════════════ -->
+<section id="testimonials">
+  <div class="section-eyebrow">How it works</div>
+  <h2 class="section-title">Two minutes to submit.<br><span class="hl">The rest is on us.</span></h2>
+  <div class="testi-grid">
+    <div class="testi-card">
+      <p class="testi-quote">Submit your resume. We watch every single one — no exceptions. You're in the queue the second you hit send.</p>
+      <div class="testi-name">Step 1 <span>— Submit</span></div>
+    </div>
+    <div class="testi-card">
+      <p class="testi-quote">We go through real resumes on camera and break down exactly what's wrong — specifically, not generically. If yours makes the cut, you'll finally know why you're not getting callbacks.</p>
+      <div class="testi-name">Step 2 <span>— Get the diagnosis</span></div>
+    </div>
+    <div class="testi-card">
+      <p class="testi-quote">Either way, you get our resume template the second you submit. A thank you for letting us take a look. Use it while you wait.</p>
+      <div class="testi-name">Step 3 <span>— Template in the meantime</span></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════ BOTTOM CTA ═══════════════════════ -->
+<section id="cta-bottom">
+  <h2 class="cta-b-title">Submit it.<br><span class="hl">We'll take it from here.</span></h2>
+  <p class="cta-b-sub">Free. We watch every one.</p>
+  <button class="cta-btn" onclick="openForm()">
+    Roast My Resume
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+  </button>
+</section>
+
+
+<!-- ═══════════════════════ FORM OVERLAY ═══════════════════════ -->
+<div id="form-overlay">
+  <canvas id="fo-fireworks"></canvas>
+  <!-- Thin progress bar top -->
+  <div style="position:fixed;top:0;left:0;right:0;height:3px;background:rgba(255,255,255,0.06);z-index:901;">
+    <div id="fo-fill" style="height:100%;background:var(--red);width:0%;transition:width 0.4s ease;border-radius:0 2px 2px 0;"></div>
+  </div>
+
+  <!-- Close -->
+  <button class="fo-close" onclick="closeForm()">✕</button>
+
+  <div class="fo-steps">
+
+    <!-- STEP 0: Name -->
+    <div class="fo-step active" id="fo-0">
+      <div class="fo-q">What's your first name?</div>
+      <input class="fo-input" id="fo-name" type="text" placeholder="First name" autocomplete="given-name"
+        oninput="checkName()" />
+      <div class="fo-error" id="fo-err-0"></div>
+      <button class="fo-btn" id="fo-btn-0" onclick="foContinue()">Continue →</button>
+    </div>
+
+    <!-- STEP 1: Email -->
+    <div class="fo-step" id="fo-1">
+      <div class="fo-q">What's your email, <span id="fo-name-disp" style="font-weight:900;"></span>?</div>
+      <input class="fo-input" id="fo-email" type="email" placeholder="your@email.com" autocomplete="email"
+        oninput="checkEmail()" />
+      <div class="fo-error" id="fo-err-1"></div>
+      <button class="fo-btn" id="fo-btn-1" onclick="foContinue()">Continue →</button>
+    </div>
+
+    <!-- STEP 2: Upload + Analysis -->
+    <div class="fo-step" id="fo-2">
+      <div class="fo-q" id="fo-upload-q">Upload your resume.</div>
+
+      <div class="fo-upload-zone" id="fo-drop"
+        ondragover="event.preventDefault();this.classList.add('drag')"
+        ondragleave="this.classList.remove('drag')"
+        ondrop="handleDrop(event)">
+        <input type="file" accept=".pdf,.doc,.docx" id="fo-file" onchange="handleFile(this)" />
+        <div id="fo-upload-icon" style="font-size:32px;margin-bottom:10px;">📄</div>
+        <div id="fo-upload-main" style="font-size:15px;font-weight:600;margin-bottom:4px;">Drop your resume here</div>
+        <div id="fo-upload-sub" style="font-size:12px;color:rgba(255,255,255,0.3);">PDF, DOC, or DOCX</div>
+        <div class="fo-upload-filename" id="fo-upload-filename" style="display:none;font-size:13px;font-weight:600;margin-top:8px;"></div>
+      </div>
+      <div class="fo-upload-status" id="fo-upload-status"></div>
+
+      <div class="fo-error" id="fo-err-2"></div>
+      <button class="fo-btn" id="fo-btn-2" onclick="foContinue()">Continue →</button>
+    </div>
+
+    <!-- STEP 3: Queue confirmation -->
+    <div class="fo-step" id="fo-3">
+      <div class="fo-q-inner">
+
+        <!-- Animated checkmark -->
+        <div class="fo-chk-wrap">
+          <svg class="fo-chk-svg" viewBox="0 0 52 52">
+            <circle class="fo-chk-circle" cx="26" cy="26" r="23"/>
+            <path class="fo-chk-mark" d="M14 27 L22 35 L38 18"/>
+          </svg>
+        </div>
+
+        <div class="fo-q-headline">You're in the queue.</div>
+
+        <div class="fo-q-count">
+          <span>There are</span>
+          <span class="hl" id="fo-queue-num">0</span>
+          <span>people in front of you.</span>
+        </div>
+
+        <div class="fo-q-sub">For now, check out the template.</div>
+
+        <button class="fo-btn ready fo-q-btn" onclick="showTemplate()">View Template →</button>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ═══════════════════════ TEMPLATE REVEAL ═══════════════════════ -->
+<div id="template-reveal">
+  <button class="tr-exit" onclick="exitTemplate()">← Back</button>
+
+  <div class="tr-header">
+    <div style="font-size:11px; font-weight:700; letter-spacing:.18em; text-transform:uppercase; color:var(--red); margin-bottom:24px; opacity:0.9;">The Jumpseat Resume System</div>
+    <h2>This is what a<br><span class="hl">real resume</span> looks like.</h2>
+    <p style="margin-top:20px;">Every section is intentional.</p>
+
+    <!-- Scroll hint: classic mouse icon -->
+    <div class="tr-scroll-hint">
+      <div class="tr-mouse"><div class="tr-wheel"></div></div>
+    </div>
+  </div>
+
+  <!-- 3-col annotation layout: LEFT | RESUME | RIGHT -->
+  <div style="max-width:1500px; margin:0 auto; padding:0 40px; display:grid; grid-template-columns:240px 1fr 240px; gap:0 32px; align-items:start;">
+
+    <!-- ── LEFT ANNOTATIONS (offset down so they interleave with right side) ── -->
+    <div id="tr-ann-left" style="padding-top:320px;">
+
+      <div class="tr-ann-block tr-ann left" data-s="tr-name" style="margin-bottom:260px; opacity:0.15; transition:opacity 0.4s;">
+        <div class="tr-ann-card">
+          <h4>The Name</h4>
+          <p>Big ole name. Not too big though.</p>
+        </div>
+      </div>
+
+      <div class="tr-ann-block tr-ann left" data-s="tr-headline" style="margin-bottom:260px; opacity:0.15; transition:opacity 0.4s;">
+        <div class="tr-ann-card">
+          <h4>The Headline</h4>
+          <p>Your resume will be viewed for 7 seconds on average. Hiring managers are looking for three things: years of experience, job title, and areas of expertise. Spoon feed it right up top.</p>
+        </div>
+      </div>
+
+      <div class="tr-ann-block tr-ann left" data-s="tr-exp" style="margin-bottom:260px; opacity:0.15; transition:opacity 0.4s;">
+        <div class="tr-ann-card">
+          <h4>Company First, Title Second</h4>
+          <p>Company first in bold, title below in italics. Frame your experience in one line. Who did you work for, why does it matter. Humans WILL read your resume.</p>
+        </div>
+      </div>
+
+      <div class="tr-ann-block tr-ann left" data-s="tr-keyresults" style="margin-bottom:260px; opacity:0.15; transition:opacity 0.4s;">
+        <div class="tr-ann-card">
+          <h4>Recruiter Candy</h4>
+          <p>THEY LOVE these. Make them real. How can you quantify what you did? Bada bing. Keep pre-promotion positions simple. Spell out what you did and the one key result.</p>
+        </div>
+      </div>
+
+      <div class="tr-ann-block tr-ann left" data-s="tr-skills" style="margin-bottom:260px; opacity:0.15; transition:opacity 0.4s;">
+        <div class="tr-ann-card">
+          <h4>Break Skills Into Sections</h4>
+          <p>Break Skills into multiple sections so it is more digestible. Search your preferred job title on LinkedIn, look at the requirements, run a tally of the most frequent ones.</p>
+        </div>
+      </div>
+
+      <div class="tr-ann-block tr-ann left" data-s="tr-edu" style="opacity:0.15; transition:opacity 0.4s;">
+        <div class="tr-ann-card">
+          <h4>Education Goes Last</h4>
+          <p>Always last. Unless you are a new grad — then Education comes first.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── CENTER: Sticky Resume (actual PDF) ── -->
+    <div id="tr-resume-wrap" style="position:relative; padding-bottom:3000px;">
+      <div id="tr-resume" style="position:relative; top:0; pointer-events:none;">
+        <img src="resume-template.png" alt="Jumpseat Resume Template"
+          style="width:100%; border-radius:6px; display:block;
+                 box-shadow:0 0 60px rgba(0,0,0,0.6), 0 0 120px rgba(217,30,30,0.07);" />
+        <!-- Section highlight overlays (positions calibrated from pixel analysis of 1854x2400 image) -->
+        <div class="r-hl" data-sec="tr-name"       style="top:4.5%;  height:2%;"></div>
+        <div class="r-hl" data-sec="tr-contact"    style="top:6.3%;  height:2%;"></div>
+        <div class="r-hl" data-sec="tr-headline"   style="top:8.1%;  height:1.5%;"></div>
+        <div class="r-hl" data-sec="tr-exp"        style="top:11.5%; height:20%;"></div>
+        <div class="r-hl" data-sec="tr-promotion"  style="top:34%;   height:27.5%;"></div>
+        <div class="r-hl" data-sec="tr-keyresults" style="top:45%;   height:16.5%;"></div>
+        <div class="r-hl" data-sec="tr-intern"     style="top:64%;   height:6%;"></div>
+        <div class="r-hl" data-sec="tr-skills"     style="top:71.5%; height:9.5%;"></div>
+        <div class="r-hl" data-sec="tr-fun"        style="top:78.5%; height:2.5%;"></div>
+        <div class="r-hl" data-sec="tr-edu"        style="top:83.5%; height:12%;"></div>
+        <div class="r-hl" data-sec="tr-edu-detail" style="top:87%;   height:8.5%;"></div>
+      </div>
+    </div>
+
+    <!-- ── RIGHT ANNOTATIONS (start near top, interleave with left) ── -->
+    <div id="tr-ann-right" style="padding-top:60px;">
+
+      <div class="tr-ann-block tr-ann right" data-s="tr-contact" style="margin-bottom:260px; opacity:0.15; transition:opacity 0.4s;">
+        <div class="tr-ann-card">
+          <h4>Contact Line</h4>
+          <p>Always include LinkedIn — hyperlink it so it's not an ugly link. It shows you are real. City/State and Email. Phone optional, but at high volume you need a second one.</p>
+        </div>
+      </div>
+
+      <div class="tr-ann-block tr-ann right" data-s="tr-exp" style="margin-bottom:260px; opacity:0.15; transition:opacity 0.4s;">
+        <div class="tr-ann-card">
+          <h4>Work Experience First</h4>
+          <p>Always the first section. Unless you are fresh out of college. Even if you were laid off, keep the most recent experience as "Present." Want remote? Have the most recent role say "Remote."</p>
+        </div>
+      </div>
+
+      <div class="tr-ann-block tr-ann right" data-s="tr-promotion" style="margin-bottom:260px; opacity:0.15; transition:opacity 0.4s;">
+        <div class="tr-ann-card">
+          <h4>Multiple Roles, One Company</h4>
+          <p>A space efficient way to show you were promoted. Add multiple roles if you wore more than one hat — particularly if one was the role you want to get into.</p>
+        </div>
+      </div>
+
+      <div class="tr-ann-block tr-ann right" data-s="tr-intern" style="margin-bottom:260px; opacity:0.15; transition:opacity 0.4s;">
+        <div class="tr-ann-card">
+          <h4>Internships</h4>
+          <p>Unless you are less than 5 years out of college, internships get cut. If added, keep them brief and show why they molded your career. We all know interns do nothing.</p>
+        </div>
+      </div>
+
+      <div class="tr-ann-block tr-ann right" data-s="tr-fun" style="margin-bottom:260px; opacity:0.15; transition:opacity 0.4s;">
+        <div class="tr-ann-card">
+          <h4>For Fun</h4>
+          <p>The more niche your interest the better. Talk nerdy to me. If they are interested, interviewers will ask about it.</p>
+        </div>
+      </div>
+
+      <div class="tr-ann-block tr-ann right" data-s="tr-edu-detail" style="opacity:0.15; transition:opacity 0.4s;">
+        <div class="tr-ann-card">
+          <h4>One Line Is Boring</h4>
+          <p>While the clubs you were in or sports you played sound irrelevant, they humanize you. Always use second decimal places for GPA. Add specializations if your degree is not entirely relevant.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="tr-footer">
+    <div class="tr-note">
+      Use the template. Download it, fill it in, stop losing to people with worse experience than you.
+    </div>
+    <div class="tr-actions">
+      <button class="cta-btn" onclick="alert('Downloads editable template in production.')">Download Template</button>
+      <a href="https://jumpseatjobs.com" class="btn-outline" target="_blank">Want us to do this for you? →</a>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════ JS ═══════════════════════ -->
+<script>
+  /* ── State ── */
+  let foStep = 0;
+  let foName = '';
+  const QUEUE_COUNT = 150; // Update this to match Beehiiv list size
+
+  /* ── Form open/close ── */
+  function openForm() {
+    foStep = 0;
+    document.getElementById('fo-0').classList.add('active');
+    document.getElementById('fo-1').classList.remove('active');
+    document.getElementById('fo-2').classList.remove('active');
+    const s3 = document.getElementById('fo-3');
+    s3.classList.remove('active');
+    s3.classList.remove('q-live');
+    document.getElementById('fo-queue-num').textContent = '0';
+    document.getElementById('fo-fill').style.width = '0%';
+    document.getElementById('form-overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => document.getElementById('fo-name').focus(), 80);
+  }
+  function closeForm() {
+    document.getElementById('form-overlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  /* ── foContinue ── */
+  function foContinue() {
+    if (foStep === 0) {
+      const val = document.getElementById('fo-name').value.trim();
+      if (!val) {
+        document.getElementById('fo-err-0').textContent = 'Please enter your first name.';
+        document.getElementById('fo-name').focus();
+        return;
+      }
+      foName = val;
+      document.getElementById('fo-name-disp').textContent = val;
+      const nameField = document.getElementById('tr-name-field');
+      if (nameField) nameField.textContent = val;
+      document.getElementById('fo-err-0').textContent = '';
+    }
+
+    if (foStep === 1) {
+      const email = document.getElementById('fo-email').value.trim();
+      const valid  = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+      if (!email) {
+        document.getElementById('fo-err-1').textContent = 'Please enter your email address.';
+        document.getElementById('fo-email').focus();
+        return;
+      }
+      if (!valid) {
+        document.getElementById('fo-err-1').textContent = "That doesn't look like a valid email, try again.";
+        document.getElementById('fo-email').focus();
+        return;
+      }
+      document.getElementById('fo-err-1').textContent = '';
+      document.getElementById('fo-upload-q').textContent = `Last one. Upload your resume.`;
+    }
+
+    if (foStep === 2) {
+      document.getElementById('fo-queue-num').textContent = '0';
+      goToStep(3);
+      setTimeout(() => {
+        document.getElementById('fo-3').classList.add('q-live');
+        launchFireworks();
+        countUp(document.getElementById('fo-queue-num'), QUEUE_COUNT, 1500);
+      }, 80);
+      return;
+    }
+
+    goToStep(foStep + 1);
+  }
+
+  /* ── Input validation → button state ── */
+  function checkName() {
+    const val = document.getElementById('fo-name').value.trim();
+    document.getElementById('fo-btn-0').classList.toggle('ready', val.length > 0);
+  }
+  function checkEmail() {
+    const val = document.getElementById('fo-email').value.trim();
+    const ok  = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
+    document.getElementById('fo-btn-1').classList.toggle('ready', ok);
+    if (ok) document.getElementById('fo-err-1').textContent = '';
+  }
+
+  /* ── Enter key forwarding ── */
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && document.getElementById('form-overlay').classList.contains('open')) {
+      if (foStep < 2) foContinue();
+    }
+  });
+
+  function goToStep(n) {
+    document.getElementById('fo-' + foStep).classList.remove('active');
+    foStep = n;
+    const pct = [33, 66, 99, 100][n] ?? 100;
+    document.getElementById('fo-fill').style.width = pct + '%';
+    const next = document.getElementById('fo-' + foStep);
+    if (next) {
+      next.classList.add('active');
+      next.style.animation = 'slideUp 0.35s ease';
+      const inp = next.querySelector('input:not([type=file])');
+      if (inp) setTimeout(() => inp.focus(), 80);
+    }
+  }
+
+  /* ── File handling ── */
+  function handleFile(input) {
+    if (!input.files.length) return;
+    startUpload(input.files[0].name);
+  }
+  function handleDrop(e) {
+    e.preventDefault();
+    document.getElementById('fo-drop').classList.remove('drag');
+    const file = e.dataTransfer.files[0];
+    if (file) startUpload(file.name);
+  }
+
+  function startUpload(filename) {
+    const drop     = document.getElementById('fo-drop');
+    const icon     = document.getElementById('fo-upload-icon');
+    const main     = document.getElementById('fo-upload-main');
+    const sub      = document.getElementById('fo-upload-sub');
+    const fname    = document.getElementById('fo-upload-filename');
+    const status   = document.getElementById('fo-upload-status');
+    const btn      = document.getElementById('fo-btn-2');
+
+    // Show filename, hide the prompt text
+    main.style.display = 'none';
+    sub.style.display  = 'none';
+    fname.style.display = 'block';
+    fname.textContent = filename;
+
+    // Disable file input during scan
+    document.getElementById('fo-file').disabled = true;
+
+    // Phase 1: RED — scanning
+    drop.classList.add('scanning');
+    icon.textContent = '📄';
+    status.textContent = 'Scanning resume...';
+
+    setTimeout(() => {
+      // Phase 2: still red — "Wow, this is really bad."
+      status.textContent = 'Wow, this is really bad.';
+
+      setTimeout(() => {
+        // Phase 3: GREEN — "Just kidding, you can continue now."
+        drop.classList.remove('scanning');
+        drop.classList.add('success');
+        icon.textContent = '📄';
+        fname.style.color = 'rgba(0,220,80,0.9)';
+        status.textContent = 'Just kidding, you can continue now.';
+
+        // Light up continue button
+        btn.classList.add('ready');
+        btn.textContent = 'See My Template →';
+
+        // Fade out the status message after 2.5s
+        setTimeout(() => {
+          status.style.opacity = '0';
+        }, 2500);
+
+      }, 1200);
+    }, 1800);
+  }
+
+  /* ── Template reveal ── */
+  /* ── Count-up animation ── */
+  function countUp(el, to, duration) {
+    const start = performance.now();
+    function tick(now) {
+      const p = Math.min((now - start) / duration, 1);
+      const ease = 1 - Math.pow(1 - p, 3); // ease-out cubic
+      el.textContent = Math.floor(to * ease).toLocaleString();
+      if (p < 1) requestAnimationFrame(tick);
+      else el.textContent = to.toLocaleString();
+    }
+    requestAnimationFrame(tick);
+  }
+
+  /* ── Canvas fireworks ── */
+  function launchFireworks() {
+    const canvas = document.getElementById('fo-fireworks');
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+    const ctx = canvas.getContext('2d');
+    const particles = [];
+    const palette = ['#d91e1e','#ff3c3c','#ff7a00','#ffffff','#ffcc00','#ff5588'];
+
+    function burst(x, y, count) {
+      for (let i = 0; i < count; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = 2.5 + Math.random() * 5.5;
+        particles.push({
+          x, y,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed - (1.5 + Math.random() * 2),
+          alpha: 1,
+          color: palette[Math.floor(Math.random() * palette.length)],
+          size:  1.5 + Math.random() * 3,
+          decay: 0.012 + Math.random() * 0.014,
+          gravity: 0.12,
+          trail: []
+        });
+      }
+    }
+
+    const cx = canvas.width  / 2;
+    const cy = canvas.height * 0.38;
+
+    burst(cx, cy, 70);
+    setTimeout(() => burst(cx - 110, cy + 20, 50), 220);
+    setTimeout(() => burst(cx + 110, cy + 20, 50), 380);
+    setTimeout(() => burst(cx,        cy - 60, 40), 540);
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      let alive = false;
+      for (const p of particles) {
+        if (p.alpha <= 0) continue;
+        alive = true;
+        p.x  += p.vx;
+        p.y  += p.vy;
+        p.vy += p.gravity;
+        p.vx *= 0.97;
+        p.alpha -= p.decay;
+
+        ctx.save();
+        ctx.globalAlpha = Math.max(0, p.alpha);
+        ctx.fillStyle   = p.color;
+        ctx.shadowBlur  = 6;
+        ctx.shadowColor = p.color;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+      if (alive) requestAnimationFrame(draw);
+      else ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+    draw();
+  }
+
+  function showTemplate() {
+    closeForm();
+    const tr = document.getElementById('template-reveal');
+    tr.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
+    tr.scrollTop = 0;
+    setTimeout(() => { initAnnObserver(); initStickyResume(); }, 300);
+  }
+
+  function exitTemplate() {
+    document.getElementById('template-reveal').classList.remove('open');
+    document.body.style.overflow = '';
+    document.documentElement.style.overflow = '';
+  }
+
+  /* ── Annotation scroll observer (template reveal) ── */
+  /* ── Manual sticky resume (CSS sticky broken inside position:fixed overlay) ── */
+  function initStickyResume() {
+    const tr   = document.getElementById('template-reveal');
+    const wrap = document.getElementById('tr-resume-wrap');
+    const el   = document.getElementById('tr-resume');
+    if (!tr || !wrap || !el) return;
+
+    let rafPending = false;
+    function update() {
+      rafPending = false;
+      const scrollTop  = tr.scrollTop;
+      const stickyTop  = 80;
+      const wrapTop    = wrap.offsetTop;          // distance from tr top to wrap top (~919)
+      const wrapH      = wrap.offsetHeight;       // 3649
+      const elH        = el.offsetHeight;         // 849
+      const triggerAt  = wrapTop - stickyTop;     // scroll position where sticky kicks in
+      const releaseAt  = wrapTop + wrapH - elH;   // scroll position where it pins to bottom
+
+      if (scrollTop < triggerAt) {
+        // before sticky zone
+        el.style.position = 'relative';
+        el.style.top      = '0px';
+        el.style.left     = '';
+        el.style.width    = '';
+      } else if (scrollTop >= releaseAt) {
+        // past sticky zone — pin to bottom of wrap
+        el.style.position = 'absolute';
+        el.style.top      = (wrapH - elH) + 'px';
+        el.style.left     = '0';
+        el.style.width    = '';
+      } else {
+        // sticky zone — fixed relative to viewport
+        const rect = wrap.getBoundingClientRect();
+        el.style.position = 'fixed';
+        el.style.top      = stickyTop + 'px';
+        el.style.left     = rect.left + 'px';
+        el.style.width    = rect.width + 'px';
+      }
+    }
+
+    function onScroll() {
+      if (!rafPending) { rafPending = true; requestAnimationFrame(update); }
+    }
+
+    tr.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', update);
+    update();
+  }
+
+  function initAnnObserver() {
+    const tr = document.getElementById('template-reveal');
+    const annBlocks = tr.querySelectorAll('.tr-ann-block');
+    annBlocks.forEach(b => b.style.opacity = '0.15');
+
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (!e.isIntersecting) { e.target.style.opacity = '0.15'; return; }
+
+        // Dim all, clear all highlights
+        annBlocks.forEach(b => b.style.opacity = '0.15');
+        document.querySelectorAll('.r-hl').forEach(h => h.classList.remove('active'));
+
+        // Light up this annotation + its section
+        e.target.style.opacity = '1';
+        const sec = e.target.dataset.s;
+        if (sec) {
+          const hl = document.querySelector(`.r-hl[data-sec="${sec}"]`);
+          if (hl) hl.classList.add('active');
+        }
+      });
+    }, { root: tr, threshold: 0.5, rootMargin: '-25% 0px -25% 0px' });
+
+    annBlocks.forEach(b => obs.observe(b));
+  }
+
+  /* ── Scroll reveal for landing page items ── */
+  const scrollObs = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        e.target.classList.add('vis');
+        scrollObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.get-item').forEach((el, i) => {
+    el.style.transitionDelay = (i * 0.1) + 's';
+    scrollObs.observe(el);
+  });
+
+  /* ── Landing page annotation scroll ── */
+  const landingObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      e.target.style.opacity = e.isIntersecting ? '1' : '0.15';
+    });
+  }, { threshold: 0.35 });
+
+  document.querySelectorAll('.ann-item').forEach(el => landingObs.observe(el));
+
+  /* ── Floating scribbles ── */
+  (function() {
+    const marks = ['✗', '✗', '✗', '?', '??', 'NO', 'WHY', '✗', '⟵ bad', 'weak', '?!', '✗'];
+    const layer = document.getElementById('scribble-layer');
+    if (!layer) return;
+
+    function spawn() {
+      const el = document.createElement('div');
+      el.className = 'scribble';
+      const mark = marks[Math.floor(Math.random() * marks.length)];
+      el.textContent = mark;
+      const left = 5 + Math.random() * 90;
+      const rot  = (Math.random() * 40 - 20) + 'deg';
+      const dur  = 8 + Math.random() * 14;
+      const delay = Math.random() * -20;
+      const size = 13 + Math.random() * 14;
+      el.style.cssText = `left:${left}%;top:-40px;--rot:${rot};animation-duration:${dur}s;animation-delay:${delay}s;font-size:${size}px;`;
+      layer.appendChild(el);
+      // Remove after a couple cycles to avoid DOM bloat
+      setTimeout(() => el.remove(), (dur + 20) * 1000);
+    }
+
+    // Initial spawn
+    for (let i = 0; i < 18; i++) spawn();
+    // Keep spawning
+    setInterval(spawn, 1800);
+  })();
+
+</script>
+
+<!-- ═══════════════════ GSAP SCROLL ANIMATIONS ═══════════════════ -->
+<script>
+(function() {
+  gsap.registerPlugin(ScrollTrigger);
+
+  // ── Reduced motion: skip scroll animations ──
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ─────────────────────────────────────────────
+  // 1. HERO ENTRANCE (on load)
+  // ─────────────────────────────────────────────
+  const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+  heroTl
+    .from('.hero-headline', { y: 70, opacity: 0, duration: 0.85 })
+    .from('.hero-sub',      { y: 40, opacity: 0, duration: 0.65 }, '-=0.45')
+    .from('.video-wrap',    { y: 24, opacity: 0, duration: 0.5  }, '-=0.35')
+    .from('#hero .cta-btn', {
+      scale: 0.78, opacity: 0, duration: 0.55,
+      ease: 'back.out(1.8)'
+    }, '-=0.25');
+
+  if (prefersReducedMotion) {
+    heroTl.progress(1).kill();
+    return;
+  }
+
+  // ─────────────────────────────────────────────
+  // 2. RESUME AUTOPSY — scroll-pinned sequence
+  // ─────────────────────────────────────────────
+  const autopsyTl = gsap.timeline({
+    scrollTrigger: {
+      trigger: '#autopsy',
+      start:   'top top',
+      end:     '+=2200',
+      scrub:   0.8,
+      pin:     true,
+      anticipatePin: 1,
+    }
+  });
+
+  // Step 0: Fade resume in
+  autopsyTl.from('.autopsy-resume', { y: 40, opacity: 0, duration: 0.8 }, 0);
+
+  // Step 1 (pos 1): Circle around summary + bubble
+  autopsyTl
+    .to('.a-mark-1',     { opacity: 1, duration: 0.4 }, 1)
+    .to('.a-mark-1 ellipse', {
+        strokeDashoffset: 0, duration: 1.2, ease: 'none'
+    }, 1)
+    .to('.a-bubble-1',   { opacity: 1, scale: 1, duration: 0.4, ease: 'back.out(2)' }, 1.8);
+
+  // Step 2 (pos 3): Strikethrough line
+  autopsyTl
+    .to('.a-mark-2',     { opacity: 1, scaleX: 1, duration: 0.6, ease: 'power2.out' }, 3)
+    .to('.a-bubble-2',   { opacity: 1, scale: 1, duration: 0.4, ease: 'back.out(2)' }, 3.5);
+
+  // Step 3 (pos 5): X on skills
+  autopsyTl
+    .to('.a-mark-3',     { opacity: 1, scale: 1, rotation: 0, duration: 0.4, ease: 'back.out(1.5)' }, 5)
+    .to('.a-x-1',        { strokeDashoffset: 0, duration: 0.5 }, 5.1)
+    .to('.a-x-2',        { strokeDashoffset: 0, duration: 0.5 }, 5.4)
+    .to('.a-bubble-3',   { opacity: 1, scale: 1, duration: 0.4, ease: 'back.out(2)' }, 5.6);
+
+  // Step 4 (pos 7): Arrow on contact
+  autopsyTl
+    .to('.a-mark-4',     { opacity: 1, scale: 1, rotation: 0, duration: 0.4, ease: 'back.out(1.5)' }, 7)
+    .to('.a-mark-4 path', { strokeDashoffset: 0, duration: 0.6, ease: 'none', stagger: 0.2 }, 7.1)
+    .to('.a-bubble-4',   { opacity: 1, scale: 1, duration: 0.4, ease: 'back.out(2)' }, 7.6);
+
+  // Step 5 (pos 9): Final callout
+  autopsyTl
+    .to('.autopsy-resume', { scale: 0.92, filter: 'brightness(0.6)', duration: 1 }, 9)
+    .to('.a-callout-final', { opacity: 1, y: 0, duration: 1, ease: 'power3.out' }, 9.5);
+
+  // ─────────────────────────────────────────────
+  // 3. WHAT YOU GET — cards slide in
+  // ─────────────────────────────────────────────
+  gsap.utils.toArray('.get-item').forEach((item, i) => {
+    gsap.from(item, {
+      y: 65, opacity: 0, rotation: -2, duration: 0.75,
+      ease: 'power3.out',
+      delay: i * 0.12,
+      scrollTrigger: {
+        trigger: item,
+        start:   'top 88%',
+        toggleActions: 'play none none none'
+      }
+    });
+    const badge = item.querySelector('.get-num');
+    if (badge) {
+      gsap.from(badge, {
+        scale: 0, opacity: 0, duration: 0.45, ease: 'back.out(2.2)',
+        delay: i * 0.12 + 0.25,
+        scrollTrigger: { trigger: item, start: 'top 88%' }
+      });
+    }
+  });
+
+  // ─────────────────────────────────────────────
+  // 4. HOW IT WORKS — alternating sides
+  // ─────────────────────────────────────────────
+  gsap.utils.toArray('.testi-card').forEach((card, i) => {
+    gsap.from(card, {
+      x: i % 2 === 0 ? -90 : 90,
+      opacity: 0, duration: 0.8,
+      ease: 'power3.out',
+      scrollTrigger: {
+        trigger: card,
+        start:   'top 87%',
+        toggleActions: 'play none none none'
+      }
+    });
+  });
+
+  // Section titles
+  gsap.utils.toArray('.section-title').forEach(el => {
+    gsap.from(el, {
+      y: 30, opacity: 0, duration: 0.7, ease: 'power3.out',
+      scrollTrigger: { trigger: el, start: 'top 88%' }
+    });
+  });
+
+  // ─────────────────────────────────────────────
+  // 5. BOTTOM CTA — words assemble from above
+  // ─────────────────────────────────────────────
+  gsap.from('.cta-b-title', {
+    y: -30, opacity: 0, duration: 0.8, ease: 'power3.out',
+    scrollTrigger: { trigger: '#cta-bottom', start: 'top 82%' }
+  });
+  gsap.from('.cta-b-sub', {
+    y: 20, opacity: 0, duration: 0.6, ease: 'power3.out', delay: 0.15,
+    scrollTrigger: { trigger: '#cta-bottom', start: 'top 82%' }
+  });
+  gsap.from('#cta-bottom .cta-btn', {
+    scale: 0.85, opacity: 0, duration: 0.6, ease: 'back.out(1.8)', delay: 0.3,
+    scrollTrigger: { trigger: '#cta-bottom', start: 'top 82%' }
+  });
+
+})();
+</script>
+</body>
+</html>

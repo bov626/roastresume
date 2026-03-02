@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Resume Section — Style Explorer</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --black:#0a0a0a;--grey:#111;--border:#1e1e1e;--muted:#555;
+  --white:#fff;--red:#d91e1e;--red-dark:#8b0000;
+}
+html{scroll-behavior:smooth;background:var(--black);color:var(--white);font-family:'Inter',sans-serif}
+body{overflow-x:hidden}
+
+/* ── DEMO LABEL ── */
+.demo-label{
+  position:fixed;top:20px;left:50%;transform:translateX(-50%);
+  font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+  color:rgba(255,255,255,.2);z-index:9999;pointer-events:none;
+}
+
+/* ── STYLE SWITCHER ── */
+#switcher{
+  position:fixed;bottom:28px;right:28px;z-index:9999;
+  display:flex;align-items:center;gap:8px;
+  background:rgba(10,10,10,.9);border:1px solid #222;
+  border-radius:100px;padding:8px 14px;backdrop-filter:blur(10px);
+}
+.sw-label{font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-right:4px}
+.sw-btn{
+  width:32px;height:32px;border-radius:50%;border:none;cursor:pointer;
+  background:#1a1a1a;color:rgba(255,255,255,.4);font-size:12px;font-weight:700;
+  transition:background .2s,color .2s;font-family:'Inter',sans-serif;
+}
+.sw-btn:hover{background:#2a2a2a;color:#fff}
+.sw-btn.on{background:var(--red);color:#fff}
+
+/* ── STYLE CONTAINERS ── */
+.style-wrap{display:none;min-height:100vh}
+.style-wrap.on{display:block}
+
+/* ── SHARED RESUME ATOMS ── */
+.r-doc{
+  background:#fff;color:#111;font-family:'Inter',sans-serif;
+  border-radius:8px;overflow:hidden;
+}
+.r-doc-inner{padding:44px 48px}
+.r-name{font-size:26px;font-weight:800;color:#111;letter-spacing:-.02em;margin-bottom:3px}
+.r-title{font-size:13px;color:#666;margin-bottom:8px}
+.r-contact{font-size:11px;color:#999;border-bottom:1px solid #eee;padding-bottom:10px;margin-bottom:16px}
+.r-sec{margin-bottom:16px}
+.r-sec-h{font-size:9px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#111;border-bottom:1.5px solid #111;padding-bottom:3px;margin-bottom:9px}
+.r-summary{font-size:12px;line-height:1.7;color:#333;background:#fafafa;border-left:2.5px solid var(--red);padding:9px 12px;border-radius:0 4px 4px 0}
+.r-exp{margin-bottom:10px}
+.r-exp-row{display:flex;justify-content:space-between}
+.r-exp-role{font-size:13px;font-weight:700;color:#111}
+.r-exp-date{font-size:11px;color:#999}
+.r-exp-co{font-size:11px;color:#666;margin:2px 0 6px}
+.r-bullets{list-style:none}
+.r-bullets li{font-size:11px;color:#444;padding:2px 0 2px 12px;position:relative;line-height:1.55}
+.r-bullets li::before{content:'▸';position:absolute;left:0;color:var(--red);font-size:9px;top:4px}
+.skills-row{display:flex;flex-wrap:wrap;gap:5px}
+.s-pill{background:#f3f3f3;border-radius:4px;padding:4px 9px;font-size:10px;font-weight:500;color:#333}
+
+/* annotation card */
+.ann-card{
+  background:#111;border:1px solid #1e1e1e;border-radius:10px;
+  padding:18px 20px;border-left:3px solid var(--red);
+}
+.ann-card h4{font-size:13px;font-weight:700;color:#fff;margin-bottom:6px}
+.ann-card p{font-size:12px;line-height:1.65;color:rgba(255,255,255,.5)}
+
+/* ════════════════════════════════════════
+   STYLE 1 — DOTTED CALLOUTS
+════════════════════════════════════════ */
+#s1{background:var(--black)}
+.s1-intro{text-align:center;padding:120px 24px 80px;position:relative}
+.s1-intro h2{font-size:clamp(32px,5vw,64px);font-weight:900;letter-spacing:-.03em;margin-bottom:16px}
+.s1-red{background:var(--red);color:#fff;padding:2px 12px 5px;border-radius:5px}
+.s1-intro p{color:rgba(255,255,255,.35);font-size:16px}
+
+.s1-stage{
+  max-width:1300px;margin:0 auto;padding:0 32px;
+  display:grid;grid-template-columns:1fr 580px 1fr;gap:0;align-items:start;
+}
+.s1-resume{position:sticky;top:100px;box-shadow:0 0 80px rgba(217,30,30,.12)}
+.s1-left{padding-right:36px}
+.s1-right{padding-left:36px}
+
+.s1-ann-block{
+  margin-bottom:560px;opacity:.12;
+  transition:opacity .6s ease,transform .6s ease;
+  transform:translateY(12px);
+}
+.s1-ann-block.s1-active{opacity:1;transform:translateY(0)}
+.s1-ann-block:first-child{margin-top:60px}
+
+.s1-resume .r-sec{transition:outline .3s,outline-offset .3s}
+.s1-resume .r-sec.s1-ring{outline:2px solid rgba(217,30,30,.8);outline-offset:5px;border-radius:4px}
+.s1-spacer{height:200px}
+
+/* ════════════════════════════════════════
+   STYLE 2 — STAR WARS STACK
+════════════════════════════════════════ */
+#s2{background:#050505}
+.s2-intro{text-align:center;padding:120px 24px 40px}
+.s2-intro h2{font-size:clamp(32px,5vw,64px);font-weight:900;letter-spacing:-.03em;margin-bottom:16px}
+
+.s2-track{position:relative;padding-bottom:300px}
+.s2-card{
+  position:sticky;
+  width:100%;max-width:820px;margin:0 auto;
+  background:#fff;color:#111;border-radius:12px 12px 0 0;
+  box-shadow:0 -8px 60px rgba(0,0,0,.6);
+  overflow:hidden;
+}
+.s2-card:nth-child(1){top:80px;z-index:10}
+.s2-card:nth-child(2){top:120px;z-index:20}
+.s2-card:nth-child(3){top:160px;z-index:30}
+.s2-card:nth-child(4){top:200px;z-index:40}
+.s2-card:nth-child(5){top:240px;z-index:50}
+
+.s2-card-top-bar{height:4px;background:var(--red)}
+.s2-card-inner{
+  display:grid;grid-template-columns:1fr 280px;
+  padding:36px 40px;gap:32px;align-items:start;
+}
+.s2-sec-label{
+  font-size:9px;font-weight:800;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--red);margin-bottom:10px;
+}
+.s2-card-ann{
+  background:#0a0a0a;border-radius:8px;padding:20px;
+  border-left:3px solid var(--red);
+}
+.s2-card-ann h4{font-size:12px;font-weight:700;color:#fff;margin-bottom:6px}
+.s2-card-ann p{font-size:11px;line-height:1.65;color:rgba(255,255,255,.5)}
+.s2-spacer{height:220px;display:block}
+
+/* ════════════════════════════════════════
+   STYLE 3 — FLY-IN LEFT / RIGHT
+════════════════════════════════════════ */
+#s3{background:var(--black)}
+.s3-intro{text-align:center;padding:120px 24px 80px}
+.s3-intro h2{font-size:clamp(32px,5vw,64px);font-weight:900;letter-spacing:-.03em;margin-bottom:16px}
+
+.s3-row{
+  max-width:1100px;margin:0 auto 140px;padding:0 32px;
+  display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:center;
+  min-height:280px;
+}
+.s3-row.flip{direction:rtl}
+.s3-row.flip>*{direction:ltr}
+
+.s3-resume-frag{
+  background:#fff;border-radius:10px;padding:32px 36px;
+  box-shadow:0 0 60px rgba(0,0,0,.4);
+  opacity:0;transform:translateX(-80px);
+  transition:opacity .9s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1);
+}
+.s3-row.flip .s3-resume-frag{transform:translateX(80px)}
+.s3-resume-frag.in{opacity:1;transform:translateX(0)}
+
+.s3-ann{
+  opacity:0;transform:translateX(80px);
+  transition:opacity .9s cubic-bezier(.16,1,.3,1) .12s,transform .9s cubic-bezier(.16,1,.3,1) .12s;
+}
+.s3-row.flip .s3-ann{transform:translateX(-80px)}
+.s3-ann.in{opacity:1;transform:translateX(0)}
+
+/* ════════════════════════════════════════
+   STYLE 4 — SPOTLIGHT
+════════════════════════════════════════ */
+#s4{background:#040404}
+.s4-intro{text-align:center;padding:120px 24px 80px}
+.s4-intro h2{font-size:clamp(32px,5vw,64px);font-weight:900;letter-spacing:-.03em;margin-bottom:16px}
+
+.s4-stage{
+  display:grid;grid-template-columns:680px 1fr;
+  max-width:1200px;margin:0 auto;gap:60px;
+  padding:0 32px;align-items:start;
+}
+.s4-resume-wrap{position:sticky;top:100px}
+.s4-resume-wrap .r-doc{box-shadow:0 0 80px rgba(0,0,0,.7)}
+
+/* Section overlay: darken non-active sections */
+.s4-resume-wrap .r-sec{
+  position:relative;transition:opacity .5s ease;
+}
+.s4-resume-wrap.has-active .r-sec{opacity:.2}
+.s4-resume-wrap.has-active .r-sec.s4-lit{opacity:1}
+.s4-resume-wrap.has-active .r-sec.s4-lit::after{
+  content:'';position:absolute;inset:-6px;
+  border:2px solid rgba(217,30,30,.7);border-radius:4px;pointer-events:none;
+}
+
+/* Right column: annotation triggers */
+.s4-trigger{height:340px;display:flex;align-items:center}
+.s4-ann{
+  opacity:0;transform:translateX(30px);
+  transition:opacity .7s ease,transform .7s ease;
+  width:100%;
+}
+.s4-ann.s4-on{opacity:1;transform:translateX(0)}
+.s4-spacer{height:60px}
+
+/* ════════════════════════════════════════
+   STYLE 5 — CINEMATIC SPLIT-SCREEN
+════════════════════════════════════════ */
+#s5{
+  scroll-snap-type:y mandatory;
+  overflow-y:scroll;height:100vh;
+  background:#030303;
+}
+.s5-panel{
+  scroll-snap-align:start;min-height:100vh;
+  display:grid;grid-template-columns:55% 45%;position:relative;overflow:hidden;
+}
+.s5-panel-intro{
+  scroll-snap-align:start;min-height:100vh;
+  display:flex;align-items:center;justify-content:center;
+  text-align:center;padding:60px 24px;
+  background:radial-gradient(ellipse 70% 60% at 50% 50%,rgba(140,0,0,.18) 0%,transparent 65%);
+}
+.s5-panel-intro h2{font-size:clamp(40px,6vw,80px);font-weight:900;letter-spacing:-.03em;line-height:1.05;margin-bottom:20px}
+.s5-panel-intro p{color:rgba(255,255,255,.35);font-size:18px}
+
+.s5-left{
+  padding:80px 60px;display:flex;flex-direction:column;justify-content:center;
+  position:relative;overflow:hidden;border-right:1px solid #111;
+}
+.s5-bg-word{
+  position:absolute;font-size:clamp(100px,14vw,180px);font-weight:900;
+  color:rgba(255,255,255,.03);letter-spacing:-.05em;line-height:1;
+  bottom:-20px;left:-10px;pointer-events:none;user-select:none;white-space:nowrap;
+}
+.s5-sec-label{font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--red);margin-bottom:16px}
+.s5-content{
+  background:#fff;color:#111;border-radius:8px;
+  padding:28px 32px;position:relative;z-index:1;
+  box-shadow:0 20px 80px rgba(0,0,0,.5);
+}
+.s5-right{
+  padding:80px 60px;display:flex;flex-direction:column;justify-content:center;
+  background:#000;border-left:none;position:relative;
+}
+.s5-right::before{content:'';position:absolute;left:0;top:20%;bottom:20%;width:3px;background:var(--red);border-radius:2px}
+.s5-ann-text{
+  font-size:clamp(18px,2.2vw,26px);line-height:1.55;color:rgba(255,255,255,.85);
+  font-weight:400;padding-left:36px;
+}
+.s5-ann-num{
+  font-size:clamp(80px,10vw,140px);font-weight:900;color:rgba(217,30,30,.08);
+  position:absolute;bottom:20px;right:30px;line-height:1;letter-spacing:-.05em;
+  pointer-events:none;user-select:none;
+}
+
+/* Panel entry animation */
+.s5-panel{opacity:0;transform:translateY(20px);transition:opacity .8s ease,transform .8s ease}
+.s5-panel.s5-vis{opacity:1;transform:translateY(0)}
+</style>
+</head>
+<body>
+<div class="demo-label">Resume Style Explorer — scroll heavy, pick your favourite</div>
+
+<!-- ══════════════ SWITCHER ══════════════ -->
+<div id="switcher">
+  <span class="sw-label">Style</span>
+  <button class="sw-btn on" onclick="setStyle(1)">1</button>
+  <button class="sw-btn"   onclick="setStyle(2)">2</button>
+  <button class="sw-btn"   onclick="setStyle(3)">3</button>
+  <button class="sw-btn"   onclick="setStyle(4)">4</button>
+  <button class="sw-btn"   onclick="setStyle(5)">5</button>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     STYLE 1 — DOTTED CALLOUTS
+══════════════════════════════════════ -->
+<div id="s1" class="style-wrap on">
+  <div class="s1-intro">
+    <h2>Every section is <span class="s1-red">intentional.</span></h2>
+    <p>Scroll to see exactly why.</p>
+  </div>
+
+  <!-- 3-col layout: left | resume | right -->
+  <div class="s1-stage">
+    <!-- LEFT annotations -->
+    <div class="s1-left" id="s1-left">
+      <div class="s1-ann-block" data-sec="s1-header" id="s1-a-header">
+        <div class="ann-card">
+          <h4>Name and Title Line</h4>
+          <p>Read in 2 seconds. Function plus industry plus years. Match it to the JD — this line alone decides whether they keep reading.</p>
+        </div>
+      </div>
+      <div class="s1-ann-block" data-sec="s1-skills" id="s1-a-skills" style="margin-top:0">
+        <div class="ann-card">
+          <h4>Skills</h4>
+          <p>8 to 12 skills from your target JDs. This section is for ATS parsing. Don't list 30 things. Nothing you can't defend in a 5-minute interview.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- CENTER: sticky resume -->
+    <div>
+      <div class="s1-resume r-doc" id="s1-resume">
+        <div class="r-doc-inner">
+          <div class="r-name">Alex Johnson</div>
+          <div class="r-title">Senior Product Manager · SaaS and Fintech · 8 Years</div>
+          <div class="r-contact">alex@email.com · (555) 000-0000 · LinkedIn · San Francisco, CA</div>
+
+          <div class="r-sec" id="s1-header">
+            <div class="r-sec-h">Professional Header</div>
+            <div style="font-size:12px;color:#444;line-height:1.6;">Results-driven PM. 8 years. Enterprise fintech. San Francisco.</div>
+          </div>
+
+          <div class="r-sec" id="s1-summary">
+            <div class="r-sec-h">Professional Summary</div>
+            <div class="r-summary">Results-driven Product Manager with 8 years building SaaS products for enterprise fintech. Launched 0 to 1 features used by 2M+ users. Expert in Agile delivery and translating ambiguous problems into shipped product.</div>
+          </div>
+
+          <div class="r-sec" id="s1-experience">
+            <div class="r-sec-h">Experience</div>
+            <div class="r-exp">
+              <div class="r-exp-row"><span class="r-exp-role">Senior Product Manager</span><span class="r-exp-date">2022 – Present</span></div>
+              <div class="r-exp-co">Stripe · Remote</div>
+              <ul class="r-bullets">
+                <li>Led 0 to 1 launch of merchant dashboard used by 500K+ businesses, reduced support tickets 34%</li>
+                <li>Shipped 6 major features across 3 engineering squads in 12 months</li>
+                <li>Increased checkout conversion 11% via A/B testing</li>
+              </ul>
+            </div>
+            <div class="r-exp" style="margin-top:10px">
+              <div class="r-exp-row"><span class="r-exp-role">Product Manager</span><span class="r-exp-date">2019 – 2022</span></div>
+              <div class="r-exp-co">Brex · New York, NY</div>
+              <ul class="r-bullets">
+                <li>Owned corporate card from beta to 100K users in 18 months</li>
+                <li>Reduced onboarding time 40%. NPS improved 32 to 61</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="r-sec" id="s1-skills">
+            <div class="r-sec-h">Skills</div>
+            <div class="skills-row">
+              <span class="s-pill">Product Strategy</span><span class="s-pill">Roadmap Planning</span>
+              <span class="s-pill">SQL</span><span class="s-pill">Figma</span>
+              <span class="s-pill">Agile</span><span class="s-pill">A/B Testing</span><span class="s-pill">Amplitude</span>
+            </div>
+          </div>
+
+          <div class="r-sec" id="s1-education">
+            <div class="r-sec-h">Education</div>
+            <div class="r-exp-row"><span class="r-exp-role" style="font-size:11px">B.S. Computer Science, Syracuse University</span><span class="r-exp-date">2015</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT annotations -->
+    <div class="s1-right" id="s1-right">
+      <div style="height:260px"></div>
+      <div class="s1-ann-block" data-sec="s1-summary" id="s1-a-summary">
+        <div class="ann-card">
+          <h4>The Summary</h4>
+          <p>Only write this if you know what hiring managers want. Formula: title plus years plus industry plus 2 to 3 tools plus one outcome. No keyword stuffing. Write for a human first.</p>
+        </div>
+      </div>
+      <div class="s1-ann-block" data-sec="s1-experience" id="s1-a-exp" style="margin-top:0">
+        <div class="ann-card">
+          <h4>Bullets Are Outcomes</h4>
+          <p>Every bullet answers: so what? Numbers, scale, impact. Not what you did — what happened because you did it. Cut "responsible for" every time you see it.</p>
+        </div>
+      </div>
+      <div class="s1-ann-block" data-sec="s1-education" id="s1-a-edu" style="margin-top:0">
+        <div class="ann-card">
+          <h4>Education Goes Last</h4>
+          <p>Unless you graduated in the past 2 years. Hiring managers care what you have done, not where you went. Recent grad? Move it up.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="s1-spacer"></div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     STYLE 2 — STAR WARS STACK
+══════════════════════════════════════ -->
+<div id="s2" class="style-wrap">
+  <div class="s2-intro">
+    <h2>A resume is built <span class="s1-red">in layers.</span></h2>
+    <p style="color:rgba(255,255,255,.35);font-size:16px;margin-top:12px">Scroll to build yours.</p>
+  </div>
+
+  <div class="s2-track">
+    <!-- Card 1: Header -->
+    <div class="s2-card">
+      <div class="s2-card-top-bar"></div>
+      <div class="s2-card-inner">
+        <div>
+          <div class="s2-sec-label">01 — Header</div>
+          <div class="r-name" style="font-size:22px">Alex Johnson</div>
+          <div class="r-title">Senior Product Manager · SaaS and Fintech · 8 Years</div>
+          <div class="r-contact" style="margin-top:8px">alex@email.com · LinkedIn · San Francisco, CA</div>
+        </div>
+        <div class="s2-card-ann">
+          <h4>Name and Title Line</h4>
+          <p>Read in 2 seconds. Function plus industry plus years. Match it to the JD.</p>
+        </div>
+      </div>
+    </div>
+    <div class="s2-spacer"></div>
+
+    <!-- Card 2: Summary -->
+    <div class="s2-card">
+      <div class="s2-card-top-bar"></div>
+      <div class="s2-card-inner">
+        <div>
+          <div class="s2-sec-label">02 — Summary</div>
+          <div class="r-sec-h">Professional Summary</div>
+          <div class="r-summary">Results-driven Product Manager with 8 years building SaaS products for enterprise fintech. Launched 0 to 1 features used by 2M+ users. Expert in Agile delivery.</div>
+        </div>
+        <div class="s2-card-ann">
+          <h4>The Summary</h4>
+          <p>Only write this if you know what hiring managers want. No keyword stuffing. Write for a human first.</p>
+        </div>
+      </div>
+    </div>
+    <div class="s2-spacer"></div>
+
+    <!-- Card 3: Experience -->
+    <div class="s2-card">
+      <div class="s2-card-top-bar"></div>
+      <div class="s2-card-inner">
+        <div>
+          <div class="s2-sec-label">03 — Experience</div>
+          <div class="r-exp">
+            <div class="r-exp-row"><span class="r-exp-role">Senior PM, Stripe</span><span class="r-exp-date">2022–Present</span></div>
+            <ul class="r-bullets" style="margin-top:6px">
+              <li>Led launch of merchant dashboard. 500K+ businesses. Reduced support 34%</li>
+              <li>Shipped 6 major features in 12 months</li>
+            </ul>
+          </div>
+          <div class="r-exp" style="margin-top:8px">
+            <div class="r-exp-row"><span class="r-exp-role">PM, Brex</span><span class="r-exp-date">2019–2022</span></div>
+            <ul class="r-bullets" style="margin-top:6px">
+              <li>Owned corporate card from beta to 100K users</li>
+              <li>NPS improved 32 to 61</li>
+            </ul>
+          </div>
+        </div>
+        <div class="s2-card-ann">
+          <h4>Bullets Are Outcomes</h4>
+          <p>Every bullet answers: so what? Numbers, scale, impact. Cut "responsible for" every time.</p>
+        </div>
+      </div>
+    </div>
+    <div class="s2-spacer"></div>
+
+    <!-- Card 4: Skills -->
+    <div class="s2-card">
+      <div class="s2-card-top-bar"></div>
+      <div class="s2-card-inner">
+        <div>
+          <div class="s2-sec-label">04 — Skills</div>
+          <div class="skills-row" style="margin-top:8px">
+            <span class="s-pill">Product Strategy</span><span class="s-pill">Roadmap Planning</span>
+            <span class="s-pill">SQL</span><span class="s-pill">Figma</span>
+            <span class="s-pill">Agile</span><span class="s-pill">A/B Testing</span><span class="s-pill">Amplitude</span>
+          </div>
+        </div>
+        <div class="s2-card-ann">
+          <h4>Skills</h4>
+          <p>8 to 12 from your target JDs. ATS-friendly. Nothing you can't defend in a 5-minute interview.</p>
+        </div>
+      </div>
+    </div>
+    <div class="s2-spacer"></div>
+
+    <!-- Card 5: Education -->
+    <div class="s2-card">
+      <div class="s2-card-top-bar"></div>
+      <div class="s2-card-inner">
+        <div>
+          <div class="s2-sec-label">05 — Education</div>
+          <div class="r-exp-row" style="margin-top:8px">
+            <span class="r-exp-role">B.S. Computer Science, Syracuse University</span>
+            <span class="r-exp-date">2015</span>
+          </div>
+        </div>
+        <div class="s2-card-ann">
+          <h4>Education Goes Last</h4>
+          <p>Unless you graduated in the past 2 years. Hiring managers care what you have done.</p>
+        </div>
+      </div>
+    </div>
+    <div class="s2-spacer"></div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     STYLE 3 — FLY-IN LEFT / RIGHT
+══════════════════════════════════════ -->
+<div id="s3" class="style-wrap">
+  <div class="s3-intro">
+    <h2>Building a resume <span class="s1-red">section by section.</span></h2>
+    <p style="color:rgba(255,255,255,.35);font-size:16px;margin-top:12px">Scroll to assemble.</p>
+  </div>
+
+  <!-- Row 1: Header (resume left, annotation right) -->
+  <div class="s3-row s3-obs">
+    <div class="s3-resume-frag r-doc">
+      <div class="r-doc-inner" style="padding:28px 32px">
+        <div class="s2-sec-label">01 — Header</div>
+        <div class="r-name" style="font-size:20px">Alex Johnson</div>
+        <div class="r-title">Senior PM · SaaS and Fintech · 8 Years</div>
+        <div class="r-contact">alex@email.com · LinkedIn · San Francisco</div>
+      </div>
+    </div>
+    <div class="s3-ann ann-card">
+      <h4>Name and Title Line</h4>
+      <p>Read in 2 seconds. Function plus industry plus years. Match it to the JD. This line alone determines whether they keep reading.</p>
+    </div>
+  </div>
+
+  <!-- Row 2: Summary (flipped) -->
+  <div class="s3-row flip s3-obs">
+    <div class="s3-resume-frag r-doc">
+      <div class="r-doc-inner" style="padding:28px 32px">
+        <div class="s2-sec-label">02 — Summary</div>
+        <div class="r-sec-h">Professional Summary</div>
+        <div class="r-summary">Results-driven PM with 8 years in enterprise fintech. Launched 0 to 1 features used by 2M+ users.</div>
+      </div>
+    </div>
+    <div class="s3-ann ann-card">
+      <h4>The Summary</h4>
+      <p>Only write this if you know what hiring managers want. Title plus years plus industry plus 2 to 3 tools plus one outcome. No keyword stuffing.</p>
+    </div>
+  </div>
+
+  <!-- Row 3: Experience -->
+  <div class="s3-row s3-obs">
+    <div class="s3-resume-frag r-doc">
+      <div class="r-doc-inner" style="padding:28px 32px">
+        <div class="s2-sec-label">03 — Experience</div>
+        <div class="r-exp">
+          <div class="r-exp-row"><span class="r-exp-role">Senior PM, Stripe</span><span class="r-exp-date">2022–Present</span></div>
+          <ul class="r-bullets" style="margin-top:5px">
+            <li>Led merchant dashboard launch. 500K+ businesses. Support down 34%</li>
+            <li>Increased checkout conversion 11%</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="s3-ann ann-card">
+      <h4>Bullets Are Outcomes</h4>
+      <p>Numbers, scale, impact. Not what you did — what happened because of it. Cut "responsible for" every single time.</p>
+    </div>
+  </div>
+
+  <!-- Row 4: Skills (flipped) -->
+  <div class="s3-row flip s3-obs">
+    <div class="s3-resume-frag r-doc">
+      <div class="r-doc-inner" style="padding:28px 32px">
+        <div class="s2-sec-label">04 — Skills</div>
+        <div class="skills-row" style="margin-top:8px">
+          <span class="s-pill">Product Strategy</span><span class="s-pill">SQL</span>
+          <span class="s-pill">Figma</span><span class="s-pill">Agile</span><span class="s-pill">Amplitude</span>
+        </div>
+      </div>
+    </div>
+    <div class="s3-ann ann-card">
+      <h4>Skills</h4>
+      <p>8 to 12 from your target JDs. ATS-friendly but nothing you can't back up in a 5-minute interview. Real only.</p>
+    </div>
+  </div>
+
+  <!-- Row 5: Education -->
+  <div class="s3-row s3-obs" style="margin-bottom:200px">
+    <div class="s3-resume-frag r-doc">
+      <div class="r-doc-inner" style="padding:28px 32px">
+        <div class="s2-sec-label">05 — Education</div>
+        <div class="r-exp-row">
+          <span class="r-exp-role" style="font-size:12px">B.S. Computer Science, Syracuse</span>
+          <span class="r-exp-date">2015</span>
+        </div>
+      </div>
+    </div>
+    <div class="s3-ann ann-card">
+      <h4>Education Goes Last</h4>
+      <p>Unless you graduated in the past 2 years. Hiring managers care what you have done, not where you went.</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     STYLE 4 — SPOTLIGHT
+══════════════════════════════════════ -->
+<div id="s4" class="style-wrap">
+  <div class="s4-intro">
+    <h2>One section. <span class="s1-red">All the attention.</span></h2>
+    <p style="color:rgba(255,255,255,.35);font-size:16px;margin-top:12px">Scroll through each section.</p>
+  </div>
+
+  <div class="s4-stage">
+    <!-- Left: sticky full resume -->
+    <div class="s4-resume-wrap r-doc" id="s4-resume-wrap">
+      <div class="r-doc-inner">
+        <div class="r-name">Alex Johnson</div>
+        <div class="r-title">Senior Product Manager · SaaS and Fintech · 8 Years</div>
+        <div class="r-contact">alex@email.com · LinkedIn · San Francisco, CA</div>
+
+        <div class="r-sec" id="s4-header">
+          <div class="r-sec-h">Header</div>
+          <div style="font-size:12px;color:#444">Senior PM. 8 years. Enterprise fintech. San Francisco.</div>
+        </div>
+
+        <div class="r-sec" id="s4-summary">
+          <div class="r-sec-h">Professional Summary</div>
+          <div class="r-summary">Results-driven PM with 8 years building SaaS products for enterprise fintech. Launched 0 to 1 features used by 2M+ users.</div>
+        </div>
+
+        <div class="r-sec" id="s4-experience">
+          <div class="r-sec-h">Experience</div>
+          <div class="r-exp">
+            <div class="r-exp-row"><span class="r-exp-role">Senior PM, Stripe</span><span class="r-exp-date">2022–Present</span></div>
+            <div class="r-exp-co">Remote</div>
+            <ul class="r-bullets">
+              <li>Led merchant dashboard. 500K+ businesses. Support down 34%</li>
+              <li>Shipped 6 major features in 12 months</li>
+            </ul>
+          </div>
+          <div class="r-exp" style="margin-top:8px">
+            <div class="r-exp-row"><span class="r-exp-role">PM, Brex</span><span class="r-exp-date">2019–2022</span></div>
+            <ul class="r-bullets">
+              <li>Beta to 100K users in 18 months</li>
+              <li>NPS 32 to 61. Onboarding time down 40%</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="r-sec" id="s4-skills">
+          <div class="r-sec-h">Skills</div>
+          <div class="skills-row">
+            <span class="s-pill">Product Strategy</span><span class="s-pill">SQL</span>
+            <span class="s-pill">Figma</span><span class="s-pill">Agile</span><span class="s-pill">Amplitude</span>
+          </div>
+        </div>
+
+        <div class="r-sec" id="s4-education">
+          <div class="r-sec-h">Education</div>
+          <div class="r-exp-row">
+            <span class="r-exp-role" style="font-size:11px">B.S. Computer Science, Syracuse University</span>
+            <span class="r-exp-date">2015</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: annotation triggers -->
+    <div>
+      <div style="height:40px"></div>
+      <div class="s4-trigger" data-sec="s4-header">
+        <div class="s4-ann ann-card" id="s4-a-header">
+          <h4>Name and Title Line</h4>
+          <p>Read in 2 seconds. Function plus industry plus years. Match it to the JD. This line alone determines whether they keep reading.</p>
+        </div>
+      </div>
+      <div class="s4-trigger" data-sec="s4-summary">
+        <div class="s4-ann ann-card" id="s4-a-summary">
+          <h4>The Summary</h4>
+          <p>Only write this if a crisp sentence is already in your head. Formula: title plus years plus industry plus 2 to 3 tools plus one outcome. No keyword stuffing.</p>
+        </div>
+      </div>
+      <div class="s4-trigger" data-sec="s4-experience">
+        <div class="s4-ann ann-card" id="s4-a-experience">
+          <h4>Bullets Are Outcomes</h4>
+          <p>Every bullet answers: so what? Numbers, scale, impact. Not what you did — what happened because of it. Cut "responsible for" every time.</p>
+        </div>
+      </div>
+      <div class="s4-trigger" data-sec="s4-skills">
+        <div class="s4-ann ann-card" id="s4-a-skills">
+          <h4>Skills</h4>
+          <p>8 to 12 from your target JDs. ATS-friendly. Nothing you can't defend in a 5-minute interview.</p>
+        </div>
+      </div>
+      <div class="s4-trigger" data-sec="s4-education">
+        <div class="s4-ann ann-card" id="s4-a-education">
+          <h4>Education Goes Last</h4>
+          <p>Unless you graduated in the past 2 years. Hiring managers care what you have done, not where you went.</p>
+        </div>
+      </div>
+      <div class="s4-spacer"></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     STYLE 5 — CINEMATIC SPLIT-SCREEN
+══════════════════════════════════════ -->
+<div id="s5" class="style-wrap">
+
+  <!-- Intro snap panel -->
+  <div class="s5-panel-intro">
+    <div>
+      <div style="font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--red);margin-bottom:20px">The Jumpseat Resume System</div>
+      <h2>Every section.<br><span style="background:var(--red);color:#fff;padding:2px 14px 6px;border-radius:5px;display:inline">Intentional.</span></h2>
+      <p>Scroll to break it down.</p>
+    </div>
+  </div>
+
+  <!-- Panel 1: Header -->
+  <div class="s5-panel">
+    <div class="s5-left">
+      <div class="s5-bg-word">HEADER</div>
+      <div class="s5-sec-label">01 — Header</div>
+      <div class="s5-content">
+        <div class="r-name" style="font-size:22px">Alex Johnson</div>
+        <div class="r-title">Senior Product Manager · SaaS and Fintech · 8 Years</div>
+        <div class="r-contact">alex@email.com · LinkedIn · San Francisco, CA</div>
+      </div>
+    </div>
+    <div class="s5-right">
+      <div class="s5-ann-text">Your title line is read in 2 seconds. Function plus industry plus years. Match it to the JD — this line alone decides whether they keep reading.</div>
+      <div class="s5-ann-num">01</div>
+    </div>
+  </div>
+
+  <!-- Panel 2: Summary -->
+  <div class="s5-panel">
+    <div class="s5-left">
+      <div class="s5-bg-word">SUMMARY</div>
+      <div class="s5-sec-label">02 — Summary</div>
+      <div class="s5-content">
+        <div class="r-sec-h">Professional Summary</div>
+        <div class="r-summary">Results-driven Product Manager with 8 years building SaaS products for enterprise fintech. Launched 0 to 1 features used by 2M+ users. Expert in Agile delivery and translating ambiguous problems into shipped product.</div>
+      </div>
+    </div>
+    <div class="s5-right">
+      <div class="s5-ann-text">Only write this if you know what hiring managers want. Formula: title plus years plus industry plus 2 to 3 tools plus one outcome. No keyword stuffing. Write for a human first.</div>
+      <div class="s5-ann-num">02</div>
+    </div>
+  </div>
+
+  <!-- Panel 3: Experience -->
+  <div class="s5-panel">
+    <div class="s5-left">
+      <div class="s5-bg-word">WORK</div>
+      <div class="s5-sec-label">03 — Experience</div>
+      <div class="s5-content">
+        <div class="r-exp">
+          <div class="r-exp-row"><span class="r-exp-role">Senior PM, Stripe</span><span class="r-exp-date">2022–Present</span></div>
+          <div class="r-exp-co">Remote</div>
+          <ul class="r-bullets">
+            <li>Led merchant dashboard launch. 500K+ businesses. Support tickets down 34%</li>
+            <li>Shipped 6 major features in 12 months across 3 squads</li>
+            <li>Increased checkout conversion 11% via A/B testing</li>
+          </ul>
+        </div>
+        <div class="r-exp" style="margin-top:10px">
+          <div class="r-exp-row"><span class="r-exp-role">PM, Brex</span><span class="r-exp-date">2019–2022</span></div>
+          <ul class="r-bullets">
+            <li>Beta to 100K users in 18 months. Onboarding down 40%. NPS 32 to 61</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="s5-right">
+      <div class="s5-ann-text">Every bullet answers: so what? Numbers, scale, impact. Not what you did — what happened because of it. Cut "responsible for" every single time you see it.</div>
+      <div class="s5-ann-num">03</div>
+    </div>
+  </div>
+
+  <!-- Panel 4: Skills -->
+  <div class="s5-panel">
+    <div class="s5-left">
+      <div class="s5-bg-word">SKILLS</div>
+      <div class="s5-sec-label">04 — Skills</div>
+      <div class="s5-content">
+        <div class="skills-row">
+          <span class="s-pill">Product Strategy</span><span class="s-pill">Roadmap Planning</span>
+          <span class="s-pill">SQL</span><span class="s-pill">Figma</span>
+          <span class="s-pill">Agile</span><span class="s-pill">A/B Testing</span><span class="s-pill">Amplitude</span>
+        </div>
+      </div>
+    </div>
+    <div class="s5-right">
+      <div class="s5-ann-text">8 to 12 skills that show up in your target JDs. ATS-friendly — but nothing you can't back up in a 5-minute interview. Real only.</div>
+      <div class="s5-ann-num">04</div>
+    </div>
+  </div>
+
+  <!-- Panel 5: Education -->
+  <div class="s5-panel">
+    <div class="s5-left">
+      <div class="s5-bg-word">EDU</div>
+      <div class="s5-sec-label">05 — Education</div>
+      <div class="s5-content">
+        <div class="r-exp-row">
+          <span class="r-exp-role">B.S. Computer Science, Syracuse University</span>
+          <span class="r-exp-date">2015</span>
+        </div>
+      </div>
+    </div>
+    <div class="s5-right">
+      <div class="s5-ann-text">Goes last unless you graduated in the past 2 years. Hiring managers care what you have done, not where you went. Recent grad? Move it up.</div>
+      <div class="s5-ann-num">05</div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+/* ── Style switcher ── */
+function setStyle(n) {
+  document.querySelectorAll('.style-wrap').forEach(el => el.classList.remove('on'));
+  document.querySelectorAll('.sw-btn').forEach(el => el.classList.remove('on'));
+  document.getElementById('s' + n).classList.add('on');
+  document.querySelectorAll('.sw-btn')[n-1].classList.add('on');
+  window.scrollTo({top:0,behavior:'instant'});
+  // Re-init observers for the newly visible style
+  if (n === 1) initS1();
+  if (n === 3) initS3();
+  if (n === 4) initS4();
+  if (n === 5) initS5();
+}
+
+/* ══ STYLE 1: Dotted callouts ══ */
+function initS1() {
+  const secIds = ['s1-header','s1-summary','s1-experience','s1-skills','s1-education'];
+  const annMap = {
+    's1-header':    's1-a-header',
+    's1-summary':   's1-a-summary',
+    's1-experience':'s1-a-exp',
+    's1-skills':    's1-a-skills',
+    's1-education': 's1-a-edu',
+  };
+
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      const secId = e.target.id;
+      const annEl = document.getElementById(annMap[secId]);
+      if (annEl) annEl.classList.toggle('s1-active', e.isIntersecting);
+      if (e.isIntersecting) {
+        e.target.classList.add('s1-ring');
+      } else {
+        e.target.classList.remove('s1-ring');
+      }
+    });
+  }, {threshold: 0.4, rootMargin: '-15% 0px -15% 0px'});
+
+  secIds.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) obs.observe(el);
+  });
+}
+
+/* ══ STYLE 3: Fly-in ══ */
+function initS3() {
+  const rows = document.querySelectorAll('#s3 .s3-obs');
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.querySelector('.s3-resume-frag')?.classList.add('in');
+        e.target.querySelector('.s3-ann')?.classList.add('in');
+      }
+    });
+  }, {threshold: 0.2});
+  rows.forEach(r => obs.observe(r));
+}
+
+/* ══ STYLE 4: Spotlight ══ */
+function initS4() {
+  const wrap = document.getElementById('s4-resume-wrap');
+  const triggers = document.querySelectorAll('#s4 .s4-trigger');
+  const annEls = document.querySelectorAll('#s4 .s4-ann');
+
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const secId = e.target.dataset.sec;
+        // Light up annotation
+        annEls.forEach(a => a.classList.remove('s4-on'));
+        const ann = e.target.querySelector('.s4-ann');
+        if (ann) ann.classList.add('s4-on');
+        // Spotlight resume section
+        wrap.classList.add('has-active');
+        document.querySelectorAll('#s4-resume-wrap .r-sec').forEach(s => s.classList.remove('s4-lit'));
+        const sec = document.getElementById(secId);
+        if (sec) sec.classList.add('s4-lit');
+      }
+    });
+  }, {threshold: 0.5, rootMargin: '-10% 0px -10% 0px'});
+
+  triggers.forEach(t => obs.observe(t));
+}
+
+/* ══ STYLE 5: Cinematic panels ══ */
+function initS5() {
+  const s5 = document.getElementById('s5');
+  const panels = s5.querySelectorAll('.s5-panel');
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) e.target.classList.add('s5-vis');
+    });
+  }, {threshold: 0.3, root: s5});
+  panels.forEach(p => obs.observe(p));
+}
+
+/* ── Heavy scroll parallax for styles 1,2,3,4 ── */
+(function() {
+  let ticking = false;
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      const scrollY = window.scrollY;
+      // Parallax the intro headlines slightly
+      const intros = document.querySelectorAll('.s1-intro h2, .s2-intro h2, .s3-intro h2, .s4-intro h2');
+      intros.forEach(el => {
+        el.style.transform = `translateY(${scrollY * 0.18}px)`;
+      });
+      ticking = false;
+    });
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+})();
+
+/* ── Init on load ── */
+initS1();
+</script>
+</body>
+</html>
