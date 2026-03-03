@@ -7,7 +7,7 @@ const path       = require('path');
 const fs         = require('fs');
 
 const app  = express();
-const PORT = 3737;
+const PORT = 5000;
 const PASS = 'jumpseat2026';
 
 /* ── Uploads dir ── */
@@ -43,10 +43,10 @@ app.use(session({
   cookie: { maxAge: 8 * 60 * 60 * 1000 } // 8h
 }));
 
-/* ── CORS for localhost (the landing page) ── */
+/* ── CORS ── */
 app.use((req, res, next) => {
   const origin = req.headers.origin;
-  if (origin && origin.includes('localhost')) {
+  if (origin) {
     res.setHeader('Access-Control-Allow-Origin', origin);
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
     res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
@@ -180,6 +180,10 @@ app.get('/admin/uploads/:filename', requireAuth, (req, res) => {
    Redirect /admin/* catch-all
 ──────────────────────────────────────────── */
 app.get('/admin/*path', requireAuth, (req, res) => res.redirect('/admin'));
+
+/* ── Static landing page ── */
+app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
+app.use(express.static(__dirname, { index: false }));
 
 /* ────────────────────────────────────────────
    HTML TEMPLATES
@@ -539,7 +543,8 @@ function adminPage() {
 </html>`;
 }
 
-app.listen(PORT, () => {
-  console.log('\n  Roast Admin → http://localhost:' + PORT + '/admin');
+app.listen(PORT, '0.0.0.0', () => {
+  console.log('\n  Roast → http://localhost:' + PORT);
+  console.log('  Roast Admin → http://localhost:' + PORT + '/admin');
   console.log('  Password: ' + PASS + '\n');
 });
