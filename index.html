@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Please Roast My Resume</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="preload" as="image" href="resume-step1-clean.jpg" />
-  <link rel="preload" as="image" href="resume-step2-anon.jpg" />
-  <link rel="preload" as="image" href="resume-step3-roasted.jpg" />
+  <link rel="preload" as="image" href="resume-step1-clean.jpg" fetchpriority="high" />
+  <link rel="preload" as="image" href="resume-step2-anon.jpg" fetchpriority="high" />
+  <link rel="preload" as="image" href="resume-step3-roasted.jpg" fetchpriority="high" />
   <style>
     :root {
       --black: #0a0a0a;
@@ -1538,7 +1538,7 @@
     <div class="step-number">Step 01</div>
     <div class="step-label">Submit Your Resume</div>
     <div class="step-img-wrap">
-      <img class="step-img" src="resume-step1-clean.jpg" alt="Your resume" />
+      <img class="step-img" src="resume-step1-clean.jpg" alt="Your resume" loading="eager" decoding="async" />
     </div>
   </div>
 
@@ -1551,7 +1551,7 @@
     <div class="step-number">Step 02</div>
     <div class="step-label">We Anonymize It</div>
     <div class="step-img-wrap">
-      <img class="step-img" src="resume-step2-anon.jpg" alt="Anonymized resume" />
+      <img class="step-img" src="resume-step2-anon.jpg" alt="Anonymized resume" loading="eager" decoding="async" />
     </div>
   </div>
 
@@ -1564,7 +1564,7 @@
     <div class="step-number">Step 03</div>
     <div class="step-label">We Roast It On Video</div>
     <div class="step-img-wrap">
-      <img class="step-img" src="resume-step3-roasted.jpg" alt="Resume being roasted" />
+      <img class="step-img" src="resume-step3-roasted.jpg" alt="Resume being roasted" loading="eager" decoding="async" />
     </div>
   </div>
 
