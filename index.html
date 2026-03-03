@@ -1640,7 +1640,6 @@
       <div class="fo-upload-status" id="fo-upload-status"></div>
 
       <div class="fo-error" id="fo-err-2"></div>
-      <button class="fo-btn" id="fo-btn-2" onclick="foContinue()">Continue →</button>
     </div>
 
     <!-- STEP 3: Queue confirmation -->
@@ -1947,7 +1946,6 @@
     const sub      = document.getElementById('fo-upload-sub');
     const fname    = document.getElementById('fo-upload-filename');
     const status   = document.getElementById('fo-upload-status');
-    const btn      = document.getElementById('fo-btn-2');
 
     // Show filename, hide the prompt text
     main.style.display = 'none';
@@ -1968,21 +1966,17 @@
       status.textContent = 'Wow, this is really bad.';
 
       setTimeout(() => {
-        // Phase 3: GREEN — "Just kidding, you can continue now."
+        // Phase 3: GREEN — "Just kidding"
         drop.classList.remove('scanning');
         drop.classList.add('success');
         icon.textContent = '📄';
         fname.style.color = 'rgba(0,220,80,0.9)';
-        status.textContent = 'Just kidding, you can continue now.';
+        status.textContent = 'Just kidding.';
 
-        // Light up continue button
-        btn.classList.add('ready');
-        btn.textContent = 'See My Template →';
-
-        // Fade out the status message after 2.5s
+        // Auto-advance to queue after a brief pause
         setTimeout(() => {
-          status.style.opacity = '0';
-        }, 2500);
+          foContinue();
+        }, 1200);
 
       }, 1200);
     }, 1800);
