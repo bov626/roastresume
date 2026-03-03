@@ -2225,7 +2225,8 @@
     .from('.video-wrap',    { y: 24, opacity: 0, duration: 0.5  }, '-=0.35')
     .from('#hero .cta-btn', {
       scale: 0.78, opacity: 0, duration: 0.55,
-      ease: 'back.out(1.8)'
+      ease: 'back.out(1.8)',
+      clearProps: 'transform'
     }, '-=0.25');
 
   if (prefersReducedMotion) {
