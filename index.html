@@ -1129,36 +1129,140 @@
     padding: 24px;
     overflow: hidden;
   }
+  .step-block::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 15% 85%, rgba(217,30,30,0.04) 0%, transparent 50%),
+      radial-gradient(circle at 85% 15%, rgba(217,30,30,0.03) 0%, transparent 50%);
+    pointer-events: none;
+  }
+  .step-block::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(217,30,30,0.15) 30%, rgba(217,30,30,0.25) 50%, rgba(217,30,30,0.15) 70%, transparent);
+    pointer-events: none;
+  }
   #step-1 {
     z-index: 1;
-    background: radial-gradient(ellipse 80% 70% at 50% 65%, rgba(35,35,35,0.9) 0%, var(--black) 72%);
+    background:
+      radial-gradient(ellipse 60% 50% at 50% 60%, rgba(30,30,35,0.95) 0%, transparent 70%),
+      radial-gradient(circle at 80% 20%, rgba(217,30,30,0.06) 0%, transparent 40%),
+      var(--black);
   }
   #step-2 {
     z-index: 2;
-    background: radial-gradient(ellipse 80% 70% at 50% 65%, rgba(35,10,10,0.9) 0%, #0b0b0b 72%);
+    background:
+      radial-gradient(ellipse 60% 50% at 50% 60%, rgba(40,15,15,0.9) 0%, transparent 70%),
+      radial-gradient(circle at 20% 80%, rgba(217,30,30,0.08) 0%, transparent 40%),
+      #0b0b0b;
     box-shadow: 0 -32px 80px rgba(0,0,0,0.95);
   }
   #step-3 {
     z-index: 3;
-    background: radial-gradient(ellipse 80% 70% at 50% 65%, rgba(80,5,5,0.55) 0%, #0d0d0d 72%);
+    background:
+      radial-gradient(ellipse 60% 50% at 50% 60%, rgba(80,10,10,0.5) 0%, transparent 70%),
+      radial-gradient(circle at 70% 30%, rgba(217,30,30,0.1) 0%, transparent 40%),
+      radial-gradient(circle at 30% 80%, rgba(217,30,30,0.06) 0%, transparent 40%),
+      #0d0d0d;
     box-shadow: 0 -32px 80px rgba(0,0,0,0.95);
   }
+  .step-number {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .step-number::before,
+  .step-number::after {
+    content: '';
+    width: 28px;
+    height: 1px;
+    background: rgba(217,30,30,0.4);
+  }
   .step-label {
-    font-size: clamp(18px, 2.5vw, 28px);
+    font-size: clamp(22px, 3vw, 36px);
     font-weight: 900;
     color: #fff;
-    margin-bottom: 28px;
+    margin-bottom: 32px;
     text-align: center;
-    letter-spacing: 0.01em;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+  }
+  .step-img-wrap {
+    position: relative;
+    display: inline-block;
+  }
+  .step-img-wrap::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, rgba(217,30,30,0.3), transparent 40%, transparent 60%, rgba(217,30,30,0.15));
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+  }
+  .step-block.vis .step-img-wrap::before {
+    opacity: 1;
+  }
+  .step-img-wrap::after {
+    content: '';
+    position: absolute;
+    bottom: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 70%;
+    height: 80px;
+    background: radial-gradient(ellipse, rgba(217,30,30,0.12) 0%, transparent 70%);
+    pointer-events: none;
+    filter: blur(20px);
   }
   .step-img {
-    max-height: 68vh;
-    max-width: min(560px, 88vw);
+    max-height: 64vh;
+    max-width: min(540px, 86vw);
     width: auto;
     object-fit: contain;
-    border-radius: 8px;
-    box-shadow: 0 32px 100px rgba(0,0,0,0.6), 0 8px 32px rgba(0,0,0,0.4);
+    border-radius: 12px;
+    box-shadow:
+      0 4px 16px rgba(0,0,0,0.4),
+      0 16px 48px rgba(0,0,0,0.5),
+      0 32px 100px rgba(0,0,0,0.6);
+    border: 1px solid rgba(255,255,255,0.06);
+    transition: transform 0.5s ease, box-shadow 0.5s ease;
   }
+  .step-grid-bg {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, black 20%, transparent 70%);
+    -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, black 20%, transparent 70%);
+    pointer-events: none;
+  }
+  .step-corner {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    pointer-events: none;
+    opacity: 0.15;
+  }
+  .step-corner--tl { top: 32px; left: 32px; border-top: 1px solid var(--red); border-left: 1px solid var(--red); }
+  .step-corner--tr { top: 32px; right: 32px; border-top: 1px solid var(--red); border-right: 1px solid var(--red); }
+  .step-corner--bl { bottom: 32px; left: 32px; border-bottom: 1px solid var(--red); border-left: 1px solid var(--red); }
+  .step-corner--br { bottom: 32px; right: 32px; border-bottom: 1px solid var(--red); border-right: 1px solid var(--red); }
 
   /* ── WHILE YOU WAIT ── */
   #while-you-wait {
@@ -1372,21 +1476,45 @@
 <section id="how-it-works">
 
   <div class="step-block" id="step-1">
+    <div class="step-grid-bg"></div>
+    <div class="step-corner step-corner--tl"></div>
+    <div class="step-corner step-corner--tr"></div>
+    <div class="step-corner step-corner--bl"></div>
+    <div class="step-corner step-corner--br"></div>
     <div class="how-header">
       <span class="how-header-text">HOW DOES IT WORK?</span>
     </div>
-    <div class="step-label">Step 1: Submit Your Resume.</div>
-    <img class="step-img" src="resume-step1-clean.png" alt="Your resume" />
+    <div class="step-number">Step 01</div>
+    <div class="step-label">Submit Your Resume</div>
+    <div class="step-img-wrap">
+      <img class="step-img" src="resume-step1-clean.png" alt="Your resume" />
+    </div>
   </div>
 
   <div class="step-block" id="step-2">
-    <div class="step-label">Step 2: We Anonymize It</div>
-    <img class="step-img" src="resume-step2-anon.png" alt="Anonymized resume" />
+    <div class="step-grid-bg"></div>
+    <div class="step-corner step-corner--tl"></div>
+    <div class="step-corner step-corner--tr"></div>
+    <div class="step-corner step-corner--bl"></div>
+    <div class="step-corner step-corner--br"></div>
+    <div class="step-number">Step 02</div>
+    <div class="step-label">We Anonymize It</div>
+    <div class="step-img-wrap">
+      <img class="step-img" src="resume-step2-anon.png" alt="Anonymized resume" />
+    </div>
   </div>
 
   <div class="step-block" id="step-3">
-    <div class="step-label">Step 3: We Roast On Video</div>
-    <img class="step-img" src="resume-step3-roasted.png" alt="Resume being roasted" />
+    <div class="step-grid-bg"></div>
+    <div class="step-corner step-corner--tl"></div>
+    <div class="step-corner step-corner--tr"></div>
+    <div class="step-corner step-corner--bl"></div>
+    <div class="step-corner step-corner--br"></div>
+    <div class="step-number">Step 03</div>
+    <div class="step-label">We Roast It On Video</div>
+    <div class="step-img-wrap">
+      <img class="step-img" src="resume-step3-roasted.png" alt="Resume being roasted" />
+    </div>
   </div>
 
 </section>
@@ -2074,25 +2202,30 @@
   }
 
   step1Tl
+    .from('#step-1 .step-number', {
+      y: 20, opacity: 0, duration: 0.4, ease: 'power3.out'
+    })
     .from('#step-1 .step-label', {
       y: 40, opacity: 0, duration: 0.6, ease: 'power3.out'
-    })
-    .from('#step-1 .step-img', {
+    }, '-=0.2')
+    .from('#step-1 .step-img-wrap', {
       y: 90, opacity: 0, scale: 0.92, duration: 1.1, ease: 'expo.out',
-      onComplete: () => startFloat('#step-1 .step-img', 0)
+      onComplete: () => startFloat('#step-1 .step-img-wrap', 0)
     }, '-=0.3');
 
-  // Steps 2 & 3: slide in from below as they stack
   [['#step-2', 0.4], ['#step-3', 0.8]].forEach(([id, floatDelay]) => {
     gsap.timeline({
       scrollTrigger: { trigger: id, start: 'top 95%', toggleActions: 'play none none none' }
     })
+    .from(id + ' .step-number', {
+      y: 15, opacity: 0, duration: 0.35, ease: 'power3.out'
+    })
     .from(id + ' .step-label', {
       y: 30, opacity: 0, duration: 0.5, ease: 'power3.out'
-    })
-    .from(id + ' .step-img', {
+    }, '-=0.15')
+    .from(id + ' .step-img-wrap', {
       y: 70, opacity: 0, scale: 0.94, duration: 0.9, ease: 'expo.out',
-      onComplete: () => startFloat(id + ' .step-img', floatDelay)
+      onComplete: () => startFloat(id + ' .step-img-wrap', floatDelay)
     }, '-=0.25');
   });
 
