@@ -2211,8 +2211,13 @@
   // ─────────────────────────────────────────────
   // 1. HERO ENTRANCE (on load)
   // ─────────────────────────────────────────────
-  const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-  heroTl.kill();
+  const heroTl = gsap.timeline({ defaults: { ease: 'power2.out' } });
+  heroTl
+    .from('.hero-headline', { opacity: 0, duration: 0.35 })
+    .from('.hero-sub',      { opacity: 0, duration: 0.3 }, '-=0.2')
+    .from('.video-wrap',    { opacity: 0, duration: 0.3 }, '-=0.15')
+    .from('#hero .cta-btn', { opacity: 0, duration: 0.3, clearProps: 'all' }, '-=0.15')
+    .from('.hero-cta-block',{ opacity: 0, duration: 0.3, clearProps: 'all' }, '-=0.2');
 
   if (prefersReducedMotion) {
     heroTl.progress(1).kill();
