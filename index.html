@@ -1160,11 +1160,16 @@
     content: '';
     position: absolute;
     bottom: -6px;
-    left: 0;
-    width: 100%;
+    left: 50%;
+    width: 0%;
     height: 3px;
     background: var(--red);
     border-radius: 2px;
+    transform: translateX(-50%);
+    transition: width 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  .how-header-text.line-in::after {
+    width: 100%;
   }
   .step-block {
     position: sticky;
@@ -2236,6 +2241,13 @@
   // ─────────────────────────────────────────────
   // 2. STEP ENTRANCES — premium float-in
   // ─────────────────────────────────────────────
+
+  // "HOW DOES IT WORK?" underline animation
+  ScrollTrigger.create({
+    trigger: '#step-1',
+    start: 'top 90%',
+    onEnter: () => document.querySelector('.how-header-text').classList.add('line-in')
+  });
 
   // Steps: gentle float only, no entrance animation
   function startFloat(el, delay) {
