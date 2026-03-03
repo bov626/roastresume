@@ -2013,7 +2013,7 @@
       const dur  = 8 + Math.random() * 14;
       const delay = Math.random() * -20;
       const size = 13 + Math.random() * 14;
-      el.style.cssText = `left:${left}%;top:-40px;--rot:${rot};animation-duration:${dur}s;animation-delay:${delay}s;font-size:${size}px;`;
+      el.style.cssText = `left:${left}%;--rot:${rot};animation-duration:${dur}s;animation-delay:${delay}s;font-size:${size}px;`;
       layer.appendChild(el);
       // Remove after a couple cycles to avoid DOM bloat
       setTimeout(() => el.remove(), (dur + 20) * 1000);
