@@ -1495,8 +1495,12 @@
 
   <p class="cta-note">No credit card. No catch.</p>
 
-  <a href="#how-it-works" class="scroll-indicator">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+  <a href="#how-it-works" class="scroll-indicator" style="opacity:1;">
+    <svg width="20" height="30" viewBox="0 0 20 30" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="10" y1="2" x2="10" y2="22"/>
+      <polyline points="4,16 10,22 16,16"/>
+      <polyline points="4,22 10,28 16,22"/>
+    </svg>
   </a>
 
 </section>
@@ -2193,7 +2197,7 @@
   // ─────────────────────────────────────────────
   // 1. HERO ENTRANCE (on load)
   // ─────────────────────────────────────────────
-  gsap.from('#hero > *:not(.scribble-layer)', {
+  gsap.from('#hero > *:not(.scribble-layer):not(.scroll-indicator)', {
     opacity: 0, duration: 0.5, ease: 'power2.out', delay: 0.3
   });
 
