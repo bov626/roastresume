@@ -161,23 +161,12 @@
       margin: 28px 0;
       box-shadow: 0 0 80px rgba(180,0,0,0.10);
     }
-    .video-inner {
-      position: absolute; inset: 0;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center; gap: 14px;
+    .hero-video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 18px;
     }
-    .play-btn {
-      width: 68px; height: 68px;
-      background: var(--red);
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      cursor: pointer;
-      box-shadow: 0 0 40px rgba(217,30,30,0.45);
-      transition: transform 0.2s;
-    }
-    .play-btn:hover { transform: scale(1.06); }
-    .play-btn svg { margin-left: 4px; }
-    .video-caption { font-size: 12px; color: var(--muted); letter-spacing: 0.04em; }
 
     /* CTA */
     .cta-btn {
@@ -1492,12 +1481,9 @@
   <p class="hero-sub">And frankly, you wouldn't be here if it was working.</p>
 
   <div class="video-wrap">
-    <div class="video-inner">
-      <div class="play-btn">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><polygon points="5,3 19,12 5,21"/></svg>
-      </div>
-      <span class="video-caption">Wilson on why your resume isn't working</span>
-    </div>
+    <video class="hero-video" controls playsinline preload="metadata" poster="">
+      <source src="/hero-video.mp4" type="video/mp4">
+    </video>
   </div>
 
   <div class="hero-cta-block">

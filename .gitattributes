@@ -1,1 +1,2 @@
 attached_assets/Resume_Roast_Cut_Down-HD_1080p_1773014697834.mov filter=lfs diff=lfs merge=lfs -text
+hero-video.mp4 filter=lfs diff=lfs merge=lfs -text
