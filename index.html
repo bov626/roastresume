@@ -1802,7 +1802,7 @@
   /* ── State ── */
   let foStep = 0;
   let foName = '';
-  const QUEUE_COUNT = 150; // Update this to match Beehiiv list size
+  let QUEUE_COUNT = 11;
 
   /* ── Form open/close ── */
   function openForm() {
@@ -1859,6 +1859,7 @@
 
     if (foStep === 2) {
       document.getElementById('fo-queue-num').textContent = '0';
+      fetch('/api/queue-count').then(r => r.json()).then(d => { QUEUE_COUNT = d.count; }).catch(() => {});
       goToStep(3);
       setTimeout(() => {
         document.getElementById('fo-3').classList.add('q-live');

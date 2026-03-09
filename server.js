@@ -98,6 +98,11 @@ app.post('/api/submit', resumeUpload.single('resume'), (req, res) => {
   res.json({ ok: true });
 });
 
+app.get('/api/queue-count', (req, res) => {
+  const row = db.prepare('SELECT COUNT(*) AS cnt FROM submissions').get();
+  res.json({ count: row.cnt + 11 });
+});
+
 /* ────────────────────────────────────────────
    AUTH helpers
 ──────────────────────────────────────────── */
