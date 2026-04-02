@@ -54,3 +54,63 @@ id = "FAOxDrrnCdFn6S8yQNk3g"
 uri = "file://frame_09.jpg"
 type = "image"
 title = "Frame 9 — 0:44"
+
+[[outputs]]
+id = "xOPn2UfrnY0VjE4FZFaLo"
+uri = "file://frame_b01.jpg"
+type = "image"
+title = "Frame — 0:02"
+
+[[outputs]]
+id = "bOGm1g0AGAsMmEZDtJ5Lf"
+uri = "file://frame_b03.jpg"
+type = "image"
+title = "Frame — 0:07"
+
+[[outputs]]
+id = "YpixXzj-XmghupXxDs8R0"
+uri = "file://frame_b06.jpg"
+type = "image"
+title = "Frame — 0:12"
+
+[[outputs]]
+id = "K_uQji2rvFFMDm6RMom1q"
+uri = "file://frame_b08.jpg"
+type = "image"
+title = "Frame — 0:17"
+
+[[outputs]]
+id = "WkmAJrsIYJ1Ocuk9iKWmn"
+uri = "file://frame_b11.jpg"
+type = "image"
+title = "Frame — 0:22"
+
+[[outputs]]
+id = "QlXgi7M8unZYFrb5dhAd7"
+uri = "file://frame_b13.jpg"
+type = "image"
+title = "Frame — 0:27"
+
+[[outputs]]
+id = "q8Nr_agqDyAPXX7lX-zNO"
+uri = "file://frame_b16.jpg"
+type = "image"
+title = "Frame — 0:32"
+
+[[outputs]]
+id = "tnXHv9jWrPG7y-VH2okEV"
+uri = "file://frame_b18.jpg"
+type = "image"
+title = "Frame — 0:37"
+
+[[outputs]]
+id = "OblO8_oeyVltZv7cQ8aC9"
+uri = "file://frame_b21.jpg"
+type = "image"
+title = "Frame — 0:42"
+
+[[outputs]]
+id = "beuNdayjjQr-1abU9cu6G"
+uri = "file://frame_b22.jpg"
+type = "image"
+title = "Frame — 0:44"
