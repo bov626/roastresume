@@ -1,0 +1,56 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "cVL5fn6aK5F7XusmogdXV"
+uri = "file://frame_01.jpg"
+type = "image"
+title = "Frame 1 — 0:05"
+
+[[outputs]]
+id = "CurUxu1fhaROlohSsXkKI"
+uri = "file://frame_02.jpg"
+type = "image"
+title = "Frame 2 — 0:10"
+
+[[outputs]]
+id = "BoSn84kjJvjg3di9ztkw5"
+uri = "file://frame_03.jpg"
+type = "image"
+title = "Frame 3 — 0:15"
+
+[[outputs]]
+id = "EBfGCUDzW6kz5DyD7SJTu"
+uri = "file://frame_04.jpg"
+type = "image"
+title = "Frame 4 — 0:20"
+
+[[outputs]]
+id = "u4X6MmlqDtgcXEVV8t9Qq"
+uri = "file://frame_05.jpg"
+type = "image"
+title = "Frame 5 — 0:25"
+
+[[outputs]]
+id = "fqbsFdjnHPq6ZF-6bAmrD"
+uri = "file://frame_06.jpg"
+type = "image"
+title = "Frame 6 — 0:30"
+
+[[outputs]]
+id = "mswpW3wBVj9JzGTyUDdtY"
+uri = "file://frame_07.jpg"
+type = "image"
+title = "Frame 7 — 0:35"
+
+[[outputs]]
+id = "Y3I_2cgx0AV3_6-xpM1y9"
+uri = "file://frame_08.jpg"
+type = "image"
+title = "Frame 8 — 0:40"
+
+[[outputs]]
+id = "FAOxDrrnCdFn6S8yQNk3g"
+uri = "file://frame_09.jpg"
+type = "image"
+title = "Frame 9 — 0:44"
