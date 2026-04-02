@@ -209,7 +209,7 @@ app.post("/api/submit", resumeUpload.single("resume"), async (req, res) => {
           first_name: firstName,
           last_name: lastName,
           reactivate_existing: true,
-          send_welcome_email: true,
+          send_welcome_email: false,
         }),
       },
     );
