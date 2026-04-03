@@ -3060,18 +3060,18 @@
 
         if (foStep === 2) {
           document.getElementById("fo-queue-num").textContent = "0";
+          goToStep(3);
           fetch("/api/queue-count")
             .then((r) => r.json())
-            .then((d) => {
-              QUEUE_COUNT = d.count;
-            })
-            .catch(() => {});
-          goToStep(3);
-          setTimeout(() => {
-            document.getElementById("fo-3").classList.add("q-live");
-            launchFireworks();
-            countUp(document.getElementById("fo-queue-num"), QUEUE_COUNT, 1500);
-          }, 80);
+            .then((d) => { QUEUE_COUNT = d.count; })
+            .catch(() => {})
+            .finally(() => {
+              setTimeout(() => {
+                document.getElementById("fo-3").classList.add("q-live");
+                launchFireworks();
+                countUp(document.getElementById("fo-queue-num"), QUEUE_COUNT, 1500);
+              }, 80);
+            });
           return;
         }
 
