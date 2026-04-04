@@ -93,27 +93,11 @@
   .cta-btn:hover{transform:translateY(-1px);box-shadow:0 6px 32px rgba(217,30,30,0.45)}
   .cta-note{font-size:12px;color:#333;margin-top:12px}
 
-  /* ── WHAT'S IN THE REPORT — horizontal scroll lock ── */
+  /* ── WHAT'S IN THE REPORT — vertical sticky stack ── */
   #report-section{
-    position:relative;
-  }
-
-  /* Sticky container that locks scroll */
-  .report-sticky{
-    position:sticky;
-    top:0;
-    height:100vh;
-    overflow:hidden;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    background:var(--black);
     border-top:1px solid #111;
   }
 
-  .report-header{
-    padding:0 48px;margin-bottom:32px;flex-shrink:0;
-  }
   .section-eyebrow{
     font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
     color:var(--red);margin-bottom:10px;
@@ -122,24 +106,45 @@
     font-size:clamp(24px,3.5vw,40px);font-weight:900;letter-spacing:-.03em;line-height:1.1;
   }
 
-  /* Horizontal track */
-  .h-track-wrap{
-    overflow:hidden;
-    padding:0 48px;
-    flex-shrink:0;
+  .report-card{
+    position:sticky;
+    top:0;
+    height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:0 24px;
+    background:var(--black);
+    box-shadow:0 -32px 80px rgba(0,0,0,0.95);
   }
-  .h-track{
-    display:flex;gap:20px;
-    will-change:transform;
-    transition:transform .05s linear;
+  .report-card::before{
+    content:'';
+    position:absolute;top:0;left:0;right:0;height:1px;
+    background:linear-gradient(90deg,transparent,rgba(217,30,30,0.15) 30%,rgba(217,30,30,0.25) 50%,rgba(217,30,30,0.15) 70%,transparent);
+  }
+  .report-card:nth-child(1){z-index:1}
+  .report-card:nth-child(2){z-index:2}
+  .report-card:nth-child(3){z-index:3}
+  .report-card:nth-child(4){z-index:4}
+  .report-card:nth-child(5){z-index:5}
+
+  .report-card-inner{
+    width:100%;max-width:480px;
   }
 
-  .carousel-card{
-    flex-shrink:0;width:300px;
-    background:#0e0e0e;border:1px solid var(--border);
-    border-radius:16px;padding:26px;
-    transform-origin:center center;
-    will-change:transform,opacity;
+  .card-step{
+    font-size:10px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;
+    color:#333;margin-bottom:10px;
+  }
+  .card-dash{
+    width:28px;height:2px;background:var(--red);
+    border-radius:2px;margin:0 0 24px;
+  }
+  .card-heading{
+    font-size:clamp(26px,4vw,42px);
+    font-weight:900;letter-spacing:-.03em;line-height:1.1;
+    margin-bottom:28px;
   }
   .card-label{
     font-size:10px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;
@@ -210,23 +215,6 @@
   }
   .yt-info p{font-size:11px;font-weight:600;color:#888;margin-bottom:1px}
   .yt-info span{font-size:10px;color:#333}
-
-  /* Scroll indicator dots */
-  .scroll-dots{
-    display:flex;gap:6px;justify-content:center;
-    padding:16px 0 0;flex-shrink:0;
-  }
-  .scroll-dot{
-    width:6px;height:6px;border-radius:50%;
-    background:#1a1a1a;transition:background .2s;
-  }
-  .scroll-dot.active{background:var(--red)}
-
-  /* Spacer that drives the horizontal scroll via scroll position */
-  .report-spacer{
-    /* Height = number of cards * some scroll distance */
-    height:2000px;
-  }
 
   /* ── HOW IT WORKS ── */
   #how-it-works{
@@ -324,129 +312,123 @@
   <p class="cta-note">Report delivered in 20 minutes.</p>
 </section>
 
-<!-- WHAT'S IN THE REPORT — horizontal scroll lock -->
+<!-- WHAT'S IN THE REPORT — vertical sticky stack -->
 <div id="report-section">
-  <div class="report-sticky" id="report-sticky">
-    <div class="report-header">
-      <div class="section-eyebrow">Inside the report</div>
-      <h2 class="section-title">What's in the Report?</h2>
-    </div>
 
-    <div class="h-track-wrap">
-      <div class="h-track" id="h-track">
-
-        <!-- Card 1: Job Data -->
-        <div class="carousel-card">
-          <div class="card-label">Job Market Data</div>
-          <div class="card-title">Your Job Title</div>
-          <div class="job-pills">
-            <div class="job-pill">
-              <span class="job-pill-num">106,212</span>
-              <span class="job-pill-label">Openings</span>
-            </div>
-            <div class="job-pill">
-              <span class="job-pill-num">48,227</span>
-              <span class="job-pill-label">Remote Jobs</span>
-            </div>
-            <div class="job-pill">
-              <span class="job-pill-pct">41%</span>
-              <span class="job-pill-label">Remote Rate</span>
-            </div>
-          </div>
-          <p style="font-size:12px;color:#333;line-height:1.6">Live data pulled at report generation time.</p>
+  <!-- Card 1: Job Data -->
+  <div class="report-card">
+    <div class="report-card-inner">
+      <div class="card-step">1 of 5 · Inside the report</div>
+      <div class="card-dash"></div>
+      <div class="card-heading">Your job market,<br>live.</div>
+      <div class="card-label">Job Market Data</div>
+      <div class="job-pills">
+        <div class="job-pill">
+          <span class="job-pill-num">106,212</span>
+          <span class="job-pill-label">Openings</span>
         </div>
-
-        <!-- Card 2: Average Salary -->
-        <div class="carousel-card">
-          <div class="card-label">Income Potential</div>
-          <div class="card-title">Average Salary</div>
-          <div class="salary-display">
-            <div class="salary-num">$167,227</div>
-            <div class="salary-sub">Combined annual income</div>
-          </div>
-          <div class="salary-breakdown">
-            <div class="salary-col">
-              <div class="salary-col-label">J1</div>
-              <div class="salary-col-num">$95,000</div>
-            </div>
-            <div class="salary-col">
-              <div class="salary-col-label">J2</div>
-              <div class="salary-col-num" style="color:var(--red)">+$72,227</div>
-            </div>
-          </div>
+        <div class="job-pill">
+          <span class="job-pill-num">48,227</span>
+          <span class="job-pill-label">Remote Jobs</span>
         </div>
-
-        <!-- Card 3: Readiness Score -->
-        <div class="carousel-card">
-          <div class="card-label">Readiness Score</div>
-          <div class="card-title">Are You Ready?</div>
-          <div class="speedometer-wrap">
-            <svg viewBox="0 0 200 110" width="190" height="105">
-              <path d="M20,100 A80,80 0 0,1 180,100" fill="none" stroke="#1a1a1a" stroke-width="16" stroke-linecap="round"/>
-              <path d="M20,100 A80,80 0 0,1 180,100" fill="none" stroke="#d91e1e" stroke-width="16" stroke-linecap="round"
-                stroke-dasharray="251" stroke-dashoffset="70" opacity="0.9"/>
-              <line x1="100" y1="100" x2="58" y2="38" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
-              <circle cx="100" cy="100" r="6" fill="#fff"/>
-              <text x="100" y="88" text-anchor="middle" fill="#fff" font-size="22" font-weight="900" font-family="Inter,sans-serif">72</text>
-              <text x="100" y="108" text-anchor="middle" fill="#555" font-size="10" font-family="Inter,sans-serif">READINESS SCORE</text>
-            </svg>
-          </div>
-          <p style="font-size:12px;color:#555;text-align:center;line-height:1.6">Based on your workload, schedule, and role profile.</p>
+        <div class="job-pill">
+          <span class="job-pill-pct">41%</span>
+          <span class="job-pill-label">Remote Rate</span>
         </div>
-
-        <!-- Card 4: Risk Factors -->
-        <div class="carousel-card">
-          <div class="card-label">Risk Analysis</div>
-          <div class="card-title">Your Risk Factors</div>
-          <div class="risk-circles">
-            <div class="risk-circle risk-c1">Non<br>Compete</div>
-            <div class="risk-circle risk-c2">IP<br>Clause</div>
-            <div class="risk-circle risk-c3">Moon<br>light</div>
-            <div class="risk-circle risk-c4">Time<br>zone</div>
-            <div class="risk-circle risk-c5">IT</div>
-          </div>
-          <div class="risk-labels">
-            <div class="risk-label"><div class="risk-dot"></div>Non-compete enforceability by state</div>
-            <div class="risk-label"><div class="risk-dot" style="opacity:.6"></div>IP assignment clauses</div>
-            <div class="risk-label"><div class="risk-dot" style="opacity:.3"></div>Monitoring software prevalence</div>
-          </div>
-        </div>
-
-        <!-- Card 5: Bonus Videos -->
-        <div class="carousel-card">
-          <div class="card-label">Exclusive Content</div>
-          <div class="card-title">Bonus Videos</div>
-          <div class="bonus-videos">
-            <div class="bonus-video">
-              <div class="yt-thumb"><span class="yt-icon">▶</span><span class="exclusive-tag">Exclusive</span></div>
-              <div class="yt-info"><p>How to pass background checks</p><span>12 min</span></div>
-            </div>
-            <div class="bonus-video">
-              <div class="yt-thumb"><span class="yt-icon">▶</span><span class="exclusive-tag">Exclusive</span></div>
-              <div class="yt-info"><p>Managing two calendars without losing your mind</p><span>8 min</span></div>
-            </div>
-            <div class="bonus-video">
-              <div class="yt-thumb"><span class="yt-icon">▶</span><span class="exclusive-tag">Exclusive</span></div>
-              <div class="yt-info"><p>The OE exit strategy</p><span>15 min</span></div>
-            </div>
-          </div>
-        </div>
-
       </div>
-    </div>
-
-    <!-- Scroll dots -->
-    <div class="scroll-dots" id="scroll-dots">
-      <div class="scroll-dot active"></div>
-      <div class="scroll-dot"></div>
-      <div class="scroll-dot"></div>
-      <div class="scroll-dot"></div>
-      <div class="scroll-dot"></div>
+      <p style="font-size:12px;color:#333;line-height:1.6">Live data pulled at report generation time for your exact role.</p>
     </div>
   </div>
 
-  <!-- Spacer drives scroll -->
-  <div class="report-spacer"></div>
+  <!-- Card 2: Salary -->
+  <div class="report-card">
+    <div class="report-card-inner">
+      <div class="card-step">2 of 5 · Inside the report</div>
+      <div class="card-dash"></div>
+      <div class="card-heading">What two jobs<br>actually pays.</div>
+      <div class="card-label">Income Potential</div>
+      <div class="salary-display">
+        <div class="salary-num">$167,227</div>
+        <div class="salary-sub">Combined annual income</div>
+      </div>
+      <div class="salary-breakdown">
+        <div class="salary-col">
+          <div class="salary-col-label">J1</div>
+          <div class="salary-col-num">$95,000</div>
+        </div>
+        <div class="salary-col">
+          <div class="salary-col-label">J2</div>
+          <div class="salary-col-num" style="color:var(--red)">+$72,227</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card 3: Readiness Score -->
+  <div class="report-card">
+    <div class="report-card-inner">
+      <div class="card-step">3 of 5 · Inside the report</div>
+      <div class="card-dash"></div>
+      <div class="card-heading">Your readiness<br>score.</div>
+      <div class="speedometer-wrap">
+        <svg viewBox="0 0 200 110" width="200" height="110">
+          <path d="M20,100 A80,80 0 0,1 180,100" fill="none" stroke="#1a1a1a" stroke-width="16" stroke-linecap="round"/>
+          <path d="M20,100 A80,80 0 0,1 180,100" fill="none" stroke="#d91e1e" stroke-width="16" stroke-linecap="round"
+            stroke-dasharray="251" stroke-dashoffset="70" opacity="0.9"/>
+          <line x1="100" y1="100" x2="58" y2="38" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="100" cy="100" r="6" fill="#fff"/>
+          <text x="100" y="88" text-anchor="middle" fill="#fff" font-size="22" font-weight="900" font-family="Inter,sans-serif">72</text>
+          <text x="100" y="108" text-anchor="middle" fill="#555" font-size="10" font-family="Inter,sans-serif">READINESS SCORE</text>
+        </svg>
+      </div>
+      <p style="font-size:13px;color:#555;text-align:center;line-height:1.6;max-width:320px;margin:0 auto">Based on your workload, schedule, and role profile.</p>
+    </div>
+  </div>
+
+  <!-- Card 4: Risk Factors -->
+  <div class="report-card">
+    <div class="report-card-inner">
+      <div class="card-step">4 of 5 · Inside the report</div>
+      <div class="card-dash"></div>
+      <div class="card-heading">Your specific<br>risk factors.</div>
+      <div class="risk-circles">
+        <div class="risk-circle risk-c1">Non<br>Compete</div>
+        <div class="risk-circle risk-c2">IP<br>Clause</div>
+        <div class="risk-circle risk-c3">Moon<br>light</div>
+        <div class="risk-circle risk-c4">Time<br>zone</div>
+        <div class="risk-circle risk-c5">IT</div>
+      </div>
+      <div class="risk-labels">
+        <div class="risk-label"><div class="risk-dot"></div>Non-compete enforceability by state</div>
+        <div class="risk-label"><div class="risk-dot" style="opacity:.6"></div>IP assignment clauses</div>
+        <div class="risk-label"><div class="risk-dot" style="opacity:.3"></div>Monitoring software prevalence</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card 5: Bonus Videos -->
+  <div class="report-card">
+    <div class="report-card-inner">
+      <div class="card-step">5 of 5 · Inside the report</div>
+      <div class="card-dash"></div>
+      <div class="card-heading">Three exclusive<br>videos.</div>
+      <div class="bonus-videos">
+        <div class="bonus-video">
+          <div class="yt-thumb"><span class="yt-icon">▶</span><span class="exclusive-tag">Exclusive</span></div>
+          <div class="yt-info"><p>How to pass background checks</p><span>12 min</span></div>
+        </div>
+        <div class="bonus-video">
+          <div class="yt-thumb"><span class="yt-icon">▶</span><span class="exclusive-tag">Exclusive</span></div>
+          <div class="yt-info"><p>Managing two calendars without losing your mind</p><span>8 min</span></div>
+        </div>
+        <div class="bonus-video">
+          <div class="yt-thumb"><span class="yt-icon">▶</span><span class="exclusive-tag">Exclusive</span></div>
+          <div class="yt-info"><p>The OE exit strategy</p><span>15 min</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <!-- HOW IT WORKS -->
@@ -525,54 +507,6 @@
 
 </section>
 
-<script>
-  const section   = document.getElementById('report-section');
-  const track     = document.getElementById('h-track');
-  const dots      = document.querySelectorAll('.scroll-dot');
-  const cards     = document.querySelectorAll('.carousel-card');
-  const NUM_CARDS = cards.length;
-  const GAP       = 20;
-
-  function updateHorizontalScroll() {
-    const sectionTop   = section.getBoundingClientRect().top + window.scrollY;
-    const spacerHeight = section.querySelector('.report-spacer').offsetHeight;
-    const scrollInSection = window.scrollY - sectionTop;
-
-    if (scrollInSection < 0 || scrollInSection > spacerHeight) return;
-
-    const progress    = Math.max(0, Math.min(1, scrollInSection / spacerHeight));
-    const activeFloat = progress * (NUM_CARDS - 1);
-    const activeCard  = Math.round(activeFloat);
-
-    // Move track so active card is centered
-    const cardWidth   = cards[0].offsetWidth;
-    const centerOffset = (window.innerWidth / 2) - (cardWidth / 2) - 48;
-    const maxTranslate = (NUM_CARDS - 1) * (cardWidth + GAP);
-    const translateX   = Math.min(progress * (maxTranslate + cardWidth + GAP), maxTranslate);
-
-    track.style.transform = `translateX(calc(-${translateX}px + ${centerOffset > 0 ? centerOffset + 'px' : '0px'}))`;
-    track.style.transition = 'none';
-
-    // Highlight active card, dim others
-    cards.forEach((card, i) => {
-      const dist = Math.abs(activeFloat - i);
-      const scale   = dist < 0.5 ? 1 + (0.04 * (1 - dist * 2)) : 1;
-      const opacity = dist < 0.5 ? 1 : Math.max(0.35, 1 - dist * 0.5);
-      const border  = dist < 0.5 ? 'rgba(217,30,30,' + (0.5 * (1 - dist * 2)) + ')' : 'rgba(26,26,26,1)';
-      card.style.transform  = `scale(${scale})`;
-      card.style.opacity    = opacity;
-      card.style.borderColor = border;
-      card.style.transition = 'transform .15s ease, opacity .15s ease, border-color .15s ease';
-    });
-
-    // Update dots
-    dots.forEach((d, i) => d.classList.toggle('active', i === activeCard));
-  }
-
-  window.addEventListener('scroll', updateHorizontalScroll, { passive: true });
-  window.addEventListener('resize', updateHorizontalScroll);
-  updateHorizontalScroll();
-</script>
 
 </body>
 </html>
