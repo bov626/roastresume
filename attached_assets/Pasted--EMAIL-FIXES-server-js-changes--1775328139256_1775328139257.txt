@@ -1,0 +1,40 @@
+═══════════════════════════════════════════════════
+EMAIL FIXES — server.js changes
+═══════════════════════════════════════════════════
+
+CHANGE 1: Fix font in sendResourcesEmail
+─────────────────────────────────────────
+Find this in sendResourcesEmail:
+  <body style="margin:0;padding:0;background:#ffffff;font-family:Georgia,serif;">
+
+Replace with:
+  <body style="margin:0;padding:0;background:#ffffff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+
+─────────────────────────────────────────
+CHANGE 2: Fix preheader padding in sendResourcesEmail
+─────────────────────────────────────────
+Find the preheader div (the one with display:none) in sendResourcesEmail.
+Replace the entire div with this:
+
+  <div style="display:none;max-height:0;overflow:hidden;mso-hide:all;">Your resume template is at the bottom of this email.&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;</div>
+
+─────────────────────────────────────────
+CHANGE 3: Fix font in sendReportReadyEmail
+─────────────────────────────────────────
+Find this in sendReportReadyEmail:
+  <body style="margin:0;padding:0;background:#ffffff;font-family:Georgia,serif;">
+
+Replace with:
+  <body style="margin:0;padding:0;background:#ffffff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+
+─────────────────────────────────────────
+CHANGE 4: Fix font in sendRoastEmail
+─────────────────────────────────────────
+In sendRoastEmail, find:
+  font-family:Inter,Arial,sans-serif
+
+That one is already correct — no change needed.
+
+═══════════════════════════════════════════════════
+Do not change anything else in server.js.
+═══════════════════════════════════════════════════
