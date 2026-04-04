@@ -93,9 +93,10 @@
   .cta-btn:hover{transform:translateY(-1px);box-shadow:0 6px 32px rgba(217,30,30,0.45)}
   .cta-note{font-size:12px;color:#333;margin-top:12px}
 
-  /* ── WHAT'S IN THE REPORT — vertical sticky stack ── */
+  /* ── WHAT'S IN THE REPORT — horizontal card grid ── */
   #report-section{
     border-top:1px solid #111;
+    padding:80px 32px 100px;
   }
 
   .section-eyebrow{
@@ -106,45 +107,33 @@
     font-size:clamp(24px,3.5vw,40px);font-weight:900;letter-spacing:-.03em;line-height:1.1;
   }
 
+  .report-section-header{
+    text-align:center;
+    margin-bottom:48px;
+  }
+
+  .report-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:16px;
+    max-width:1100px;
+    margin:0 auto;
+  }
+  @media(max-width:900px){
+    .report-grid{grid-template-columns:repeat(2,1fr)}
+  }
+  @media(max-width:560px){
+    .report-grid{grid-template-columns:1fr}
+  }
+
   .report-card{
-    position:sticky;
-    top:0;
-    height:100vh;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    padding:0 24px;
-    background:var(--black);
-    box-shadow:0 -32px 80px rgba(0,0,0,0.95);
+    background:#0e0e0e;
+    border:1px solid #1a1a1a;
+    border-radius:16px;
+    padding:28px;
   }
-  .report-card::before{
-    content:'';
-    position:absolute;top:0;left:0;right:0;height:1px;
-    background:linear-gradient(90deg,transparent,rgba(217,30,30,0.15) 30%,rgba(217,30,30,0.25) 50%,rgba(217,30,30,0.15) 70%,transparent);
-  }
-  .report-card:nth-child(1){z-index:1}
-  .report-card:nth-child(2){z-index:2}
-  .report-card:nth-child(3){z-index:3}
-  .report-card:nth-child(4){z-index:4}
-  .report-card:nth-child(5){z-index:5}
-
-  .report-card-inner{
-    width:100%;max-width:480px;
-  }
-
-  .card-step{
-    font-size:10px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;
-    color:#333;margin-bottom:10px;
-  }
-  .card-dash{
-    width:28px;height:2px;background:var(--red);
-    border-radius:2px;margin:0 0 24px;
-  }
-  .card-heading{
-    font-size:clamp(26px,4vw,42px);
-    font-weight:900;letter-spacing:-.03em;line-height:1.1;
-    margin-bottom:28px;
+  .report-card:nth-child(3){
+    grid-row:span 1;
   }
   .card-label{
     font-size:10px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;
@@ -312,16 +301,20 @@
   <p class="cta-note">Report delivered in 20 minutes.</p>
 </section>
 
-<!-- WHAT'S IN THE REPORT — vertical sticky stack -->
+<!-- WHAT'S IN THE REPORT — horizontal card grid -->
 <div id="report-section">
 
-  <!-- Card 1: Job Data -->
-  <div class="report-card">
-    <div class="report-card-inner">
-      <div class="card-step">1 of 5 · Inside the report</div>
-      <div class="card-dash"></div>
-      <div class="card-heading">Your job market,<br>live.</div>
+  <div class="report-section-header">
+    <div class="section-eyebrow">Inside the report</div>
+    <h2 class="section-title">What's in the Report?</h2>
+  </div>
+
+  <div class="report-grid">
+
+    <!-- Card 1: Job Data -->
+    <div class="report-card">
       <div class="card-label">Job Market Data</div>
+      <div class="card-title">Your Job Title</div>
       <div class="job-pills">
         <div class="job-pill">
           <span class="job-pill-num">106,212</span>
@@ -338,15 +331,11 @@
       </div>
       <p style="font-size:12px;color:#333;line-height:1.6">Live data pulled at report generation time for your exact role.</p>
     </div>
-  </div>
 
-  <!-- Card 2: Salary -->
-  <div class="report-card">
-    <div class="report-card-inner">
-      <div class="card-step">2 of 5 · Inside the report</div>
-      <div class="card-dash"></div>
-      <div class="card-heading">What two jobs<br>actually pays.</div>
+    <!-- Card 2: Salary -->
+    <div class="report-card">
       <div class="card-label">Income Potential</div>
+      <div class="card-title">Average Salary</div>
       <div class="salary-display">
         <div class="salary-num">$167,227</div>
         <div class="salary-sub">Combined annual income</div>
@@ -362,16 +351,13 @@
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- Card 3: Readiness Score -->
-  <div class="report-card">
-    <div class="report-card-inner">
-      <div class="card-step">3 of 5 · Inside the report</div>
-      <div class="card-dash"></div>
-      <div class="card-heading">Your readiness<br>score.</div>
+    <!-- Card 3: Readiness Score -->
+    <div class="report-card">
+      <div class="card-label">Readiness Score</div>
+      <div class="card-title">Are You Ready?</div>
       <div class="speedometer-wrap">
-        <svg viewBox="0 0 200 110" width="200" height="110">
+        <svg viewBox="0 0 200 110" width="190" height="105">
           <path d="M20,100 A80,80 0 0,1 180,100" fill="none" stroke="#1a1a1a" stroke-width="16" stroke-linecap="round"/>
           <path d="M20,100 A80,80 0 0,1 180,100" fill="none" stroke="#d91e1e" stroke-width="16" stroke-linecap="round"
             stroke-dasharray="251" stroke-dashoffset="70" opacity="0.9"/>
@@ -381,16 +367,13 @@
           <text x="100" y="108" text-anchor="middle" fill="#555" font-size="10" font-family="Inter,sans-serif">READINESS SCORE</text>
         </svg>
       </div>
-      <p style="font-size:13px;color:#555;text-align:center;line-height:1.6;max-width:320px;margin:0 auto">Based on your workload, schedule, and role profile.</p>
+      <p style="font-size:12px;color:#555;text-align:center;line-height:1.6">Based on your workload, schedule, and role profile.</p>
     </div>
-  </div>
 
-  <!-- Card 4: Risk Factors -->
-  <div class="report-card">
-    <div class="report-card-inner">
-      <div class="card-step">4 of 5 · Inside the report</div>
-      <div class="card-dash"></div>
-      <div class="card-heading">Your specific<br>risk factors.</div>
+    <!-- Card 4: Risk Factors -->
+    <div class="report-card">
+      <div class="card-label">Risk Analysis</div>
+      <div class="card-title">Your Risk Factors</div>
       <div class="risk-circles">
         <div class="risk-circle risk-c1">Non<br>Compete</div>
         <div class="risk-circle risk-c2">IP<br>Clause</div>
@@ -404,14 +387,11 @@
         <div class="risk-label"><div class="risk-dot" style="opacity:.3"></div>Monitoring software prevalence</div>
       </div>
     </div>
-  </div>
 
-  <!-- Card 5: Bonus Videos -->
-  <div class="report-card">
-    <div class="report-card-inner">
-      <div class="card-step">5 of 5 · Inside the report</div>
-      <div class="card-dash"></div>
-      <div class="card-heading">Three exclusive<br>videos.</div>
+    <!-- Card 5: Bonus Videos -->
+    <div class="report-card">
+      <div class="card-label">Exclusive Content</div>
+      <div class="card-title">Bonus Videos</div>
       <div class="bonus-videos">
         <div class="bonus-video">
           <div class="yt-thumb"><span class="yt-icon">▶</span><span class="exclusive-tag">Exclusive</span></div>
@@ -427,8 +407,8 @@
         </div>
       </div>
     </div>
-  </div>
 
+  </div>
 </div>
 
 <!-- HOW IT WORKS -->
