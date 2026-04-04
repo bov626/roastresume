@@ -146,6 +146,29 @@
     border-top:1px solid #111;
   }
   footer p{font-size:11px;color:#1e1e1e}
+
+  /* ── Scroll indicator ── */
+  .scroll-indicator{
+    margin-top:32px;
+    display:flex;flex-direction:column;align-items:center;gap:4px;
+    opacity:.6;transition:opacity .3s;cursor:pointer;text-decoration:none;
+  }
+  .scroll-indicator:hover{opacity:1}
+  .scroll-mouse{
+    width:22px;height:36px;
+    border:2px solid #fff;border-radius:12px;position:relative;
+  }
+  .scroll-mouse::before{
+    content:'';position:absolute;top:6px;left:50%;
+    transform:translateX(-50%);
+    width:3px;height:6px;background:#fff;border-radius:3px;
+    animation:scrollDot 2s ease-in-out infinite;
+  }
+  @keyframes scrollDot{
+    0%{top:6px;opacity:1}
+    60%{top:20px;opacity:0}
+    100%{top:6px;opacity:0}
+  }
 </style>
 </head>
 <body>
@@ -162,6 +185,9 @@
   >
     Get the Template
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+  </a>
+  <a href="#step-2" class="scroll-indicator">
+    <div class="scroll-mouse"></div>
   </a>
 </div>
 
