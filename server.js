@@ -7,6 +7,7 @@ const fs = require("fs");
 const FormData = require("form-data");
 const axios = require("axios");
 const { createClient } = require("@supabase/supabase-js");
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 const app = express();
 const PORT = 5000;
@@ -516,7 +517,26 @@ app.get("/admin/uploads/:filename", requireAuth, (req, res) => {
 });
 
 app.get("/admin/*path", requireAuth, (req, res) => res.redirect("/admin"));
-app.get("/oto", (req, res) => res.sendFile(path.join(__dirname, "oto.html")));
+app.get("/oto", (req, res) => {
+  const html = fs.readFileSync(path.join(__dirname, "oto.html"), "utf8")
+    .replace("PUBLISHABLE_KEY_PLACEHOLDER", process.env.STRIPE_PUBLISHABLE_KEY || "");
+  res.type("html").send(html);
+});
+
+app.post("/api/create-checkout-session", async (req, res) => {
+  try {
+    const session = await stripe.checkout.sessions.create({
+      ui_mode: "embedded",
+      line_items: [{ price: process.env.STRIPE_PRICE_ID, quantity: 1 }],
+      mode: "payment",
+      return_url: `${req.headers.origin}/questionnaire?session_id={CHECKOUT_SESSION_ID}`,
+    });
+    res.json({ clientSecret: session.client_secret });
+  } catch (err) {
+    console.error("Stripe error:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
 app.get("/questionnaire", (req, res) => res.sendFile(path.join(__dirname, "questionnaire.html")));
 app.get("/waiting", (req, res) => res.sendFile(path.join(__dirname, "waiting.html")));
 app.get("/resources", (req, res) => res.sendFile(path.join(__dirname, "resources.html")));

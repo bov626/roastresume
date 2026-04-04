@@ -1,0 +1,97 @@
+Implement Stripe embedded checkout on the OTO page (oto.html).
+
+When the user clicks either CTA button ("Calculate my risk — $29" or "Create my report — $29"), an accordion opens inline on the page. Stripe loads inside it. After payment, Stripe sends the user to /questionnaire. Nothing leaves the page until payment is complete.
+
+Do the following:
+
+1. In server.js, make sure this is at the top:
+   const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+
+   Then add this route:
+
+   app.post('/api/create-checkout-session', async (req, res) => {
+     try {
+       const session = await stripe.checkout.sessions.create({
+         ui_mode: 'embedded',
+         line_items: [{ price: process.env.STRIPE_PRICE_ID, quantity: 1 }],
+         mode: 'payment',
+         return_url: `${req.headers.origin}/questionnaire?session_id={CHECKOUT_SESSION_ID}`,
+       });
+       res.json({ clientSecret: session.client_secret });
+     } catch (err) {
+       console.error('Stripe error:', err);
+       res.status(500).json({ error: err.message });
+     }
+   });
+
+2. In oto.html, add this to the <head>:
+   <script src="https://js.stripe.com/v3/"></script>
+
+3. In oto.html, add this CSS to the <style> block:
+
+   #checkout-container {
+     max-height: 0;
+     overflow: hidden;
+     transition: max-height .5s cubic-bezier(0.4,0,0.2,1);
+     background: #0e0e0e;
+     border-radius: 12px;
+     margin-top: 16px;
+   }
+   #checkout-container.open { max-height: 900px; }
+   .checkout-wrap { padding: 24px; }
+
+4. In oto.html, find both CTA buttons (they currently have href="STRIPE_LINK_PLACEHOLDER"). Replace them with <button> tags:
+
+   First button (in hero section):
+   <button class="cta-btn" onclick="openCheckout()">
+     Calculate my risk — $29
+     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+   </button>
+   <div id="checkout-container">
+     <div class="checkout-wrap" id="checkout-embed"></div>
+   </div>
+
+   Second button (in how-it-works section):
+   <button class="cta-btn" onclick="openCheckout()">
+     Create my report — $29
+     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+   </button>
+
+   Only one #checkout-container div in the whole page. Put it after the first button only.
+
+5. In oto.html, add this script before </body>. Replace YOUR_PUBLISHABLE_KEY with the value from process.env.STRIPE_PUBLISHABLE_KEY — read it from the environment and inline it server-side when serving the file, or just hardcode the pk_ key directly since it is safe to expose client-side:
+
+   <script>
+     const stripe = Stripe('YOUR_PUBLISHABLE_KEY');
+     let checkoutMounted = false;
+
+     async function openCheckout() {
+       const container = document.getElementById('checkout-container');
+       const embed = document.getElementById('checkout-embed');
+
+       container.classList.add('open');
+       setTimeout(() => container.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
+
+       if (checkoutMounted) return;
+       checkoutMounted = true;
+
+       embed.innerHTML = '<div style="padding:40px;text-align:center;color:#333;font-size:13px">Loading...</div>';
+
+       try {
+         const res = await fetch('/api/create-checkout-session', { method: 'POST' });
+         const data = await res.json();
+         if (data.error) throw new Error(data.error);
+         embed.innerHTML = '';
+         const checkout = await stripe.initEmbeddedCheckout({ clientSecret: data.clientSecret });
+         checkout.mount('#checkout-embed');
+       } catch (err) {
+         embed.innerHTML = '<div style="padding:40px;text-align:center;color:#d91e1e;font-size:13px">Something went wrong. Refresh and try again.</div>';
+         checkoutMounted = false;
+         console.error(err);
+       }
+     }
+   </script>
+
+The Stripe secret key is in process.env.STRIPE_SECRET_KEY. The price ID is in process.env.STRIPE_PRICE_ID. The publishable key is in process.env.STRIPE_PUBLISHABLE_KEY. All three are already set as Replit secrets.
+
+For the publishable key specifically, the cleanest approach is to have the Express server inject it into the HTML when it serves oto.html, replacing a placeholder like PUBLISHABLE_KEY_PLACEHOLDER with the actual value from process.env.STRIPE_PUBLISHABLE_KEY.

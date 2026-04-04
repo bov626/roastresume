@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OE Risk Report — Could You Pull It Off?</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://js.stripe.com/v3/"></script>
 <style>
   :root{--red:#d91e1e;--black:#0a0a0a;--border:#1a1a1a}
   *{box-sizing:border-box;margin:0;padding:0}
@@ -230,6 +231,11 @@
     .report-mobile{display:none}
   }
 
+  /* ── Stripe checkout accordion ── */
+  #checkout-container{max-height:0;overflow:hidden;transition:max-height .5s cubic-bezier(0.4,0,0.2,1);background:#0e0e0e;border-radius:12px;margin-top:16px}
+  #checkout-container.open{max-height:900px}
+  .checkout-wrap{padding:24px}
+
   /* ── Desktop sticky panels ── */
   @media(min-width:1024px){
     #report-desktop{position:relative;max-width:1280px;margin:0 auto}
@@ -378,10 +384,13 @@
 
   <p class="hero-footnote">Custom built for you from live job market data and 10,000 OE case studies.</p>
 
-  <a class="cta-btn" href="STRIPE_LINK_PLACEHOLDER">
+  <button class="cta-btn" onclick="openCheckout()">
     Calculate my risk — $29
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-  </a>
+  </button>
+  <div id="checkout-container">
+    <div class="checkout-wrap" id="checkout-embed"></div>
+  </div>
   <p class="cta-note">Report delivered in 20 minutes.</p>
 </section>
 
@@ -707,10 +716,10 @@
     </div>
   </div>
 
-  <a class="cta-btn" href="STRIPE_LINK_PLACEHOLDER">
+  <button class="cta-btn" onclick="openCheckout()">
     Create my report — $29
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-  </a>
+  </button>
 
   <!-- Report pages anchor -->
   <div class="report-pages">
@@ -778,6 +787,39 @@
     window.addEventListener('resize', onScroll);
     onScroll();
   })();
+</script>
+
+<script>
+  var stripe = Stripe('PUBLISHABLE_KEY_PLACEHOLDER');
+  var checkoutMounted = false;
+
+  async function openCheckout() {
+    var container = document.getElementById('checkout-container');
+    var embed     = document.getElementById('checkout-embed');
+
+    container.classList.add('open');
+    setTimeout(function() {
+      container.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }, 50);
+
+    if (checkoutMounted) return;
+    checkoutMounted = true;
+
+    embed.innerHTML = '<div style="padding:40px;text-align:center;color:#333;font-size:13px">Loading...</div>';
+
+    try {
+      var res  = await fetch('/api/create-checkout-session', { method: 'POST' });
+      var data = await res.json();
+      if (data.error) throw new Error(data.error);
+      embed.innerHTML = '';
+      var checkout = await stripe.initEmbeddedCheckout({ clientSecret: data.clientSecret });
+      checkout.mount('#checkout-embed');
+    } catch (err) {
+      embed.innerHTML = '<div style="padding:40px;text-align:center;color:#d91e1e;font-size:13px">Something went wrong. Refresh and try again.</div>';
+      checkoutMounted = false;
+      console.error(err);
+    }
+  }
 </script>
 </body>
 </html>
