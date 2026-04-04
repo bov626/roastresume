@@ -3609,6 +3609,52 @@
       </div>
     </footer>
 
+    <!-- ═══════════════════════ DEV TOOLBAR ═══════════════════════ -->
+    <div id="dev-toolbar" style="position:fixed;top:12px;right:12px;z-index:99999;display:flex;flex-direction:column;gap:6px;align-items:flex-end;">
+      <button onclick="devToggle()" style="background:rgba(20,20,20,0.95);border:1px solid #2a2a2a;color:#555;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:5px 10px;border-radius:6px;cursor:pointer;font-family:inherit;">DEV ▾</button>
+      <div id="dev-panel" style="display:none;background:rgba(12,12,12,0.97);border:1px solid #222;border-radius:10px;padding:10px;display:none;flex-direction:column;gap:5px;min-width:160px;">
+        <div style="font-size:9px;font-weight:800;letter-spacing:.15em;text-transform:uppercase;color:#333;padding:2px 4px 6px;border-bottom:1px solid #1a1a1a;margin-bottom:2px;">Form Steps</div>
+        <button onclick="devGoStep(0)" class="dev-btn">① Name</button>
+        <button onclick="devGoStep(1)" class="dev-btn">② Email</button>
+        <button onclick="devGoStep(2)" class="dev-btn">③ Upload</button>
+        <button onclick="devGoQueue()" class="dev-btn">④ Queue screen</button>
+        <button onclick="showOtoModal()" class="dev-btn">⑤ OTO popup</button>
+        <div style="font-size:9px;font-weight:800;letter-spacing:.15em;text-transform:uppercase;color:#333;padding:6px 4px 4px;border-top:1px solid #1a1a1a;margin-top:2px;">Pages</div>
+        <button onclick="window.open('/resources','_blank')" class="dev-btn">Resources</button>
+        <button onclick="window.open('/oto','_blank')" class="dev-btn">OTO</button>
+        <button onclick="window.open('/questionnaire','_blank')" class="dev-btn">Questionnaire</button>
+        <button onclick="window.open('/waiting','_blank')" class="dev-btn">Waiting</button>
+      </div>
+    </div>
+    <style>
+      .dev-btn{background:rgba(255,255,255,0.04);border:1px solid #1e1e1e;color:#777;font-size:11px;font-weight:600;padding:6px 10px;border-radius:6px;cursor:pointer;font-family:inherit;text-align:left;transition:all .1s;}
+      .dev-btn:hover{background:rgba(255,255,255,0.08);color:#ccc;border-color:#333;}
+    </style>
+    <script>
+      function devToggle() {
+        const p = document.getElementById('dev-panel');
+        p.style.display = p.style.display === 'flex' ? 'none' : 'flex';
+      }
+      function devGoStep(n) {
+        // Scroll form into view
+        const formEl = document.getElementById('fo-0');
+        if (formEl) formEl.closest('section, div[id]')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        // Set step
+        window.foStep = n;
+        if (typeof goToStep === 'function') goToStep(n);
+      }
+      function devGoQueue() {
+        window.foStep = 2;
+        if (typeof goToStep === 'function') goToStep(3);
+        setTimeout(() => {
+          document.getElementById('fo-3').classList.add('q-live');
+          if (typeof launchFireworks === 'function') launchFireworks();
+          if (typeof armOtoModal === 'function') armOtoModal();
+          if (typeof countUp === 'function') countUp(document.getElementById('fo-queue-num'), 42, 1500);
+        }, 80);
+      }
+    </script>
+
     <!-- ═══════════════════════ OTO MODAL ═══════════════════════ -->
     <div id="oto-modal" style="display:none;position:fixed;inset:0;z-index:9999;align-items:center;justify-content:center;padding:24px;">
       <div id="oto-backdrop" onclick="otoNo()" style="position:absolute;inset:0;background:rgba(0,0,0,0.82);backdrop-filter:blur(4px);"></div>
