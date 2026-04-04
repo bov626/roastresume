@@ -526,7 +526,7 @@ app.get("/oto", (req, res) => {
 app.post("/api/create-checkout-session", async (req, res) => {
   try {
     const session = await stripe.checkout.sessions.create({
-      ui_mode: "embedded",
+      ui_mode: "embedded_page",
       line_items: [{ price: process.env.STRIPE_PRICE_ID, quantity: 1 }],
       mode: "payment",
       return_url: `${req.headers.origin}/questionnaire?session_id={CHECKOUT_SESSION_ID}`,
