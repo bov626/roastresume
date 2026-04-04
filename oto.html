@@ -232,16 +232,16 @@
 
   /* ── Desktop sticky panels ── */
   @media(min-width:1024px){
-    #report-desktop{position:relative}
+    #report-desktop{position:relative;max-width:1280px;margin:0 auto}
     .rd-sticky{position:sticky;top:0;height:100vh;overflow:hidden;background:var(--black);border-top:1px solid #111}
     .rd-track{display:flex;height:100%;will-change:transform}
-    .rd-panel{min-width:100vw;height:100%;display:grid;grid-template-columns:1fr 1fr;align-items:center;border-right:1px solid #111}
+    .rd-panel{min-width:100%;height:100%;display:grid;grid-template-columns:1fr 1fr;align-items:center;border-right:1px solid #111}
     .rd-panel-inner{display:contents}
-    .rd-left{padding:60px 32px 60px 7vw;display:flex;flex-direction:column;justify-content:center;height:100%}
+    .rd-left{padding:60px 32px 60px 80px;display:flex;flex-direction:column;justify-content:center;height:100%}
     .rd-step{font-size:11px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;background:var(--red);color:#fff;padding:5px 14px;border-radius:100px;display:inline-block;margin-bottom:20px;align-self:flex-start}
     .rd-title{font-size:clamp(28px,3.2vw,46px);font-weight:900;letter-spacing:-.035em;line-height:1.05;margin-bottom:12px}
     .rd-sub{font-size:15px;color:#444;line-height:1.75;max-width:400px}
-    .rd-right{padding:60px 7vw 60px 32px;height:100%;display:flex;align-items:center;justify-content:flex-start}
+    .rd-right{padding:60px 80px 60px 32px;height:100%;display:flex;align-items:center;justify-content:flex-start}
     .rd-viz{width:100%;max-width:460px}
     .rd-spacer{height:500vh}
 
@@ -764,12 +764,13 @@
 
     function onScroll() {
       if (window.innerWidth < 1024) return;
+      var panelW   = section.offsetWidth;
       var top      = section.getBoundingClientRect().top + window.scrollY;
       var spacer   = section.querySelector('.rd-spacer').offsetHeight;
       var scrollIn = window.scrollY - top;
       if (scrollIn < 0 || scrollIn > spacer) return;
       var p = Math.max(0, Math.min(1, scrollIn / spacer));
-      track.style.transform  = 'translateX(-' + (p * (NUM - 1) * 100) + 'vw)';
+      track.style.transform  = 'translateX(' + (-p * (NUM - 1) * panelW) + 'px)';
       track.style.transition = 'none';
     }
 
