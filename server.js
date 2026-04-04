@@ -387,6 +387,7 @@ app.get("/admin/uploads/:filename", requireAuth, (req, res) => {
 });
 
 app.get("/admin/*path", requireAuth, (req, res) => res.redirect("/admin"));
+app.get("/resources", (req, res) => res.sendFile(path.join(__dirname, "resources.html")));
 app.get("/", (req, res) => res.sendFile(path.join(__dirname, "index.html")));
 app.use(express.static(__dirname, { index: false, maxAge: "1h" }));
 

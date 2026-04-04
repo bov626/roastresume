@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Resume Template — Please Roast My Resume</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Inter',sans-serif;background:#0a0a0a;color:#fff;overflow-x:hidden}
+
+  /* ── Sticky step blocks ── */
+  .step-block{
+    position:sticky;
+    top:0;
+    height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:0 24px;
+    overflow:hidden;
+  }
+
+  /* ── Step 1 ── */
+  #step-1{
+    z-index:1;
+    background:
+      radial-gradient(ellipse 50% 40% at 50% 70%, rgba(217,30,30,0.05) 0%, transparent 70%),
+      #0a0a0a;
+  }
+
+  /* ── Step 2 ── */
+  #step-2{
+    z-index:2;
+    background:#0a0a0a;
+    box-shadow:0 -32px 80px rgba(0,0,0,0.95);
+  }
+  #step-2::before{
+    content:'';
+    position:absolute;top:0;left:0;right:0;height:1px;
+    background:linear-gradient(90deg, transparent, rgba(217,30,30,0.15) 30%, rgba(217,30,30,0.25) 50%, rgba(217,30,30,0.15) 70%, transparent);
+  }
+
+  /* ── Step 3 ── */
+  #step-3{
+    z-index:3;
+    background:#0a0a0a;
+    box-shadow:0 -32px 80px rgba(0,0,0,0.95);
+  }
+  #step-3::before{
+    content:'';
+    position:absolute;top:0;left:0;right:0;height:1px;
+    background:linear-gradient(90deg, transparent, rgba(217,30,30,0.15) 30%, rgba(217,30,30,0.25) 50%, rgba(217,30,30,0.15) 70%, transparent);
+  }
+
+  /* ── Step label ── */
+  .step-label{
+    font-size:10px;font-weight:800;letter-spacing:.22em;text-transform:uppercase;
+    color:#333;margin-bottom:10px;
+  }
+
+  /* Red dash below label */
+  .step-dash{
+    width:28px;height:2px;background:#d91e1e;
+    border-radius:2px;margin:0 auto 24px;
+  }
+
+  /* Main heading */
+  .step-heading{
+    font-size:clamp(32px,5.5vw,58px);
+    font-weight:900;letter-spacing:-.035em;line-height:1.08;
+    margin-bottom:36px;
+  }
+
+  /* Sweet underline */
+  .sweet{
+    text-decoration:underline;
+    text-decoration-color:#d91e1e;
+    text-underline-offset:6px;
+    text-decoration-thickness:3px;
+  }
+
+  /* Template button */
+  .btn-template{
+    display:inline-flex;align-items:center;gap:10px;
+    background:#d91e1e;color:#fff;
+    font-family:'Inter',sans-serif;
+    font-size:15px;font-weight:700;
+    padding:16px 36px;border-radius:10px;
+    text-decoration:none;letter-spacing:-.01em;
+    box-shadow:0 4px 32px rgba(217,30,30,.3);
+    transition:transform .15s,box-shadow .15s;
+  }
+  .btn-template:hover{transform:translateY(-1px);box-shadow:0 6px 36px rgba(217,30,30,.4)}
+
+  /* Player */
+  .player-outer{
+    width:100%;max-width:min(720px,88vw);
+  }
+  .player-inner{
+    aspect-ratio:16/9;background:#000;
+    border-radius:12px;overflow:hidden;
+    border:1px solid #1a1a1a;
+    box-shadow:
+      0 0 0 1px #111,
+      0 24px 80px rgba(0,0,0,.9),
+      0 0 40px rgba(217,30,30,.08),
+      0 0 80px rgba(217,30,30,.04);
+  }
+  .player-inner iframe{width:100%;height:100%;border:none;display:block}
+
+  /* Step 3 content */
+  .step-3-body{
+    max-width:500px;
+  }
+  .step-3-sub{
+    font-size:16px;font-weight:700;color:#fff;
+    margin-bottom:16px;
+    letter-spacing:-.01em;
+  }
+  .step-3-p{
+    font-size:14px;line-height:1.85;color:#888;
+    margin-bottom:20px;
+  }
+  .step-3-p strong{color:#fff;font-weight:700}
+
+  .btn-jumpseat{
+    display:inline-flex;align-items:center;gap:8px;
+    background:#d91e1e;color:#fff;
+    font-family:'Inter',sans-serif;
+    font-size:14px;font-weight:700;
+    padding:14px 28px;border-radius:8px;
+    text-decoration:none;letter-spacing:-.01em;
+    box-shadow:0 4px 24px rgba(217,30,30,.28);
+    transition:transform .15s,box-shadow .15s;
+    margin-top:4px;
+  }
+  .btn-jumpseat:hover{transform:translateY(-1px);box-shadow:0 6px 28px rgba(217,30,30,.38)}
+
+  footer{
+    position:relative;z-index:4;
+    background:#0a0a0a;
+    padding:20px 24px;text-align:center;
+    border-top:1px solid #111;
+  }
+  footer p{font-size:11px;color:#1e1e1e}
+</style>
+</head>
+<body>
+
+<!-- STEP 1 -->
+<div class="step-block" id="step-1">
+  <div class="step-label">Step 1 of 3</div>
+  <div class="step-dash"></div>
+  <div class="step-heading">First things first.</div>
+  <a
+    class="btn-template"
+    href="https://docs.google.com/document/d/1A7y6DzPAled0cHyvR4c398zDr_HAMDDgUdFPEFACIA0/copy"
+    target="_blank"
+  >
+    Get the Template
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+  </a>
+</div>
+
+<!-- STEP 2 -->
+<div class="step-block" id="step-2">
+  <div class="step-label">Step 2 of 3</div>
+  <div class="step-dash"></div>
+  <div class="step-heading"><span class="sweet">Sweet.</span> Here's how to use it.</div>
+  <div class="player-outer">
+    <div class="player-inner">
+      <iframe
+        src="https://customer-tz9jc0r0in9fc7r9.cloudflarestream.com/a9cda35dc138cff3f099e7eb37588a25/iframe?autoplay=false&muted=false&preload=none&primaryColor=%23d91e1e"
+        loading="lazy"
+        allow="accelerometer; gyroscope; encrypted-media; picture-in-picture;"
+        allowfullscreen="true">
+      </iframe>
+    </div>
+  </div>
+</div>
+
+<!-- STEP 3 -->
+<div class="step-block" id="step-3">
+  <div class="step-label">Step 3 of 3</div>
+  <div class="step-dash"></div>
+  <div class="step-3-body">
+    <div class="step-heading">Finally. Applying.</div>
+    <p class="step-3-p">Most people fail here. Not because of their resume, because of volume.</p>
+    <p class="step-3-p"><strong>Only 1-2% of applications lead to an interview.</strong></p>
+    <p class="step-3-p">If you don't have time to apply to jobs in the thousands and want a team of experts to do everything for you, check out Jumpseat.</p>
+    <a class="btn-jumpseat" href="https://jumpseatjobs.com" target="_blank">
+      Get me a job →
+    </a>
+  </div>
+</div>
+
+<footer>
+  <p>© 2026 Jumpseat. All rights reserved.</p>
+</footer>
+
+</body>
+</html>
