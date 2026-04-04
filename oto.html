@@ -221,6 +221,73 @@
   .yt-info p{font-size:11px;font-weight:600;color:#888;margin-bottom:1px}
   .yt-info span{font-size:10px;color:#333}
 
+  @keyframes livePulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(0.7)}}
+
+  /* ── Desktop report: hide on tablet/mobile ── */
+  .report-desktop{display:none}
+  @media(min-width:1024px){
+    .report-desktop{display:block}
+    .report-mobile{display:none}
+  }
+
+  /* ── Desktop sticky panels ── */
+  @media(min-width:1024px){
+    #report-desktop{position:relative}
+    .rd-sticky{position:sticky;top:0;height:100vh;overflow:hidden;background:var(--black);border-top:1px solid #111}
+    .rd-track{display:flex;height:100%;will-change:transform}
+    .rd-panel{min-width:100vw;height:100%;display:grid;grid-template-columns:1fr 1fr;align-items:center;border-right:1px solid #111}
+    .rd-left{padding:60px 56px;display:flex;flex-direction:column;justify-content:center;height:100%}
+    .rd-step{font-size:11px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;background:var(--red);color:#fff;padding:5px 14px;border-radius:100px;display:inline-block;margin-bottom:20px;align-self:flex-start}
+    .rd-title{font-size:clamp(28px,4vw,52px);font-weight:900;letter-spacing:-.035em;line-height:1.05;margin-bottom:12px}
+    .rd-sub{font-size:15px;color:#444;line-height:1.75;max-width:380px}
+    .rd-right{padding:60px 56px;height:100%;display:flex;align-items:center;justify-content:center}
+    .rd-viz{width:100%;max-width:420px}
+    .rd-spacer{height:500vh}
+
+    .rd-live-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(217,30,30,0.12);border:1px solid rgba(217,30,30,0.25);border-radius:100px;padding:3px 10px 3px 7px;position:absolute;top:16px;right:16px}
+    .rd-live-dot{width:6px;height:6px;border-radius:50%;background:var(--red);animation:livePulse 1.8s ease-in-out infinite}
+    .rd-live-badge span{font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--red)}
+
+    .rd-job{background:#0d0d0d;border-radius:12px;padding:24px;display:flex;flex-direction:column;gap:12px;position:relative}
+    .rd-job-title{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#333}
+    .rd-pills{display:flex;gap:8px}
+    .rd-pill{background:#111;border:1px solid #1e1e1e;border-radius:8px;padding:14px 16px;text-align:center;flex:1}
+    .rd-pill-num{font-size:20px;font-weight:900;display:block}
+    .rd-pill-lab{font-size:9px;color:#444;margin-top:4px;display:block}
+    .rd-pill-full{background:#111;border:1px solid #1e1e1e;border-radius:8px;padding:14px 16px;text-align:center;width:100%}
+
+    .rd-salary{background:#0d0d0d;border-radius:12px;overflow:hidden}
+    .rd-salary-top{background:var(--red);padding:20px 16px;text-align:center}
+    .rd-salary-num{font-size:30px;font-weight:900;letter-spacing:-.02em}
+    .rd-salary-sub{font-size:10px;opacity:.8;margin-top:2px}
+    .rd-salary-bot{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:#1a1a1a}
+    .rd-salary-col{background:#0d0d0d;padding:18px 14px;text-align:center}
+    .rd-salary-col-l{font-size:9px;color:#555;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px}
+    .rd-salary-col-n{font-size:20px;font-weight:800}
+
+    .rd-score{background:#0d0d0d;border-radius:12px;padding:20px;display:flex;flex-direction:column;align-items:center}
+
+    .rd-risk{background:#0d0d0d;border-radius:12px;padding:24px}
+    .rd-risk-circles{display:flex;align-items:center;justify-content:center;margin-bottom:16px}
+    .rrc{border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;text-transform:uppercase;text-align:center;line-height:1.2;flex-shrink:0}
+    .rrc:not(:first-child){margin-left:-14px}
+    .rrc1{width:68px;height:68px;background:rgba(217,30,30,.9);color:#fff;z-index:5;font-size:9px}
+    .rrc2{width:56px;height:56px;background:rgba(217,30,30,.65);color:#fff;z-index:4}
+    .rrc3{width:46px;height:46px;background:rgba(217,30,30,.4);color:#fff;z-index:3}
+    .rrc4{width:36px;height:36px;background:rgba(217,30,30,.2);color:#fff;z-index:2}
+    .rrc5{width:26px;height:26px;background:rgba(217,30,30,.08);color:#555;z-index:1}
+    .rd-risk-rows{display:flex;flex-direction:column;gap:10px}
+    .rd-risk-row{display:flex;align-items:center;gap:8px;font-size:12px;color:#444}
+    .rd-risk-dot{width:6px;height:6px;border-radius:50%;background:var(--red);flex-shrink:0}
+
+    .rd-vids{background:#0d0d0d;border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:10px}
+    .rd-vid{display:flex;align-items:center;gap:10px;background:#111;border:1px solid #1e1e1e;border-radius:8px;padding:12px}
+    .rd-vid-thumb{width:52px;height:36px;background:#1a1a1a;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--red);font-size:16px;position:relative}
+    .rd-vid-excl{position:absolute;top:-4px;right:-4px;background:var(--red);color:#fff;font-size:6px;font-weight:800;padding:1px 4px;border-radius:3px}
+    .rd-vid-info p{font-size:12px;font-weight:600;color:#777;margin-bottom:1px}
+    .rd-vid-info span{font-size:10px;color:#2a2a2a}
+  }
+
   /* ── HOW IT WORKS ── */
   #how-it-works{
     padding:100px 24px;
@@ -317,6 +384,7 @@
   <p class="cta-note">Report delivered in 20 minutes.</p>
 </section>
 
+<div class="report-mobile">
 <!-- WHAT'S IN THE REPORT — horizontal snap scroll -->
 <div id="report-section">
 
@@ -435,6 +503,124 @@
     <div class="report-dot"></div>
   </div>
 
+</div>
+
+</div><!-- /report-mobile -->
+
+<!-- DESKTOP REPORT SECTION -->
+<div class="report-desktop" id="report-desktop">
+  <div class="rd-sticky">
+    <div class="rd-track" id="rd-track">
+
+      <div class="rd-panel">
+        <div class="rd-left">
+          <div class="rd-step">01 of 05</div>
+          <div class="rd-title">Job Market Data</div>
+          <p class="rd-sub">Live openings and remote availability for your exact job title.</p>
+        </div>
+        <div class="rd-right">
+          <div class="rd-viz">
+            <div class="rd-job">
+              <div class="rd-live-badge"><div class="rd-live-dot"></div><span>Live</span></div>
+              <div class="rd-job-title">Your Job Title</div>
+              <div class="rd-pills">
+                <div class="rd-pill"><span class="rd-pill-num">106,212</span><span class="rd-pill-lab">Openings</span></div>
+                <div class="rd-pill"><span class="rd-pill-num">48,227</span><span class="rd-pill-lab">Remote Jobs</span></div>
+              </div>
+              <div class="rd-pill-full"><span class="rd-pill-num" style="font-size:28px;color:var(--red)">41%</span><span class="rd-pill-lab">Remote Rate</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rd-panel">
+        <div class="rd-left">
+          <div class="rd-step">02 of 05</div>
+          <div class="rd-title">Average Salary</div>
+          <p class="rd-sub">What you could realistically be making with a second income stacked on top.</p>
+        </div>
+        <div class="rd-right">
+          <div class="rd-viz">
+            <div class="rd-salary">
+              <div class="rd-salary-top"><div class="rd-salary-num">$167,227</div><div class="rd-salary-sub">Combined annual income</div></div>
+              <div class="rd-salary-bot">
+                <div class="rd-salary-col"><div class="rd-salary-col-l">J1</div><div class="rd-salary-col-n">$95,000</div></div>
+                <div class="rd-salary-col"><div class="rd-salary-col-l">J2</div><div class="rd-salary-col-n" style="color:var(--red)">+$72,227</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rd-panel">
+        <div class="rd-left">
+          <div class="rd-step">03 of 05</div>
+          <div class="rd-title">Readiness Score</div>
+          <p class="rd-sub">A score from 0 to 100 based on your real workload, not time at your desk.</p>
+        </div>
+        <div class="rd-right">
+          <div class="rd-viz">
+            <div class="rd-score">
+              <svg viewBox="0 0 220 125" width="100%" style="max-width:300px">
+                <path d="M22,110 A88,88 0 0,1 198,110" fill="none" stroke="#1a1a1a" stroke-width="16" stroke-linecap="round"/>
+                <path d="M22,110 A88,88 0 0,1 198,110" fill="none" stroke="#d91e1e" stroke-width="16" stroke-linecap="round" stroke-dasharray="276" stroke-dashoffset="76"/>
+                <line x1="110" y1="110" x2="166" y2="42" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
+                <circle cx="110" cy="110" r="7" fill="#fff"/>
+                <text x="110" y="82" text-anchor="middle" fill="#fff" font-size="26" font-weight="900" font-family="Inter,sans-serif">72</text>
+                <text x="110" y="124" text-anchor="middle" fill="#444" font-size="10" font-family="Inter,sans-serif">READINESS SCORE</text>
+              </svg>
+              <div style="font-size:12px;color:#333;margin-top:8px">Based on your workload, meetings, and schedule</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rd-panel">
+        <div class="rd-left">
+          <div class="rd-step">04 of 05</div>
+          <div class="rd-title">Risk Factors</div>
+          <p class="rd-sub">Non-competes, IP assignment clauses, monitoring software. All the ways you could get caught, deciphered.</p>
+        </div>
+        <div class="rd-right">
+          <div class="rd-viz">
+            <div class="rd-risk">
+              <div class="rd-risk-circles">
+                <div class="rrc rrc1">Non<br>Compete</div>
+                <div class="rrc rrc2">IP<br>Clause</div>
+                <div class="rrc rrc3">Monitor</div>
+                <div class="rrc rrc4">TZ</div>
+                <div class="rrc rrc5">IT</div>
+              </div>
+              <div class="rd-risk-rows">
+                <div class="rd-risk-row"><div class="rd-risk-dot"></div>Non-compete enforceability by state</div>
+                <div class="rd-risk-row"><div class="rd-risk-dot" style="opacity:.6"></div>IP assignment clauses</div>
+                <div class="rd-risk-row"><div class="rd-risk-dot" style="opacity:.35"></div>Monitoring software prevalence</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rd-panel">
+        <div class="rd-left">
+          <div class="rd-step">05 of 05</div>
+          <div class="rd-title">Bonus Videos</div>
+          <p class="rd-sub">Three exclusive videos. Two unlock immediately. The third arrives with your report.</p>
+        </div>
+        <div class="rd-right">
+          <div class="rd-viz">
+            <div class="rd-vids">
+              <div class="rd-vid"><div class="rd-vid-thumb">&#9658;<span class="rd-vid-excl">NEW</span></div><div class="rd-vid-info"><p>How to pass background checks</p><span>12 min &middot; Exclusive</span></div></div>
+              <div class="rd-vid"><div class="rd-vid-thumb">&#9658;<span class="rd-vid-excl">NEW</span></div><div class="rd-vid-info"><p>Managing two calendars without losing your mind</p><span>8 min &middot; Exclusive</span></div></div>
+              <div class="rd-vid" style="opacity:.4"><div class="rd-vid-thumb" style="font-size:18px">&#128274;</div><div class="rd-vid-info"><p style="color:#333">The OE exit strategy</p><span style="color:var(--red);font-weight:600">In your report</span></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div class="rd-spacer"></div>
 </div>
 
 <script>
@@ -557,5 +743,29 @@
 </section>
 
 
+<script>
+  // Desktop report scroll (large breakpoint only)
+  (function() {
+    var section = document.getElementById('report-desktop');
+    var track   = document.getElementById('rd-track');
+    if (!section || !track) return;
+    var NUM = 5;
+
+    function onScroll() {
+      if (window.innerWidth < 1024) return;
+      var top      = section.getBoundingClientRect().top + window.scrollY;
+      var spacer   = section.querySelector('.rd-spacer').offsetHeight;
+      var scrollIn = window.scrollY - top;
+      if (scrollIn < 0 || scrollIn > spacer) return;
+      var p = Math.max(0, Math.min(1, scrollIn / spacer));
+      track.style.transform  = 'translateX(-' + (p * (NUM - 1) * 100) + 'vw)';
+      track.style.transition = 'none';
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    onScroll();
+  })();
+</script>
 </body>
 </html>
