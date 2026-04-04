@@ -161,6 +161,53 @@ Want us to land you a second job? jumpseatjobs.com`,
   return res.ok;
 }
 
+async function sendResourcesEmail(toEmail) {
+  const res = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${process.env.RESEND_API_KEY}`
+    },
+    body: JSON.stringify({
+      from: 'Wilson <wilson@pleaseroastmyresume.com>',
+      to: [toEmail],
+      reply_to: process.env.GMAIL_USER,
+      subject: 'Dammit Dino',
+      html: `<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"></head>
+<body style="margin:0;padding:0;background:#ffffff;font-family:Georgia,serif;">
+  <div style="display:none;max-height:0;overflow:hidden;mso-hide:all;">
+    Your resume template is at the bottom of this email.&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;
+  </div>
+  <div style="max-width:560px;margin:0 auto;padding:48px 32px;color:#111111;">
+    <p style="font-size:15px;line-height:1.9;margin:0 0 16px;">"I think Wilson has a blind barber," David said while tugging my hair.</p>
+    <p style="font-size:15px;line-height:1.9;margin:0 0 16px;">Everyone laughed. My cheeks lit up.</p>
+    <p style="font-size:15px;line-height:1.9;margin:0 0 16px;">I ran to the bathroom. In the mirror I saw a tuft of hair, significantly longer than the rest.</p>
+    <p style="font-size:15px;line-height:1.9;margin:0 0 16px;">I scrambled around searching for something sharp. A piece of glass. A stray knife someone forgot.</p>
+    <p style="font-size:15px;line-height:1.9;margin:0 0 24px;">To no avail. The hair stays.</p>
+    <p style="font-size:15px;line-height:1.9;margin:0 0 16px;">God dammit Dino.</p>
+    <p style="font-size:15px;line-height:1.9;margin:0 0 16px;">He was well into retirement age and specialized in military buzzcuts and deep-sea fishing. My parents took me to him because he was the cheapest barber in town. By a wide margin.</p>
+    <p style="font-size:15px;line-height:1.9;margin:0 0 16px;">You get what you pay for.</p>
+    <p style="font-size:15px;line-height:1.9;margin:0 0 16px;">The next time I had to get a haircut, when he called my name I started crying. Wailing. Begging my dad. "Please don't let him cut my hair."</p>
+    <p style="font-size:15px;line-height:1.9;margin:0 0 16px;">For the next decade I hated every haircut I got. I put it off as long as possible. Tried many barbers. To no avail.</p>
+    <p style="font-size:15px;line-height:1.9;margin:0 0 24px;">Then last year I realized it was never their fault. It was mine.</p>
+    <p style="font-size:15px;line-height:1.9;margin:0 0 16px;">Every haircut was bad because I could never explain what I wanted. I'd sit down, say something vague, forget the clipper length, and leave looking like I lost a bet.</p>
+    <p style="font-size:15px;line-height:1.9;margin:0 0 16px;">One simple change fixed it: I showed the barber pictures. That's it.</p>
+    <p style="font-size:15px;line-height:1.9;margin:0 0 16px;">You can't explain your way to a good haircut.</p>
+    <p style="font-size:15px;line-height:1.9;margin:0 0 32px;">You need a solid starting point.</p>
+    <p style="font-size:15px;line-height:1.9;margin:0 0 16px;">Same goes for your resume.</p>
+    <p style="font-size:15px;line-height:1.9;margin:0 0 32px;">Here's the template: <a href="https://pleaseroastmyresume.com/resources" style="color:#111111;text-decoration:underline;">pleaseroastmyresume.com/resources</a></p>
+    <p style="font-size:15px;line-height:1.9;margin:0 0 32px;">-W.W.</p>
+    <p style="font-size:13px;line-height:1.7;color:#888888;border-top:1px solid #eeeeee;padding-top:20px;margin:0;">P.S. There's also a full video walk-through of every decision we made in building it. Enjoy.</p>
+  </div>
+</body>
+</html>`
+    })
+  });
+  return res.ok;
+}
+
 /* ────────────────────────────────────────────
    BACKGROUND POLLER
 ──────────────────────────────────────────── */
@@ -266,6 +313,12 @@ app.post("/api/submit", resumeUpload.single("resume"), async (req, res) => {
     );
   } catch (e) {
     console.error("Beehiiv error:", e.message);
+  }
+
+  try {
+    await sendResourcesEmail(email);
+  } catch(e) {
+    console.error('Resources email error:', e.message);
   }
 
   res.json({ ok: true });
