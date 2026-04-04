@@ -217,7 +217,7 @@ async function sendReportReadyEmail(toEmail, firstName) {
       from: 'Wilson <wilson@pleaseroastmyresume.com>',
       to: [toEmail],
       reply_to: process.env.GMAIL_USER,
-      subject: "It's Ready.",
+      subject: "We need to talk",
       html: `<!DOCTYPE html>
 <html>
 <head><meta charset="UTF-8"></head>
