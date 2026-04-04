@@ -93,10 +93,10 @@
   .cta-btn:hover{transform:translateY(-1px);box-shadow:0 6px 32px rgba(217,30,30,0.45)}
   .cta-note{font-size:12px;color:#333;margin-top:12px}
 
-  /* ── WHAT'S IN THE REPORT — horizontal card grid ── */
+  /* ── WHAT'S IN THE REPORT — horizontal snap scroll ── */
   #report-section{
     border-top:1px solid #111;
-    padding:80px 32px 100px;
+    padding:72px 0 88px;
   }
 
   .section-eyebrow{
@@ -109,32 +109,47 @@
 
   .report-section-header{
     text-align:center;
-    margin-bottom:48px;
+    padding:0 32px;
+    margin-bottom:44px;
   }
 
-  .report-grid{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
+  /* Horizontal scrolling lane */
+  .report-scroller{
+    display:flex;
     gap:16px;
-    max-width:1100px;
-    margin:0 auto;
+    overflow-x:scroll;
+    scroll-snap-type:x mandatory;
+    -webkit-overflow-scrolling:touch;
+    padding:8px 5vw 28px;
+    scrollbar-width:none;
+    cursor:grab;
   }
-  @media(max-width:900px){
-    .report-grid{grid-template-columns:repeat(2,1fr)}
+  .report-scroller:active{cursor:grabbing}
+  .report-scroller::-webkit-scrollbar{display:none}
+
+  /* Progress dots */
+  .report-dots{
+    display:flex;gap:6px;justify-content:center;
+    padding-top:4px;
   }
-  @media(max-width:560px){
-    .report-grid{grid-template-columns:1fr}
+  .report-dot{
+    width:6px;height:6px;border-radius:50%;
+    background:#1a1a1a;transition:background .25s,width .25s;
   }
+  .report-dot.active{background:var(--red);width:18px;border-radius:3px}
 
   .report-card{
+    flex-shrink:0;
+    width:min(320px,80vw);
+    scroll-snap-align:center;
     background:#0e0e0e;
     border:1px solid #1a1a1a;
     border-radius:16px;
     padding:28px;
+    transition:border-color .25s;
   }
-  .report-card:nth-child(3){
-    grid-row:span 1;
-  }
+  .report-card.active{border-color:rgba(217,30,30,0.35)}
+
   .card-label{
     font-size:10px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;
     color:#333;margin-bottom:14px;
@@ -301,7 +316,7 @@
   <p class="cta-note">Report delivered in 20 minutes.</p>
 </section>
 
-<!-- WHAT'S IN THE REPORT — horizontal card grid -->
+<!-- WHAT'S IN THE REPORT — horizontal snap scroll -->
 <div id="report-section">
 
   <div class="report-section-header">
@@ -309,10 +324,10 @@
     <h2 class="section-title">What's in the Report?</h2>
   </div>
 
-  <div class="report-grid">
+  <div class="report-scroller" id="report-scroller">
 
     <!-- Card 1: Job Data -->
-    <div class="report-card">
+    <div class="report-card active">
       <div class="card-label">Job Market Data</div>
       <div class="card-title">Your Job Title</div>
       <div class="job-pills">
@@ -409,7 +424,60 @@
     </div>
 
   </div>
+
+  <!-- Progress dots -->
+  <div class="report-dots" id="report-dots">
+    <div class="report-dot active"></div>
+    <div class="report-dot"></div>
+    <div class="report-dot"></div>
+    <div class="report-dot"></div>
+    <div class="report-dot"></div>
+  </div>
+
 </div>
+
+<script>
+  (function(){
+    const scroller = document.getElementById('report-scroller');
+    const cards    = scroller.querySelectorAll('.report-card');
+    const dots     = document.querySelectorAll('.report-dot');
+
+    /* ── Active card via IntersectionObserver ── */
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if(entry.intersectionRatio >= 0.5){
+          const idx = Array.from(cards).indexOf(entry.target);
+          cards.forEach((c,i) => c.classList.toggle('active', i === idx));
+          dots.forEach((d,i)  => d.classList.toggle('active',  i === idx));
+        }
+      });
+    }, { root: scroller, threshold: 0.5 });
+    cards.forEach(c => io.observe(c));
+
+    /* ── Mouse drag-to-scroll ── */
+    let isDown = false, startX, scrollLeft;
+    scroller.addEventListener('mousedown', e => {
+      isDown = true;
+      startX = e.pageX - scroller.offsetLeft;
+      scrollLeft = scroller.scrollLeft;
+    });
+    scroller.addEventListener('mouseleave', () => isDown = false);
+    scroller.addEventListener('mouseup',    () => isDown = false);
+    scroller.addEventListener('mousemove', e => {
+      if(!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - scroller.offsetLeft;
+      scroller.scrollLeft = scrollLeft - (x - startX);
+    });
+
+    /* ── Dot click navigation ── */
+    dots.forEach((dot, i) => {
+      dot.addEventListener('click', () => {
+        cards[i].scrollIntoView({ behavior:'smooth', block:'nearest', inline:'center' });
+      });
+    });
+  })();
+</script>
 
 <!-- HOW IT WORKS -->
 <section id="how-it-works">
