@@ -231,10 +231,17 @@
     .report-mobile{display:none}
   }
 
-  /* ── Stripe checkout accordion ── */
-  #checkout-container{max-height:0;overflow:hidden;transition:max-height .5s cubic-bezier(0.4,0,0.2,1);background:#0e0e0e;border-radius:12px;margin-top:16px}
-  #checkout-container.open{max-height:900px}
-  .checkout-wrap{padding:24px}
+  /* ── Stripe checkout drawer ── */
+  #checkout-overlay{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.7);opacity:0;pointer-events:none;transition:opacity .35s ease;backdrop-filter:blur(4px)}
+  #checkout-overlay.open{opacity:1;pointer-events:all}
+  #checkout-drawer{position:fixed;top:0;right:0;bottom:0;width:50%;min-width:480px;max-width:680px;background:#0e0e0e;border-left:1px solid #1e1e1e;transform:translateX(100%);transition:transform .4s cubic-bezier(0.4,0,0.2,1);z-index:1001;overflow-y:auto;display:flex;flex-direction:column}
+  #checkout-drawer.open{transform:translateX(0)}
+  .cd-header{display:flex;align-items:center;justify-content:space-between;padding:20px 28px;border-bottom:1px solid #1a1a1a;flex-shrink:0}
+  .cd-title{font-size:14px;font-weight:700;letter-spacing:-.01em}
+  .cd-close{background:none;border:none;color:#555;cursor:pointer;line-height:1;padding:4px;border-radius:6px;transition:color .15s}
+  .cd-close:hover{color:#fff}
+  .cd-body{flex:1;padding:28px}
+  @media(max-width:600px){#checkout-drawer{width:100%;min-width:0;max-width:none}}
 
   /* ── Desktop sticky panels ── */
   @media(min-width:1024px){
@@ -388,9 +395,6 @@
     Calculate my risk — $29
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
   </button>
-  <div id="checkout-container">
-    <div class="checkout-wrap" id="checkout-embed"></div>
-  </div>
   <p class="cta-note">Report delivered in 20 minutes.</p>
 </section>
 
@@ -789,37 +793,57 @@
   })();
 </script>
 
+<!-- Checkout drawer -->
+<div id="checkout-overlay" onclick="closeCheckout()"></div>
+<div id="checkout-drawer">
+  <div class="cd-header">
+    <span class="cd-title">OE Risk Report — $29</span>
+    <button class="cd-close" onclick="closeCheckout()" aria-label="Close">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <div class="cd-body" id="checkout-embed"></div>
+</div>
+
 <script>
   var stripe = Stripe('PUBLISHABLE_KEY_PLACEHOLDER');
   var checkoutMounted = false;
+  var checkoutInstance = null;
+
+  function closeCheckout() {
+    document.getElementById('checkout-overlay').classList.remove('open');
+    document.getElementById('checkout-drawer').classList.remove('open');
+    document.body.style.overflow = '';
+  }
 
   async function openCheckout() {
-    var container = document.getElementById('checkout-container');
-    var embed     = document.getElementById('checkout-embed');
-
-    container.classList.add('open');
-    setTimeout(function() {
-      container.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }, 50);
+    document.getElementById('checkout-overlay').classList.add('open');
+    document.getElementById('checkout-drawer').classList.add('open');
+    document.body.style.overflow = 'hidden';
 
     if (checkoutMounted) return;
     checkoutMounted = true;
 
-    embed.innerHTML = '<div style="padding:40px;text-align:center;color:#333;font-size:13px">Loading...</div>';
+    var embed = document.getElementById('checkout-embed');
+    embed.innerHTML = '<div style="padding:60px 0;text-align:center;color:#444;font-size:13px">Loading…</div>';
 
     try {
       var res  = await fetch('/api/create-checkout-session', { method: 'POST' });
       var data = await res.json();
       if (data.error) throw new Error(data.error);
       embed.innerHTML = '';
-      var checkout = await stripe.initEmbeddedCheckout({ clientSecret: data.clientSecret });
-      checkout.mount('#checkout-embed');
+      checkoutInstance = await stripe.initEmbeddedCheckout({ clientSecret: data.clientSecret });
+      checkoutInstance.mount('#checkout-embed');
     } catch (err) {
-      embed.innerHTML = '<div style="padding:40px;text-align:center;color:#d91e1e;font-size:13px">Something went wrong. Refresh and try again.</div>';
+      embed.innerHTML = '<div style="padding:60px 0;text-align:center;color:#d91e1e;font-size:13px">Something went wrong. Refresh and try again.</div>';
       checkoutMounted = false;
       console.error(err);
     }
   }
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeCheckout();
+  });
 </script>
 </body>
 </html>
