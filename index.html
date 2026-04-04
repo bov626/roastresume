@@ -3583,7 +3583,13 @@
       }
 
       function otoUSYes() {
-        window.location.href = '/oto';
+        const veil = document.createElement('div');
+        veil.style.cssText = 'position:fixed;inset:0;background:#0a0a0a;z-index:99999;opacity:0;transition:opacity .45s ease;';
+        document.body.appendChild(veil);
+        requestAnimationFrame(() => {
+          veil.style.opacity = '1';
+          setTimeout(() => { window.location.href = '/oto'; }, 460);
+        });
       }
     </script>
 
