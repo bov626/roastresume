@@ -3068,9 +3068,9 @@
             .finally(() => {
               setTimeout(() => {
                 document.getElementById("fo-3").classList.add("q-live");
-                launchFireworks();
                 armOtoModal();
-                countUp(document.getElementById("fo-queue-num"), QUEUE_COUNT, 1500);
+                countUp(document.getElementById("fo-queue-num"), QUEUE_COUNT, 1800);
+                setTimeout(launchFireworks, 200);
               }, 80);
             });
           return;
@@ -3190,10 +3190,12 @@
       /* ── Template reveal ── */
       /* ── Count-up animation ── */
       function countUp(el, to, duration) {
+        el.textContent = "0";
         const start = performance.now();
         function tick(now) {
-          const p = Math.min((now - start) / duration, 1);
-          const ease = 1 - Math.pow(1 - p, 3); // ease-out cubic
+          const elapsed = now - start;
+          const p = Math.min(elapsed / duration, 1);
+          const ease = 1 - Math.pow(1 - p, 3);
           el.textContent = Math.floor(to * ease).toLocaleString();
           if (p < 1) requestAnimationFrame(tick);
           else el.textContent = to.toLocaleString();
