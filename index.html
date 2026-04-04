@@ -3636,22 +3636,18 @@
         p.style.display = p.style.display === 'flex' ? 'none' : 'flex';
       }
       function devGoStep(n) {
-        // Scroll form into view
-        const formEl = document.getElementById('fo-0');
-        if (formEl) formEl.closest('section, div[id]')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        // Set step
-        window.foStep = n;
-        if (typeof goToStep === 'function') goToStep(n);
+        openForm();
+        if (n > 0) setTimeout(() => goToStep(n), 50);
       }
       function devGoQueue() {
-        window.foStep = 2;
-        if (typeof goToStep === 'function') goToStep(3);
+        openForm();
         setTimeout(() => {
+          goToStep(3);
           document.getElementById('fo-3').classList.add('q-live');
           if (typeof launchFireworks === 'function') launchFireworks();
-          if (typeof armOtoModal === 'function') armOtoModal();
+          if (typeof armOtoModal === 'function') { otoShown = false; armOtoModal(); }
           if (typeof countUp === 'function') countUp(document.getElementById('fo-queue-num'), 42, 1500);
-        }, 80);
+        }, 50);
       }
     </script>
 
