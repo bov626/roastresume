@@ -208,6 +208,45 @@ async function sendResourcesEmail(toEmail) {
   return res.ok;
 }
 
+async function sendReportReadyEmail(toEmail, firstName) {
+  const res = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${process.env.RESEND_API_KEY}`
+    },
+    body: JSON.stringify({
+      from: 'Wilson <wilson@pleaseroastmyresume.com>',
+      to: [toEmail],
+      reply_to: process.env.GMAIL_USER,
+      subject: "It's Ready.",
+      html: `<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"></head>
+<body style="margin:0;padding:0;background:#ffffff;font-family:Georgia,serif;">
+  <div style="display:none;max-height:0;overflow:hidden;mso-hide:all;">
+    Your OE Risk Report is ready. We barely made it out alive.&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;
+  </div>
+  <div style="max-width:560px;margin:0 auto;padding:48px 32px;color:#111111;">
+    <p style="font-size:15px;line-height:1.9;margin:0 0 16px;">${firstName},</p>
+    <p style="font-size:15px;line-height:1.9;margin:0 0 16px;">We barely made it out alive.</p>
+    <p style="font-size:15px;line-height:1.9;margin:0 0 16px;">First, we took a boat to the treacherous jungle most folks know as LinkedIn. But the indigenous people call it "Kah-Nekth", which roughly translates to "Hell."</p>
+    <p style="font-size:15px;line-height:1.9;margin:0 0 16px;">Alexander kept staring at the fruit on the trees. Beautiful blue rectangles with rounded edges. Each one whispered, "apply now." I knew we would lose him. He was so young.</p>
+    <p style="font-size:15px;line-height:1.9;margin:0 0 16px;">After that we became you. Yes you.</p>
+    <p style="font-size:15px;line-height:1.9;margin:0 0 16px;">Half the battle is understanding your workload.</p>
+    <p style="font-size:15px;line-height:1.9;margin:0 0 24px;">I can tell you this. That is the last time. Every team member has some form of complex PTSD now.</p>
+    <p style="font-size:15px;line-height:1.9;margin:0 0 32px;">Hope it was worth it.</p>
+    <a href="REPORT_LINK_PLACEHOLDER" style="display:inline-block;background:#d91e1e;color:#fff;font-family:Inter,Arial,sans-serif;font-weight:700;font-size:16px;padding:16px 32px;border-radius:8px;text-decoration:none;letter-spacing:-0.01em;">View My Report →</a>
+    <p style="font-size:15px;line-height:1.9;margin:40px 0 0;">-W.W.</p>
+    <p style="font-size:13px;line-height:1.7;color:#888888;border-top:1px solid #eeeeee;padding-top:20px;margin:32px 0 0;">P.S. Alex came back but he is not the same. Beware the allure of the Easy Apply.</p>
+  </div>
+</body>
+</html>`
+    })
+  });
+  return res.ok;
+}
+
 /* ────────────────────────────────────────────
    BACKGROUND POLLER
 ──────────────────────────────────────────── */
@@ -381,6 +420,45 @@ app.get("/admin", requireAuth, (req, res) => res.send(adminPage()));
 /* ────────────────────────────────────────────
    ADMIN: API
 ──────────────────────────────────────────── */
+app.post('/api/questionnaire', async (req, res) => {
+  const {
+    name, email, jobTitle, years, seniority,
+    salary, hoursWork, hoursMeetings, remote
+  } = req.body;
+
+  try {
+    await supabase.from('questionnaire_responses').insert({
+      name,
+      email,
+      job_title: jobTitle,
+      years_experience: years,
+      seniority,
+      salary_range: salary,
+      hours_work_per_day: parseInt(hoursWork) || null,
+      hours_meetings_per_day: parseInt(hoursMeetings) || null,
+      work_location: remote
+    });
+  } catch(e) {
+    console.error('Questionnaire insert error:', e.message);
+  }
+
+  // Schedule report email in ~10 minutes
+  setTimeout(async () => {
+    try {
+      await sendReportReadyEmail(email, name);
+      await supabase
+        .from('questionnaire_responses')
+        .update({ report_sent_at: new Date().toISOString() })
+        .eq('email', email);
+      console.log('[Report] Sent to', email);
+    } catch(e) {
+      console.error('[Report] Email failed:', e.message);
+    }
+  }, 10 * 60 * 1000);
+
+  res.json({ ok: true });
+});
+
 app.get("/admin/api/submissions", requireAuth, async (req, res) => {
   const { data, error } = await supabase
     .from("submissions")
@@ -440,6 +518,9 @@ app.get("/admin/uploads/:filename", requireAuth, (req, res) => {
 });
 
 app.get("/admin/*path", requireAuth, (req, res) => res.redirect("/admin"));
+app.get("/oto", (req, res) => res.sendFile(path.join(__dirname, "oto.html")));
+app.get("/questionnaire", (req, res) => res.sendFile(path.join(__dirname, "questionnaire.html")));
+app.get("/waiting", (req, res) => res.sendFile(path.join(__dirname, "waiting.html")));
 app.get("/resources", (req, res) => res.sendFile(path.join(__dirname, "resources.html")));
 app.get("/", (req, res) => res.sendFile(path.join(__dirname, "index.html")));
 app.use(express.static(__dirname, { index: false, maxAge: "1h" }));

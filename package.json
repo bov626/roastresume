@@ -17,6 +17,7 @@
     "express-session": "^1.19.0",
     "form-data": "^4.0.5",
     "multer": "^2.0.2",
+    "stripe": "^22.0.0",
     "uuid": "^13.0.0"
   }
 }

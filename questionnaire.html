@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Build My Report — OE Risk Report</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:'Inter',sans-serif;
+    background:#000;color:#fff;
+    min-height:100vh;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    padding:24px;
+    background-image:radial-gradient(ellipse 55% 50% at 100% 100%, rgba(100,0,0,0.3) 0%, transparent 60%);
+  }
+
+  /* Progress bar */
+  .progress-bar{
+    position:fixed;top:0;left:0;right:0;height:3px;
+    background:rgba(255,255,255,0.06);z-index:100;
+  }
+  .progress-fill{
+    height:100%;background:#d91e1e;
+    transition:width 0.4s ease;border-radius:0 2px 2px 0;
+  }
+
+  .steps{width:100%;max-width:520px}
+
+  .step{display:none;flex-direction:column;align-items:stretch;}
+  .step.active{display:flex;animation:slideUp .35s ease}
+  @keyframes slideUp{
+    from{opacity:0;transform:translateY(28px)}
+    to{opacity:1;transform:translateY(0)}
+  }
+
+  /* Reaction */
+  .reaction{
+    font-size:12px;font-weight:800;color:#d91e1e;
+    margin-bottom:10px;min-height:18px;letter-spacing:.06em;
+    text-transform:uppercase;
+  }
+
+  /* Question with inline editable span */
+  .question{
+    font-size:clamp(22px,3.5vw,32px);
+    font-weight:800;letter-spacing:-.02em;line-height:1.3;
+    margin-bottom:28px;color:#fff;
+    word-break:break-word;
+  }
+
+  /* Inline editable field — looks like part of the sentence */
+  .inline-edit{
+    display:inline;
+    border:none;
+    border-bottom:2px solid #d91e1e;
+    background:transparent;
+    color:#fff;
+    font-size:inherit;
+    font-weight:inherit;
+    font-family:inherit;
+    letter-spacing:inherit;
+    outline:none;
+    caret-color:#d91e1e;
+    min-width:60px;
+    padding:0 2px 2px;
+    text-underline-offset:4px;
+  }
+  .inline-edit::placeholder{color:#333}
+  .inline-edit:focus{border-bottom-color:#fff}
+
+  /* Hint below question */
+  .question-hint{
+    font-size:12px;color:#2a2a2a;margin-bottom:20px;margin-top:-20px;
+  }
+
+  /* Standard text input for job title, hours etc */
+  .q-input{
+    width:100%;background:transparent;
+    border:none;border-bottom:1.5px solid #1a1a1a;
+    color:#fff;font-size:20px;font-family:'Inter',sans-serif;
+    font-weight:500;padding:12px 0;outline:none;
+    caret-color:#d91e1e;margin-bottom:24px;
+    transition:border-color .2s;
+  }
+  .q-input:focus{border-bottom-color:#d91e1e}
+  .q-input::placeholder{color:#222}
+
+  /* Bubbles — standard */
+  .bubbles{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:28px}
+  .bubble{
+    background:rgba(255,255,255,0.04);
+    border:1px solid #1e1e1e;
+    color:#888;font-size:14px;font-weight:600;
+    padding:10px 18px;border-radius:100px;
+    cursor:pointer;transition:all .15s;
+    font-family:'Inter',sans-serif;
+  }
+  .bubble:hover{border-color:#555;color:#fff}
+  .bubble.selected{background:rgba(217,30,30,.15);border-color:#d91e1e;color:#fff}
+
+  /* Seniority bubbles — bigger */
+  .seniority-bubbles{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:28px}
+  .sen-bubble{
+    flex:1;min-width:120px;
+    background:rgba(255,255,255,0.04);
+    border:1px solid #1e1e1e;
+    color:#888;font-size:16px;font-weight:700;
+    padding:18px 20px;border-radius:12px;
+    cursor:pointer;transition:all .15s;
+    font-family:'Inter',sans-serif;
+    text-align:center;
+  }
+  .sen-bubble:hover{border-color:#555;color:#fff}
+  .sen-bubble.selected{background:rgba(217,30,30,.15);border-color:#d91e1e;color:#fff}
+  .sen-bubble-sub{font-size:11px;font-weight:500;color:#333;margin-top:4px}
+  .sen-bubble.selected .sen-bubble-sub{color:#d91e1e}
+
+  /* Yes/No */
+  .yn-btns{display:flex;flex-direction:column;gap:10px;margin-bottom:28px}
+  .yn-btn{
+    background:rgba(255,255,255,0.04);
+    border:1px solid #1e1e1e;color:#888;
+    font-size:15px;font-weight:600;
+    padding:14px 20px;border-radius:10px;
+    cursor:pointer;text-align:left;
+    font-family:'Inter',sans-serif;transition:all .15s;
+  }
+  .yn-btn:hover{border-color:#555;color:#fff}
+  .yn-btn.yes:hover,.yn-btn.yes.selected{background:rgba(217,30,30,.15);border-color:#d91e1e;color:#fff}
+  .yn-btn.no:hover,.yn-btn.no.selected{background:rgba(255,255,255,.06);border-color:#444;color:#fff}
+
+  /* Continue button */
+  .cont-btn{
+    display:flex;align-items:center;justify-content:center;gap:9px;
+    width:100%;background:rgba(100,0,0,0.5);
+    color:rgba(255,255,255,0.3);font-size:16px;font-weight:600;
+    padding:16px 20px;border:none;border-radius:8px;
+    cursor:default;transition:background .2s,color .2s;
+    font-family:'Inter',sans-serif;pointer-events:none;
+  }
+  .cont-btn.ready{
+    background:#d91e1e;color:#fff;
+    cursor:pointer;pointer-events:all;
+  }
+  .cont-btn.ready:hover{background:#f02525}
+
+  .hint{margin-top:12px;font-size:11px;color:#1e1e1e;text-align:center}
+  kbd{background:rgba(255,255,255,.08);border-radius:4px;padding:1px 6px;font-size:11px;font-family:inherit}
+</style>
+</head>
+<body>
+
+<div class="progress-bar">
+  <div class="progress-fill" id="progress" style="width:0%"></div>
+</div>
+
+<div class="steps" id="steps">
+
+  <!-- STEP 0: Intro -->
+  <div class="step active" id="s0">
+    <div class="question">First, let's check two things.</div>
+    <button class="cont-btn ready" onclick="goTo(1)">Continue →</button>
+  </div>
+
+  <!-- STEP 1: Confirm / edit name inline -->
+  <div class="step" id="s1">
+    <div class="question">
+      Your name is <input
+        class="inline-edit"
+        id="input-name"
+        type="text"
+        placeholder="your name"
+        size="10"
+        oninput="onNameInput(this.value)"
+        onkeydown="if(event.key==='Enter'){document.getElementById('btn-name').click()}"
+      />, right?
+    </div>
+    <p class="question-hint">You can type.</p>
+    <button class="cont-btn" id="btn-name" onclick="goTo(2)">Yep →</button>
+  </div>
+
+  <!-- STEP 2: Confirm / edit email inline -->
+  <div class="step" id="s2">
+    <div class="question">
+      We're sending the report to <input
+        class="inline-edit"
+        id="input-email"
+        type="email"
+        placeholder="your@email.com"
+        size="20"
+        oninput="onEmailInput(this.value)"
+        onkeydown="if(event.key==='Enter'){document.getElementById('btn-email').click()}"
+      />?
+    </div>
+    <button class="cont-btn" id="btn-email" onclick="goTo(3)">You got it →</button>
+  </div>
+
+  <!-- STEP 3: Job title -->
+  <div class="step" id="s3">
+    <div class="question">Sick. Now on to the new stuff.<br>What's your job title?</div>
+    <input class="q-input" id="input-jobtitle" type="text" placeholder="e.g. Product Manager" oninput="onJobTitleInput(this.value)" />
+    <button class="cont-btn" id="btn-jobtitle" onclick="goTo(4)">Next →</button>
+    <p class="hint">Press <kbd>Enter</kbd> to continue</p>
+  </div>
+
+  <!-- STEP 4: Seniority only — no text input -->
+  <div class="step" id="s4">
+    <div class="reaction" id="reaction-4"></div>
+    <div class="question">How long have you been doing that?</div>
+    <div class="seniority-bubbles">
+      <button class="sen-bubble" onclick="selectSeniority('entry',this)">
+        Entry
+        <div class="sen-bubble-sub">0 – 3 years</div>
+      </button>
+      <button class="sen-bubble" onclick="selectSeniority('mid',this)">
+        Mid-level
+        <div class="sen-bubble-sub">3 – 7 years</div>
+      </button>
+      <button class="sen-bubble" onclick="selectSeniority('senior',this)">
+        Senior
+        <div class="sen-bubble-sub">7+ years</div>
+      </button>
+    </div>
+    <button class="cont-btn" id="btn-seniority" onclick="goTo(5)">Next →</button>
+  </div>
+
+  <!-- STEP 5: Salary -->
+  <div class="step" id="s5">
+    <div class="reaction" id="reaction-5"></div>
+    <div class="question">How much are they paying you?</div>
+    <div class="bubbles">
+      <button class="bubble" onclick="selectSalary('lt40',this)">Less than $40k</button>
+      <button class="bubble" onclick="selectSalary('40-70',this)">$40 – $70k</button>
+      <button class="bubble" onclick="selectSalary('70-100',this)">$70 – $100k</button>
+      <button class="bubble" onclick="selectSalary('100-130',this)">$100 – $130k</button>
+      <button class="bubble" onclick="selectSalary('130plus',this)">$130k+</button>
+    </div>
+    <button class="cont-btn" id="btn-salary" onclick="goTo(6)">Next →</button>
+  </div>
+
+  <!-- STEP 6: Hours of work -->
+  <div class="step" id="s6">
+    <div class="reaction" id="reaction-6"></div>
+    <div class="question">How many hours of actual work do you do per day?</div>
+    <p class="question-hint" style="margin-bottom:16px">Not "at your desk" or "in a meeting." Heads down work.</p>
+    <input class="q-input" id="input-hours" type="number" min="0" max="24" placeholder="Hours" oninput="onHoursInput(this.value)" />
+    <button class="cont-btn" id="btn-hours" onclick="goTo(7)">Next →</button>
+  </div>
+
+  <!-- STEP 7: Meetings -->
+  <div class="step" id="s7">
+    <div class="reaction" id="reaction-7"></div>
+    <div class="question">On average, how many hours are you in meetings every day?</div>
+    <input class="q-input" id="input-meetings" type="number" min="0" max="24" placeholder="Hours" oninput="onMeetingsInput(this.value)" />
+    <button class="cont-btn" id="btn-meetings" onclick="goTo(8)">Next →</button>
+  </div>
+
+  <!-- STEP 8: Remote -->
+  <div class="step" id="s8">
+    <div class="reaction" id="reaction-8"></div>
+    <div class="question">Finally. Are you remote?</div>
+    <div class="yn-btns">
+      <button class="yn-btn" onclick="selectRemote('no',this)">Nope</button>
+      <button class="yn-btn" onclick="selectRemote('hybrid',this)">Hybrid</button>
+      <button class="yn-btn yes" onclick="selectRemote('yes',this)">Yes</button>
+    </div>
+    <button class="cont-btn" id="btn-remote" onclick="submitAndWait()">Build my report →</button>
+  </div>
+
+</div>
+
+<script>
+  const TOTAL_STEPS = 9;
+  let currentStep = 0;
+  let answers = {
+    name: '', email: '', jobTitle: '',
+    seniority: '', salary: '',
+    hoursWork: '', hoursMeetings: '', remote: ''
+  };
+
+  // Pre-fill from URL params if available (e.g. passed from Stripe success)
+  const params = new URLSearchParams(window.location.search);
+  const prefillName  = params.get('name')  || '';
+  const prefillEmail = params.get('email') || '';
+  if (prefillName)  { answers.name  = prefillName;  }
+  if (prefillEmail) { answers.email = prefillEmail; }
+
+  // Apply prefills when steps become active
+  function applyPrefills() {
+    const nameInput = document.getElementById('input-name');
+    const emailInput = document.getElementById('input-email');
+    if (nameInput && prefillName) {
+      nameInput.value = prefillName;
+      nameInput.size = Math.max(prefillName.length + 2, 8);
+      document.getElementById('btn-name').classList.add('ready');
+    }
+    if (emailInput && prefillEmail) {
+      emailInput.value = prefillEmail;
+      emailInput.size = Math.max(prefillEmail.length + 2, 16);
+      document.getElementById('btn-email').classList.add('ready');
+    }
+  }
+
+  function goTo(n) {
+    document.getElementById('s' + currentStep).classList.remove('active');
+    currentStep = n;
+    const next = document.getElementById('s' + currentStep);
+    next.classList.add('active');
+    document.getElementById('progress').style.width = (n / (TOTAL_STEPS-1) * 100) + '%';
+
+    // Dynamic reactions based on actual answers
+    if (n === 4) {
+      // Reaction to job title — vary based on first letter for fun
+      const t = answers.jobTitle.toLowerCase();
+      let r = 'Noted.';
+      if (t.includes('engineer') || t.includes('developer') || t.includes('data')) r = 'Intriguing.';
+      else if (t.includes('manager') || t.includes('director') || t.includes('lead')) r = 'Classic.';
+      else if (t.includes('analyst') || t.includes('consultant')) r = 'Noted.';
+      document.getElementById('reaction-4').textContent = r;
+    }
+    if (n === 5) {
+      // Reaction to seniority
+      const reactions = { entry: 'Just getting started.', mid: 'Classic.', senior: 'Intriguing.' };
+      document.getElementById('reaction-5').textContent = reactions[answers.seniority] || '';
+    }
+    if (n === 7) {
+      // Reaction to hours of work
+      const h = parseInt(answers.hoursWork) || 0;
+      let r = 'Noted.';
+      if (h <= 2) r = 'Workaholic.';
+      else if (h <= 4) r = 'Perfecto.';
+      else if (h >= 7) r = 'That tracks.';
+      document.getElementById('reaction-7').textContent = r;
+    }
+    if (n === 8) {
+      // Reaction to meetings
+      const m = parseInt(answers.hoursMeetings) || 0;
+      let r = 'Noted.';
+      if (m >= 5) r = 'Classic corporate.';
+      else if (m <= 1) r = 'Lucky you.';
+      document.getElementById('reaction-8').textContent = r;
+    }
+
+    // Focus inline input or regular input
+    setTimeout(() => {
+      const inp = next.querySelector('.inline-edit, .q-input');
+      if (inp) inp.focus();
+    }, 80);
+  }
+
+  // Name inline
+  function onNameInput(val) {
+    answers.name = val.trim();
+    const inp = document.getElementById('input-name');
+    inp.size = Math.max(val.length + 2, 8);
+    document.getElementById('btn-name').classList.toggle('ready', answers.name.length > 0);
+  }
+
+  // Email inline
+  function onEmailInput(val) {
+    answers.email = val.trim();
+    const inp = document.getElementById('input-email');
+    inp.size = Math.max(val.length + 2, 16);
+    const ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(answers.email);
+    document.getElementById('btn-email').classList.toggle('ready', ok);
+  }
+
+  // Job title
+  function onJobTitleInput(val) {
+    answers.jobTitle = val.trim();
+    document.getElementById('btn-jobtitle').classList.toggle('ready', answers.jobTitle.length > 0);
+  }
+
+  // Seniority
+  function selectSeniority(val, el) {
+    answers.seniority = val;
+    document.querySelectorAll('.sen-bubble').forEach(b => b.classList.remove('selected'));
+    el.classList.add('selected');
+    document.getElementById('btn-seniority').classList.add('ready');
+  }
+
+  // Salary
+  const SALARY_REACTIONS = {
+    'lt40': 'We can fix that.',
+    '40-70': 'We can fix that.',
+    '70-100': 'Not bad.',
+    '100-130': 'Not bad.',
+    '130plus': 'Big money.'
+  };
+  function selectSalary(val, el) {
+    answers.salary = val;
+    document.querySelectorAll('#s5 .bubble').forEach(b => b.classList.remove('selected'));
+    el.classList.add('selected');
+    document.getElementById('btn-salary').classList.add('ready');
+    document.getElementById('reaction-6').textContent = SALARY_REACTIONS[val] || '';
+  }
+
+  // Hours work
+  function onHoursInput(val) {
+    answers.hoursWork = val;
+    document.getElementById('btn-hours').classList.toggle('ready', val.length > 0 && parseInt(val) >= 0);
+  }
+
+  // Meetings
+  function onMeetingsInput(val) {
+    answers.hoursMeetings = val;
+    document.getElementById('btn-meetings').classList.toggle('ready', val.length > 0 && parseInt(val) >= 0);
+  }
+
+  // Remote
+  function selectRemote(val, el) {
+    answers.remote = val;
+    document.querySelectorAll('.yn-btn').forEach(b => b.classList.remove('selected'));
+    el.classList.add('selected');
+    document.getElementById('btn-remote').classList.add('ready');
+  }
+
+  // Enter key
+  document.addEventListener('keydown', e => {
+    if (e.key !== 'Enter') return;
+    // Don't trigger on inline edits — they handle Enter themselves
+    if (document.activeElement.classList.contains('inline-edit')) return;
+    const btn = document.querySelector('#s'+currentStep+' .cont-btn.ready');
+    if (btn) btn.click();
+  });
+
+  // Submit
+  async function submitAndWait() {
+    try {
+      await fetch('/api/questionnaire', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify(answers)
+      });
+    } catch(e) { console.error(e); }
+    window.location.href = '/waiting?name=' + encodeURIComponent(answers.name) + '&email=' + encodeURIComponent(answers.email);
+  }
+
+  // Apply prefills on load
+  applyPrefills();
+</script>
+
+</body>
+</html>

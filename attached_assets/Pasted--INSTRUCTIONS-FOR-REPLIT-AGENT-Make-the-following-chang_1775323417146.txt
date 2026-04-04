@@ -1,0 +1,173 @@
+=== INSTRUCTIONS FOR REPLIT AGENT ===
+
+Make the following changes to server.js and index.html. Do not change anything else.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+CHANGE 1: Add 3 new routes to server.js
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Find this line in server.js:
+  app.get('/resources', (req, res) => res.sendFile(path.join(__dirname, 'resources.html')));
+
+Add these THREE lines directly above it:
+  app.get('/oto', (req, res) => res.sendFile(path.join(__dirname, 'oto.html')));
+  app.get('/questionnaire', (req, res) => res.sendFile(path.join(__dirname, 'questionnaire.html')));
+  app.get('/waiting', (req, res) => res.sendFile(path.join(__dirname, 'waiting.html')));
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+CHANGE 2: Add questionnaire API endpoint to server.js
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Find this line in server.js:
+  app.get('/admin/api/submissions', requireAuth, async (req, res) => {
+
+Add this block DIRECTLY ABOVE that line:
+
+app.post('/api/questionnaire', async (req, res) => {
+  const {
+    name, email, jobTitle, years, seniority,
+    salary, hoursWork, hoursMeetings, remote
+  } = req.body;
+
+  try {
+    await supabase.from('questionnaire_responses').insert({
+      name,
+      email,
+      job_title: jobTitle,
+      years_experience: years,
+      seniority,
+      salary_range: salary,
+      hours_work_per_day: parseInt(hoursWork) || null,
+      hours_meetings_per_day: parseInt(hoursMeetings) || null,
+      work_location: remote
+    });
+  } catch(e) {
+    console.error('Questionnaire insert error:', e.message);
+  }
+
+  // Schedule report email in ~10 minutes
+  setTimeout(async () => {
+    try {
+      await sendReportReadyEmail(email, name);
+      await supabase
+        .from('questionnaire_responses')
+        .update({ report_sent_at: new Date().toISOString() })
+        .eq('email', email);
+      console.log('[Report] Sent to', email);
+    } catch(e) {
+      console.error('[Report] Email failed:', e.message);
+    }
+  }, 10 * 60 * 1000);
+
+  res.json({ ok: true });
+});
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+CHANGE 3: Add sendReportReadyEmail function to server.js
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Find the sendResourcesEmail function in server.js.
+Add this new function DIRECTLY BELOW the sendResourcesEmail function:
+
+async function sendReportReadyEmail(toEmail, firstName) {
+  const res = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${process.env.RESEND_API_KEY}`
+    },
+    body: JSON.stringify({
+      from: 'Wilson <wilson@pleaseroastmyresume.com>',
+      to: [toEmail],
+      reply_to: process.env.GMAIL_USER,
+      subject: "It's Ready.",
+      html: `<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"></head>
+<body style="margin:0;padding:0;background:#ffffff;font-family:Georgia,serif;">
+  <div style="display:none;max-height:0;overflow:hidden;mso-hide:all;">
+    Your OE Risk Report is ready. We barely made it out alive.&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;
+  </div>
+  <div style="max-width:560px;margin:0 auto;padding:48px 32px;color:#111111;">
+    <p style="font-size:15px;line-height:1.9;margin:0 0 16px;">${firstName},</p>
+    <p style="font-size:15px;line-height:1.9;margin:0 0 16px;">We barely made it out alive.</p>
+    <p style="font-size:15px;line-height:1.9;margin:0 0 16px;">First, we took a boat to the treacherous jungle most folks know as LinkedIn. But the indigenous people call it "Kah-Nekth", which roughly translates to "Hell."</p>
+    <p style="font-size:15px;line-height:1.9;margin:0 0 16px;">Alexander kept staring at the fruit on the trees. Beautiful blue rectangles with rounded edges. Each one whispered, "apply now." I knew we would lose him. He was so young.</p>
+    <p style="font-size:15px;line-height:1.9;margin:0 0 16px;">After that we became you. Yes you.</p>
+    <p style="font-size:15px;line-height:1.9;margin:0 0 16px;">Half the battle is understanding your workload.</p>
+    <p style="font-size:15px;line-height:1.9;margin:0 0 24px;">I can tell you this. That is the last time. Every team member has some form of complex PTSD now.</p>
+    <p style="font-size:15px;line-height:1.9;margin:0 0 32px;">Hope it was worth it.</p>
+    <a href="REPORT_LINK_PLACEHOLDER" style="display:inline-block;background:#d91e1e;color:#fff;font-family:Inter,Arial,sans-serif;font-weight:700;font-size:16px;padding:16px 32px;border-radius:8px;text-decoration:none;letter-spacing:-0.01em;">View My Report →</a>
+    <p style="font-size:15px;line-height:1.9;margin:40px 0 0;">-W.W.</p>
+    <p style="font-size:13px;line-height:1.7;color:#888888;border-top:1px solid #eeeeee;padding-top:20px;margin:32px 0 0;">P.S. Alex came back but he is not the same. Beware the allure of the Easy Apply.</p>
+  </div>
+</body>
+</html>`
+    })
+  });
+  return res.ok;
+}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+CHANGE 4: Add OTO trigger to index.html
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+In index.html, find the queue confirmation screen (step fo-3).
+It contains the animated checkmark and "You're in the queue." text.
+
+Find the closing </div> of the fo-q-inner div inside fo-3.
+Add this block AFTER it (but still inside fo-3):
+
+<div id="oto-teaser" style="display:none;margin-top:40px;max-width:400px;text-align:center;animation:slideUp .5s ease;">
+  <div style="width:40px;height:1px;background:#1a1a1a;margin:0 auto 28px;"></div>
+  <p style="font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#333;margin-bottom:12px;">But before you go</p>
+  <div id="oto-q1" style="margin-bottom:16px;">
+    <p style="font-size:18px;font-weight:700;color:#fff;margin-bottom:14px;">Are you interested in job stacking?</p>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <button onclick="otoYes()" style="background:rgba(217,30,30,.1);border:1px solid rgba(217,30,30,.25);color:#f87171;font-size:14px;font-weight:600;padding:12px 20px;border-radius:8px;cursor:pointer;font-family:inherit;transition:all .15s;" onmouseover="this.style.background='rgba(217,30,30,.2)'" onmouseout="this.style.background='rgba(217,30,30,.1)'">Yeah</button>
+      <button onclick="otoNo()" style="background:rgba(255,255,255,.03);border:1px solid #1a1a1a;color:#444;font-size:14px;font-weight:600;padding:12px 20px;border-radius:8px;cursor:pointer;font-family:inherit;transition:all .15s;" onmouseover="this.style.color='#888'" onmouseout="this.style.color='#444'">No, I'm fine with one income</button>
+    </div>
+  </div>
+  <div id="oto-q2" style="display:none;animation:slideUp .35s ease;">
+    <p style="font-size:18px;font-weight:700;color:#fff;margin-bottom:14px;">Are you based in the US?</p>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <button onclick="otoUSYes()" style="background:rgba(217,30,30,.1);border:1px solid rgba(217,30,30,.25);color:#f87171;font-size:14px;font-weight:600;padding:12px 20px;border-radius:8px;cursor:pointer;font-family:inherit;transition:all .15s;" onmouseover="this.style.background='rgba(217,30,30,.2)'" onmouseout="this.style.background='rgba(217,30,30,.1)'">Yes</button>
+      <button onclick="otoNo()" style="background:rgba(255,255,255,.03);border:1px solid #1a1a1a;color:#444;font-size:14px;font-weight:600;padding:12px 20px;border-radius:8px;cursor:pointer;font-family:inherit;transition:all .15s;" onmouseover="this.style.color='#888'" onmouseout="this.style.color='#444'">No</button>
+    </div>
+  </div>
+</div>
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+CHANGE 5: Add OTO JS functions to index.html
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+In index.html, find the closing </script> tag of the main script block.
+Add these functions BEFORE that closing tag:
+
+function otoYes() {
+  document.getElementById('oto-q1').style.display = 'none';
+  document.getElementById('oto-q2').style.display = 'block';
+}
+
+function otoNo() {
+  document.getElementById('oto-teaser').style.display = 'none';
+}
+
+function otoUSYes() {
+  window.open('/oto', '_blank');
+}
+
+Also find the launchFireworks() call inside the setTimeout in foContinue (step 2 handling).
+It looks like:
+  document.getElementById('fo-3').classList.add('q-live');
+  launchFireworks();
+
+Add this line AFTER launchFireworks():
+  setTimeout(() => { document.getElementById('oto-teaser').style.display = 'block'; }, 2000);
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Also add these 3 files to the project root:
+- oto.html
+- questionnaire.html
+- waiting.html
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

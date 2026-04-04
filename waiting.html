@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Building Your Report — OE Risk Report</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:'Inter',sans-serif;background:#0a0a0a;color:#fff;
+    min-height:100vh;overflow-x:hidden;
+  }
+
+  .container{
+    max-width:640px;margin:0 auto;
+    padding:60px 24px 80px;
+  }
+
+  /* Header */
+  .eyebrow{
+    font-size:10px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;
+    color:#333;margin-bottom:16px;
+  }
+  .headline{
+    font-size:clamp(28px,5vw,44px);
+    font-weight:900;letter-spacing:-.03em;line-height:1.1;
+    margin-bottom:8px;
+  }
+  .headline span{color:#d91e1e}
+  .subline{font-size:15px;color:#444;margin-bottom:48px}
+
+  /* Status checklist */
+  .status-wrap{margin-bottom:48px}
+  .status-label{
+    font-size:10px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;
+    color:#2a2a2a;margin-bottom:16px;
+  }
+  .status-items{display:flex;flex-direction:column;gap:10px}
+  .status-item{
+    display:flex;align-items:center;gap:14px;
+    background:#0e0e0e;border:1px solid #111;
+    border-radius:10px;padding:14px 16px;
+    transition:all .4s ease;
+  }
+  .status-item.done{border-color:#1a2a1a}
+  .status-item.active{border-color:#1a1a2a}
+
+  .status-check{
+    width:20px;height:20px;border-radius:6px;
+    border:1.5px solid #1e1e1e;
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;transition:all .3s ease;
+  }
+  .status-item.done .status-check{
+    background:#1a3a1a;border-color:#2a5a2a;
+  }
+  .status-item.active .status-check{
+    border-color:#d91e1e;
+  }
+  .check-icon{display:none;color:#4ade80;font-size:11px;font-weight:900}
+  .status-item.done .check-icon{display:block}
+
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .spinner{
+    display:none;
+    width:10px;height:10px;
+    border:1.5px solid rgba(217,30,30,0.3);
+    border-top-color:#d91e1e;
+    border-radius:50%;
+    animation:spin .7s linear infinite;
+  }
+  .status-item.active .spinner{display:block}
+  .status-item.active .status-check{align-items:center;justify-content:center}
+
+  .status-text{font-size:13px;font-weight:600;color:#333;transition:color .3s}
+  .status-item.done .status-text{color:#4ade80}
+  .status-item.active .status-text{color:#fff}
+
+  /* Divider */
+  .divider{
+    width:32px;height:2px;background:#d91e1e;
+    border-radius:2px;margin:0 0 32px;opacity:.6;
+  }
+
+  /* While you wait */
+  .while-heading{
+    font-size:20px;font-weight:800;letter-spacing:-.02em;
+    margin-bottom:6px;
+  }
+  .while-sub{font-size:14px;color:#444;margin-bottom:24px}
+
+  /* Video cards */
+  .video-cards{display:flex;flex-direction:column;gap:12px;margin-bottom:12px}
+  .video-card{
+    display:flex;align-items:center;gap:16px;
+    background:#0e0e0e;border:1px solid #1a1a1a;
+    border-radius:12px;padding:16px;
+    text-decoration:none;color:#fff;
+    transition:border-color .15s;
+    cursor:pointer;
+  }
+  .video-card:hover{border-color:#2a2a2a}
+  .video-card.locked{cursor:default;opacity:.5}
+  .video-card.locked:hover{border-color:#1a1a1a}
+
+  .vid-thumb{
+    width:72px;height:48px;
+    background:#111;border-radius:8px;
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;position:relative;
+  }
+  .vid-play{color:#d91e1e;font-size:20px}
+  .vid-exclusive{
+    position:absolute;top:-6px;right:-6px;
+    background:#d91e1e;color:#fff;
+    font-size:7px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;
+    padding:2px 5px;border-radius:3px;
+  }
+  .vid-lock{
+    position:absolute;top:-6px;right:-6px;
+    background:#1a1a1a;color:#444;
+    font-size:8px;padding:3px 5px;border-radius:3px;
+  }
+
+  .vid-info{}
+  .vid-title{font-size:13px;font-weight:700;margin-bottom:3px}
+  .vid-meta{font-size:11px;color:#333}
+  .vid-locked-label{font-size:11px;color:#d91e1e;font-weight:600;margin-top:4px}
+
+  /* Pulse animation on active step */
+  @keyframes pulse{
+    0%,100%{opacity:1}
+    50%{opacity:.5}
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="eyebrow">OE Risk Report</div>
+  <h1 class="headline"><span id="name-out">Hey</span>, give us 20ish mins.</h1>
+  <p class="subline" id="headline-sub">Your report is being built.</p>
+
+  <div class="status-wrap">
+    <div class="status-label">Status</div>
+    <div class="status-items">
+      <div class="status-item active" id="si-0">
+        <div class="status-check">
+          <div class="spinner"></div>
+          <span class="check-icon">✓</span>
+        </div>
+        <div class="status-text">Pulling live job market data</div>
+      </div>
+      <div class="status-item" id="si-1">
+        <div class="status-check"><span class="check-icon">✓</span></div>
+        <div class="status-text">Analyzing remote job availability</div>
+      </div>
+      <div class="status-item" id="si-2">
+        <div class="status-check"><span class="check-icon">✓</span></div>
+        <div class="status-text">Checking non-compete enforceability by state</div>
+      </div>
+      <div class="status-item" id="si-3">
+        <div class="status-check"><span class="check-icon">✓</span></div>
+        <div class="status-text">Calculating OE readiness score</div>
+      </div>
+      <div class="status-item" id="si-4">
+        <div class="status-check"><span class="check-icon">✓</span></div>
+        <div class="status-text">Writing your personalized risk analysis</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="while-heading">While you wait.</div>
+  <p class="while-sub">Here's 2 of 3 exclusive videos. The third is in your report.</p>
+
+  <div class="video-cards">
+    <!-- Video 1 — unlocked -->
+    <a class="video-card" href="VIDEO_1_URL_PLACEHOLDER" target="_blank">
+      <div class="vid-thumb">
+        <span class="vid-play">▶</span>
+        <span class="vid-exclusive">Exclusive</span>
+      </div>
+      <div class="vid-info">
+        <div class="vid-title">How to pass background checks</div>
+        <div class="vid-meta">12 min · Exclusive</div>
+      </div>
+    </a>
+
+    <!-- Video 2 — unlocked -->
+    <a class="video-card" href="VIDEO_2_URL_PLACEHOLDER" target="_blank">
+      <div class="vid-thumb">
+        <span class="vid-play">▶</span>
+        <span class="vid-exclusive">Exclusive</span>
+      </div>
+      <div class="vid-info">
+        <div class="vid-title">Managing two calendars without losing your mind</div>
+        <div class="vid-meta">8 min · Exclusive</div>
+      </div>
+    </a>
+
+    <!-- Video 3 — locked -->
+    <div class="video-card locked">
+      <div class="vid-thumb">
+        <span style="font-size:18px">🔒</span>
+        <span class="vid-lock">Locked</span>
+      </div>
+      <div class="vid-info">
+        <div class="vid-title" style="color:#333">The OE exit strategy</div>
+        <div class="vid-locked-label">Be patient. It's in the report.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // Get name from URL params
+  const params = new URLSearchParams(window.location.search);
+  const name = params.get('name') || 'Hey';
+  document.getElementById('name-out').textContent = name;
+
+  // Auto-progress status items
+  const items = [0,1,2,3,4];
+  const delays = [0, 90000, 300000, 480000, 600000]; // 0, 1.5min, 5min, 8min, 10min
+
+  function markDone(i) {
+    const el = document.getElementById('si-'+i);
+    el.classList.remove('active');
+    el.classList.add('done');
+    if (i+1 < items.length) {
+      document.getElementById('si-'+(i+1)).classList.add('active');
+    }
+  }
+
+  delays.forEach((delay, i) => {
+    setTimeout(() => markDone(i), delay + 8000);
+  });
+
+  // After ~10 min, update headline to say report is ready
+  setTimeout(() => {
+    document.getElementById('headline-sub').textContent = 'Check your email. Your report is ready.';
+    document.getElementById('headline-sub').style.color = '#4ade80';
+  }, 620000); // ~10.3 minutes
+</script>
+
+</body>
+</html>
