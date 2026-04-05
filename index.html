@@ -208,12 +208,17 @@
         max-width: 720px;
         aspect-ratio: 16/9;
         background: #0f0f0f;
-        border: 1px solid var(--border);
+        border: 1px solid rgba(217,30,30,0.35);
         border-radius: 18px;
         overflow: hidden;
         position: relative;
         margin: 28px 0;
-        box-shadow: 0 0 50px rgba(139, 0, 0, 0.25);
+        box-shadow:
+          0 0 0 1px rgba(217,30,30,0.15),
+          0 0 30px rgba(217,30,30,0.55),
+          0 0 70px rgba(217,30,30,0.35),
+          0 0 130px rgba(180,20,20,0.2),
+          0 24px 80px rgba(0,0,0,0.7);
       }
       .hero-video {
         width: 100%;
