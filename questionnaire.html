@@ -231,11 +231,12 @@
     <div class="reaction" id="reaction-5"></div>
     <div class="question">How much are they paying you?</div>
     <div class="bubbles">
-      <button class="bubble" onclick="selectSalary('lt40',this)">Less than $40k</button>
-      <button class="bubble" onclick="selectSalary('40-70',this)">$40 – $70k</button>
-      <button class="bubble" onclick="selectSalary('70-100',this)">$70 – $100k</button>
-      <button class="bubble" onclick="selectSalary('100-130',this)">$100 – $130k</button>
-      <button class="bubble" onclick="selectSalary('130plus',this)">$130k+</button>
+      <button class="bubble" onclick="selectSalary('lt60',this)">Less than $60k</button>
+      <button class="bubble" onclick="selectSalary('60-90',this)">$60 – $90k</button>
+      <button class="bubble" onclick="selectSalary('90-130',this)">$90 – $130k</button>
+      <button class="bubble" onclick="selectSalary('130-170',this)">$130 – $170k</button>
+      <button class="bubble" onclick="selectSalary('170-250',this)">$170 – $250k</button>
+      <button class="bubble" onclick="selectSalary('250plus',this)">$250k+</button>
     </div>
     <button class="cont-btn" id="btn-salary" onclick="goTo(6)">Next →</button>
   </div>
@@ -383,11 +384,12 @@
 
   // Salary
   const SALARY_REACTIONS = {
-    'lt40': 'We can fix that.',
-    '40-70': 'We can fix that.',
-    '70-100': 'Not bad.',
-    '100-130': 'Not bad.',
-    '130plus': 'Big money.'
+    'lt60':    'We can fix that.',
+    '60-90':   'We can work with that.',
+    '90-130':  'Not bad.',
+    '130-170': 'Solid.',
+    '170-250': 'Big money.',
+    '250plus': 'Whoa.'
   };
   function selectSalary(val, el) {
     answers.salary = val;
