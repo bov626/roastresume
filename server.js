@@ -570,19 +570,19 @@ app.post("/api/create-checkout-session", async (req, res) => {
   }
 });
 app.post("/api/report-ready", async (req, res) => {
+  if (req.headers["x-make-secret"] !== process.env.MAKE_WEBHOOK_SECRET) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
   const { email, first_name, pdf_url } = req.body;
 
-  setTimeout(
-    async () => {
-      try {
-        await sendReportReadyEmail(email, first_name, pdf_url);
-        console.log("[Report] Sent to", email);
-      } catch (e) {
-        console.error("[Report] Email failed:", e.message);
-      }
-    },
-    10 * 60 * 1000,
-  );
+  async () => {
+    try {
+      await sendReportReadyEmail(email, first_name, pdf_url);
+      console.log("[Report] Sent to", email);
+    } catch (e) {
+      console.error("[Report] Email failed:", e.message);
+    }
+  };
 
   res.json({ ok: true });
 });
