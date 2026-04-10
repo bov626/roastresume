@@ -163,17 +163,17 @@ Want us to land you a second job? jumpseatjobs.com`,
 }
 
 async function sendResourcesEmail(toEmail) {
-  const res = await fetch('https://api.resend.com/emails', {
-    method: 'POST',
+  const res = await fetch("https://api.resend.com/emails", {
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${process.env.RESEND_API_KEY}`
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
     },
     body: JSON.stringify({
-      from: 'Wilson <wilson@pleaseroastmyresume.com>',
+      from: "Wilson <wilson@pleaseroastmyresume.com>",
       to: [toEmail],
       reply_to: process.env.GMAIL_USER,
-      subject: 'Dammit Dino',
+      subject: "Dammit Dino",
       html: `<!DOCTYPE html>
 <html>
 <head><meta charset="UTF-8"></head>
@@ -201,21 +201,21 @@ async function sendResourcesEmail(toEmail) {
     <p style="font-size:13px;line-height:1.7;color:#888888;border-top:1px solid #eeeeee;padding-top:20px;margin:0;">P.S. There's also a full video walk-through of every decision we made in building it. Enjoy.</p>
   </div>
 </body>
-</html>`
-    })
+</html>`,
+    }),
   });
   return res.ok;
 }
 
-async function sendReportReadyEmail(toEmail, firstName) {
-  const res = await fetch('https://api.resend.com/emails', {
-    method: 'POST',
+async function sendReportReadyEmail(toEmail, firstName, pdfUrl) {
+  const res = await fetch("https://api.resend.com/emails", {
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${process.env.RESEND_API_KEY}`
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
     },
     body: JSON.stringify({
-      from: 'Wilson <wilson@pleaseroastmyresume.com>',
+      from: "Wilson <wilson@pleaseroastmyresume.com>",
       to: [toEmail],
       reply_to: process.env.GMAIL_USER,
       subject: "We need to talk",
@@ -235,13 +235,13 @@ async function sendReportReadyEmail(toEmail, firstName) {
     <p style="font-size:15px;line-height:1.9;margin:0 0 16px;">Half the battle is understanding your workload.</p>
     <p style="font-size:15px;line-height:1.9;margin:0 0 24px;">I can tell you this. That is the last time. Every team member has some form of complex PTSD now.</p>
     <p style="font-size:15px;line-height:1.9;margin:0 0 32px;">Hope it was worth it.</p>
-    <a href="REPORT_LINK_PLACEHOLDER" style="display:inline-block;background:#d91e1e;color:#fff;font-family:Inter,Arial,sans-serif;font-weight:700;font-size:16px;padding:16px 32px;border-radius:8px;text-decoration:none;letter-spacing:-0.01em;">View My Report →</a>
+    <a href="${pdfUrl}" style="display:inline-block;background:#d91e1e;color:#fff;font-family:Inter,Arial,sans-serif;font-weight:700;font-size:16px;padding:16px 32px;border-radius:8px;text-decoration:none;letter-spacing:-0.01em;">View My Report →</a>
     <p style="font-size:15px;line-height:1.9;margin:40px 0 0;">-W.W.</p>
     <p style="font-size:13px;line-height:1.7;color:#888888;border-top:1px solid #eeeeee;padding-top:20px;margin:32px 0 0;">P.S. Alex came back but he is not the same. Beware the allure of the Easy Apply.</p>
   </div>
 </body>
-</html>`
-    })
+</html>`,
+    }),
   });
   return res.ok;
 }
@@ -355,8 +355,8 @@ app.post("/api/submit", resumeUpload.single("resume"), async (req, res) => {
 
   try {
     await sendResourcesEmail(email);
-  } catch(e) {
-    console.error('Resources email error:', e.message);
+  } catch (e) {
+    console.error("Resources email error:", e.message);
   }
 
   res.json({ ok: true });
@@ -419,41 +419,69 @@ app.get("/admin", requireAuth, (req, res) => res.send(adminPage()));
 /* ────────────────────────────────────────────
    ADMIN: API
 ──────────────────────────────────────────── */
-app.post('/api/questionnaire', async (req, res) => {
+// Replace app.post("/api/questionnaire") at line 422 with this:
+
+app.post("/api/questionnaire", async (req, res) => {
   const {
-    name, email, jobTitle, years, seniority,
-    salary, hoursWork, hoursMeetings, remote
+    name,
+    email,
+    jobTitle,
+    seniority,
+    salary,
+    hoursWork,
+    hoursMeetings,
+    remote,
   } = req.body;
 
+  const salaryMap = {
+    lt60: "Less than $60k",
+    "60-90": "$60 - $90k",
+    "90-130": "$90 - $130k",
+    "130-170": "$130 - $170k",
+    "170-250": "$170 - $250k",
+    "250plus": "$250k+",
+  };
+
+  const seniorityMap = {
+    entry: "Entry",
+    mid: "Mid-level",
+    senior: "Senior",
+  };
+
+  // 1. Save to Supabase
   try {
-    await supabase.from('questionnaire_responses').insert({
+    await supabase.from("questionnaire_responses").insert({
       name,
       email,
       job_title: jobTitle,
-      years_experience: years,
       seniority,
       salary_range: salary,
       hours_work_per_day: parseInt(hoursWork) || null,
       hours_meetings_per_day: parseInt(hoursMeetings) || null,
-      work_location: remote
+      work_location: remote,
     });
-  } catch(e) {
-    console.error('Questionnaire insert error:', e.message);
+  } catch (e) {
+    console.error("Questionnaire insert error:", e.message);
   }
 
-  // Schedule report email in ~10 minutes
-  setTimeout(async () => {
-    try {
-      await sendReportReadyEmail(email, name);
-      await supabase
-        .from('questionnaire_responses')
-        .update({ report_sent_at: new Date().toISOString() })
-        .eq('email', email);
-      console.log('[Report] Sent to', email);
-    } catch(e) {
-      console.error('[Report] Email failed:', e.message);
-    }
-  }, 10 * 60 * 1000);
+  // 2. Fire Make.com webhook — Make.com generates PDF and calls /api/report-ready when done
+  try {
+    await axios.post(
+      "https://hook.us2.make.com/ttyc8em3qf3i9swyjsjvkd4vp89913wu",
+      {
+        first_name: name,
+        email: email,
+        job_title: jobTitle,
+        years_experience: seniorityMap[seniority] || seniority,
+        salary_band: salaryMap[salary] || salary,
+        work_hours_daily: parseInt(hoursWork) || 0,
+        meeting_hours_daily: parseInt(hoursMeetings) || 0,
+        is_remote: remote,
+      },
+    );
+  } catch (e) {
+    console.error("Make.com webhook error:", e.message);
+  }
 
   res.json({ ok: true });
 });
@@ -518,8 +546,12 @@ app.get("/admin/uploads/:filename", requireAuth, (req, res) => {
 
 app.get("/admin/*path", requireAuth, (req, res) => res.redirect("/admin"));
 app.get("/oto", (req, res) => {
-  const html = fs.readFileSync(path.join(__dirname, "oto.html"), "utf8")
-    .replace("PUBLISHABLE_KEY_PLACEHOLDER", process.env.STRIPE_PUBLISHABLE_KEY || "");
+  const html = fs
+    .readFileSync(path.join(__dirname, "oto.html"), "utf8")
+    .replace(
+      "PUBLISHABLE_KEY_PLACEHOLDER",
+      process.env.STRIPE_PUBLISHABLE_KEY || "",
+    );
   res.type("html").send(html);
 });
 
@@ -537,9 +569,33 @@ app.post("/api/create-checkout-session", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
-app.get("/questionnaire", (req, res) => res.sendFile(path.join(__dirname, "questionnaire.html")));
-app.get("/waiting", (req, res) => res.sendFile(path.join(__dirname, "waiting.html")));
-app.get("/resources", (req, res) => res.sendFile(path.join(__dirname, "resources.html")));
+app.post("/api/report-ready", async (req, res) => {
+  const { email, first_name, pdf_url } = req.body;
+
+  setTimeout(
+    async () => {
+      try {
+        await sendReportReadyEmail(email, first_name, pdf_url);
+        console.log("[Report] Sent to", email);
+      } catch (e) {
+        console.error("[Report] Email failed:", e.message);
+      }
+    },
+    10 * 60 * 1000,
+  );
+
+  res.json({ ok: true });
+});
+
+app.get("/questionnaire", (req, res) =>
+  res.sendFile(path.join(__dirname, "questionnaire.html")),
+);
+app.get("/waiting", (req, res) =>
+  res.sendFile(path.join(__dirname, "waiting.html")),
+);
+app.get("/resources", (req, res) =>
+  res.sendFile(path.join(__dirname, "resources.html")),
+);
 app.get("/", (req, res) => res.sendFile(path.join(__dirname, "index.html")));
 app.use(express.static(__dirname, { index: false, maxAge: "1h" }));
 
