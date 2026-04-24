@@ -2267,6 +2267,19 @@
         max-width: 500px;
         margin: 0 auto;
       }
+      .footer-logo-wrap {
+        max-width: 220px;
+        width: 100%;
+        margin: 0 auto 20px;
+      }
+      .footer-logo-wrap img {
+        width: 100%;
+        display: block;
+        -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black 30%, transparent 100%);
+        mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black 30%, transparent 100%);
+        mix-blend-mode: screen;
+        opacity: 0.7;
+      }
       .footer-brand {
         font-size: 16px;
         font-weight: 800;
@@ -3614,12 +3627,8 @@
     <!-- ═══════════════════════ FOOTER ═══════════════════════ -->
     <footer id="site-footer">
       <div class="footer-inner">
-        <div class="footer-brand">
-          <img
-            src="jumpseat-logo.png"
-            alt="Jumpseat"
-            style="height: 40px; width: auto; opacity: 0.9"
-          />
+        <div class="footer-logo-wrap">
+          <img src="jumpseat-logo.png" alt="Jumpseat" />
         </div>
         <p class="footer-sub">
           A free resource from the team that helps people land second (or
