@@ -442,11 +442,21 @@
         flex: 1;
         padding: 28px;
       }
-      @media (max-width: 600px) {
+      @media (max-width: 768px) {
         #checkout-drawer {
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
           width: 100%;
           min-width: 0;
           max-width: none;
+          border-left: none;
+          border-top: none;
+          transform: translateY(100%);
+        }
+        #checkout-drawer.open {
+          transform: translateY(0);
         }
       }
 
