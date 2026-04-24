@@ -90,12 +90,13 @@
       .hl-you::after {
         content: "";
         position: absolute;
-        bottom: -10px;
+        bottom: 6px;
         left: 0;
         width: 0;
         height: 3px;
         background: var(--red);
         border-radius: 2px;
+        z-index: -1;
         animation: drawLine 0.8s ease 0.5s forwards;
       }
       @keyframes drawLine {
