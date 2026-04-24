@@ -64,11 +64,11 @@
         display: inline-block;
         background: var(--red);
         color: #fff;
-        font-size: 11px;
+        font-size: 13px;
         font-weight: 800;
         letter-spacing: 0.14em;
         text-transform: uppercase;
-        padding: 6px 16px;
+        padding: 7px 19px;
         border-radius: 100px;
         margin-bottom: 28px;
       }
@@ -90,7 +90,7 @@
       .hl-you::after {
         content: "";
         position: absolute;
-        bottom: -4px;
+        bottom: -10px;
         left: 0;
         width: 0;
         height: 3px;
@@ -130,7 +130,7 @@
         overflow: hidden;
         position: relative;
         margin: 0 0 36px;
-        box-shadow: 0 0 50px rgba(139, 0, 0, 0.15);
+        box-shadow: 0 0 50px rgba(139, 0, 0, 0.20);
       }
       .hero-video {
         width: 100%;
@@ -176,12 +176,11 @@
         margin-top: 12px;
       }
 
-      /* ── WHAT'S IN THE REPORT — horizontal snap scroll ── */
+      /* ── WHAT'S IN THE REPORT — vertical ── */
       #report-section {
         border-top: 1px solid #111;
-        padding: 72px 0 88px;
+        padding: 80px 0 0;
       }
-
       .section-eyebrow {
         font-size: 11px;
         font-weight: 700;
@@ -196,174 +195,157 @@
         letter-spacing: -0.03em;
         line-height: 1.1;
       }
-
       .report-section-header {
         text-align: center;
         padding: 0 32px;
-        margin-bottom: 44px;
+        margin-bottom: 60px;
       }
-
-      /* Horizontal scrolling lane */
-      .report-scroller {
+      .rp-rows {
+        border-top: 1px solid #111;
+      }
+      .rp-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 64px;
+        align-items: center;
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 72px 60px;
+        border-bottom: 1px solid #111;
+      }
+      .rp-left {
         display: flex;
-        gap: 16px;
-        overflow-x: scroll;
-        scroll-snap-type: x mandatory;
-        -webkit-overflow-scrolling: touch;
-        padding: 8px 5vw 28px;
-        scrollbar-width: none;
-        cursor: grab;
+        flex-direction: column;
       }
-      .report-scroller:active {
-        cursor: grabbing;
+      .rp-step {
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        background: var(--red);
+        color: #fff;
+        padding: 5px 14px;
+        border-radius: 100px;
+        display: inline-block;
+        align-self: flex-start;
+        margin-bottom: 20px;
       }
-      .report-scroller::-webkit-scrollbar {
-        display: none;
+      .rp-title {
+        font-size: clamp(26px, 3vw, 42px);
+        font-weight: 900;
+        letter-spacing: -0.035em;
+        line-height: 1.05;
+        margin-bottom: 14px;
       }
-
-      /* Progress dots */
-      .report-dots {
+      .rp-desc {
+        font-size: 16px;
+        color: #444;
+        line-height: 1.75;
+        max-width: 380px;
+      }
+      .rp-right {
         display: flex;
-        gap: 6px;
         justify-content: center;
-        padding-top: 4px;
       }
-      .report-dot {
+      .rp-viz {
+        width: 100%;
+        max-width: 460px;
+      }
+      @media (max-width: 860px) {
+        .rp-row {
+          grid-template-columns: 1fr;
+          gap: 32px;
+          padding: 48px 24px;
+        }
+        .rp-desc { max-width: none; }
+      }
+
+      @keyframes livePulse {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.4; transform: scale(0.7); }
+      }
+
+      /* ── Visualization components ── */
+      .rd-live-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        background: rgba(217, 30, 30, 0.12);
+        border: 1px solid rgba(217, 30, 30, 0.25);
+        border-radius: 100px;
+        padding: 3px 10px 3px 7px;
+        position: absolute;
+        top: 16px;
+        right: 16px;
+      }
+      .rd-live-dot {
         width: 6px;
         height: 6px;
         border-radius: 50%;
-        background: #1a1a1a;
-        transition:
-          background 0.25s,
-          width 0.25s;
-      }
-      .report-dot.active {
         background: var(--red);
-        width: 18px;
-        border-radius: 3px;
+        animation: livePulse 1.8s ease-in-out infinite;
       }
-
-      .report-card {
-        flex-shrink: 0;
-        width: min(320px, 80vw);
-        scroll-snap-align: center;
-        background: #0e0e0e;
-        border: 1px solid #1a1a1a;
-        border-radius: 16px;
-        padding: 28px;
-        transition: border-color 0.25s;
-      }
-      .report-card.active {
-        border-color: rgba(217, 30, 30, 0.35);
-      }
-
-      .card-label {
+      .rd-live-badge span {
         font-size: 10px;
         font-weight: 800;
-        letter-spacing: 0.16em;
+        letter-spacing: 0.1em;
         text-transform: uppercase;
-        color: #333;
-        margin-bottom: 14px;
-      }
-      .card-title {
-        font-size: 17px;
-        font-weight: 700;
-        margin-bottom: 18px;
-      }
-
-      /* Job data card */
-      .job-pills {
-        display: flex;
-        gap: 10px;
-        flex-wrap: wrap;
-        margin-bottom: 14px;
-      }
-      .job-pill {
-        background: #111;
-        border: 1px solid #1e1e1e;
-        border-radius: 8px;
-        padding: 10px 14px;
-        text-align: center;
-      }
-      .job-pill-num {
-        font-size: 17px;
-        font-weight: 800;
-        color: #fff;
-        display: block;
-      }
-      .job-pill-label {
-        font-size: 10px;
-        color: #444;
-        margin-top: 3px;
-        display: block;
-      }
-      .job-pill-pct {
-        font-size: 22px;
-        font-weight: 900;
         color: var(--red);
       }
-
-      /* Salary card */
-      .salary-display {
-        background: var(--red);
-        border-radius: 10px;
-        padding: 14px 20px;
-        text-align: center;
-        margin-bottom: 14px;
+      .rd-job {
+        background: #0d0d0d;
+        border-radius: 12px;
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        position: relative;
       }
-      .salary-num {
-        font-size: 26px;
-        font-weight: 900;
-        letter-spacing: -0.02em;
-      }
-      .salary-sub {
+      .rd-job-title {
         font-size: 11px;
-        opacity: 0.8;
-        margin-top: 2px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: #333;
       }
-      .salary-breakdown {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 10px;
-      }
-      .salary-col {
+      .rd-pills { display: flex; gap: 8px; }
+      .rd-pill {
         background: #111;
         border: 1px solid #1e1e1e;
         border-radius: 8px;
-        padding: 12px;
+        padding: 14px 16px;
         text-align: center;
+        flex: 1;
       }
-      .salary-col-label {
-        font-size: 10px;
-        color: #555;
-        margin-bottom: 4px;
-        font-weight: 700;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
+      .rd-pill-num { font-size: 20px; font-weight: 900; display: block; }
+      .rd-pill-lab { font-size: 9px; color: #444; margin-top: 4px; display: block; }
+      .rd-pill-full {
+        background: #111;
+        border: 1px solid #1e1e1e;
+        border-radius: 8px;
+        padding: 14px 16px;
+        text-align: center;
+        width: 100%;
       }
-      .salary-col-num {
-        font-size: 15px;
-        font-weight: 700;
-      }
-
-      /* Readiness card */
-      .speedometer-wrap {
+      .rd-salary { background: #0d0d0d; border-radius: 12px; overflow: hidden; }
+      .rd-salary-top { background: var(--red); padding: 20px 16px; text-align: center; }
+      .rd-salary-num { font-size: 30px; font-weight: 900; letter-spacing: -0.02em; }
+      .rd-salary-sub { font-size: 10px; opacity: 0.8; margin-top: 2px; }
+      .rd-salary-bot { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: #1a1a1a; }
+      .rd-salary-col { background: #0d0d0d; padding: 18px 14px; text-align: center; }
+      .rd-salary-col-l { font-size: 9px; color: #555; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 5px; }
+      .rd-salary-col-n { font-size: 20px; font-weight: 800; }
+      .rd-score {
+        background: #0d0d0d;
+        border-radius: 12px;
+        padding: 20px;
         display: flex;
+        flex-direction: column;
         align-items: center;
-        justify-content: center;
-        padding: 16px 0;
       }
-
-      /* Risk factors card */
-      .risk-circles {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 16px 0;
-      }
-      .risk-circle {
-        width: 60px;
-        height: 60px;
+      .rd-risk { background: #0d0d0d; border-radius: 12px; padding: 24px; }
+      .rd-risk-circles { display: flex; align-items: center; justify-content: center; margin-bottom: 16px; }
+      .rrc {
         border-radius: 50%;
         display: flex;
         align-items: center;
@@ -371,146 +353,29 @@
         font-size: 8px;
         font-weight: 700;
         text-transform: uppercase;
-        letter-spacing: 0.05em;
         text-align: center;
-        line-height: 1.3;
+        line-height: 1.2;
         flex-shrink: 0;
       }
-      .risk-circle:not(:first-child) {
-        margin-left: -14px;
+      .rrc:not(:first-child) { margin-left: -14px; }
+      .rrc1 { width: 68px; height: 68px; background: rgba(217,30,30,0.9); color: #fff; z-index: 5; font-size: 9px; }
+      .rrc2 { width: 56px; height: 56px; background: rgba(217,30,30,0.65); color: #fff; z-index: 4; }
+      .rrc3 { width: 46px; height: 46px; background: rgba(217,30,30,0.4); color: #fff; z-index: 3; }
+      .rrc4 { width: 36px; height: 36px; background: rgba(217,30,30,0.2); color: #fff; z-index: 2; }
+      .rrc5 { width: 26px; height: 26px; background: rgba(217,30,30,0.08); color: #555; z-index: 1; }
+      .rd-risk-rows { display: flex; flex-direction: column; gap: 10px; }
+      .rd-risk-row { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #444; }
+      .rd-risk-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--red); flex-shrink: 0; }
+      .rd-vids { background: #0d0d0d; border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+      .rd-vid { display: flex; align-items: center; gap: 10px; background: #111; border: 1px solid #1e1e1e; border-radius: 8px; padding: 12px; }
+      .rd-vid-thumb {
+        width: 52px; height: 36px; background: #1a1a1a; border-radius: 6px;
+        display: flex; align-items: center; justify-content: center;
+        flex-shrink: 0; color: var(--red); font-size: 16px; position: relative;
       }
-      .risk-c1 {
-        background: rgba(217, 30, 30, 0.9);
-        color: #fff;
-        z-index: 5;
-      }
-      .risk-c2 {
-        background: rgba(217, 30, 30, 0.65);
-        color: #fff;
-        z-index: 4;
-        width: 52px;
-        height: 52px;
-      }
-      .risk-c3 {
-        background: rgba(217, 30, 30, 0.4);
-        color: #fff;
-        z-index: 3;
-        width: 44px;
-        height: 44px;
-      }
-      .risk-c4 {
-        background: rgba(217, 30, 30, 0.2);
-        color: #fff;
-        z-index: 2;
-        width: 36px;
-        height: 36px;
-      }
-      .risk-c5 {
-        background: rgba(217, 30, 30, 0.08);
-        color: #555;
-        z-index: 1;
-        width: 28px;
-        height: 28px;
-      }
-      .risk-labels {
-        display: flex;
-        flex-direction: column;
-        gap: 7px;
-        margin-top: 14px;
-      }
-      .risk-label {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        font-size: 11px;
-        color: #555;
-      }
-      .risk-dot {
-        width: 7px;
-        height: 7px;
-        border-radius: 50%;
-        background: var(--red);
-        flex-shrink: 0;
-      }
-
-      /* Bonus videos card */
-      .bonus-videos {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-      }
-      .bonus-video {
-        background: #111;
-        border: 1px solid #1e1e1e;
-        border-radius: 10px;
-        padding: 12px;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-      }
-      .yt-thumb {
-        width: 52px;
-        height: 36px;
-        background: #1a1a1a;
-        border-radius: 6px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-        position: relative;
-      }
-      .yt-icon {
-        color: var(--red);
-        font-size: 16px;
-      }
-      .exclusive-tag {
-        position: absolute;
-        top: -5px;
-        right: -5px;
-        background: var(--red);
-        color: #fff;
-        font-size: 6px;
-        font-weight: 800;
-        letter-spacing: 0.06em;
-        text-transform: uppercase;
-        padding: 2px 4px;
-        border-radius: 3px;
-      }
-      .yt-info p {
-        font-size: 11px;
-        font-weight: 600;
-        color: #888;
-        margin-bottom: 1px;
-      }
-      .yt-info span {
-        font-size: 10px;
-        color: #333;
-      }
-
-      @keyframes livePulse {
-        0%,
-        100% {
-          opacity: 1;
-          transform: scale(1);
-        }
-        50% {
-          opacity: 0.4;
-          transform: scale(0.7);
-        }
-      }
-
-      /* ── Desktop report: hide on tablet/mobile ── */
-      .report-desktop {
-        display: none;
-      }
-      @media (min-width: 1024px) {
-        .report-desktop {
-          display: block;
-        }
-        .report-mobile {
-          display: none;
-        }
-      }
+      .rd-vid-excl { position: absolute; top: -4px; right: -4px; background: var(--red); color: #fff; font-size: 6px; font-weight: 800; padding: 1px 4px; border-radius: 3px; }
+      .rd-vid-info p { font-size: 12px; font-weight: 600; color: #777; margin-bottom: 1px; }
+      .rd-vid-info span { font-size: 10px; color: #2a2a2a; }
 
       /* ── Stripe checkout drawer ── */
       #checkout-overlay {
@@ -585,9 +450,8 @@
         }
       }
 
-      /* ── Desktop sticky panels ── */
-      @media (min-width: 1024px) {
-        #report-desktop {
+      /* ── Desktop sticky panels (removed — unified vertical layout) ── */
+      /* @media (min-width: 1024px) { #report-desktop {
           position: relative;
           max-width: 1280px;
           margin: 0 auto;
@@ -928,6 +792,8 @@
         }
       }
 
+      */
+
       /* ── HOW IT WORKS ── */
       #how-it-works {
         padding: 100px 24px;
@@ -990,8 +856,7 @@
         gap: 0;
         justify-content: center;
         margin-top: 56px;
-        padding: 0 24px;
-        overflow: hidden;
+        padding: 40px 24px 0;
       }
       .report-page {
         width: 180px;
@@ -1049,10 +914,34 @@
         width: 60%;
       }
 
-      /* Red accent on first page */
+      /* Red accent on center page */
       .report-page:nth-child(2) .rpl:first-child {
         background: rgba(217, 30, 30, 0.2);
         height: 2px;
+      }
+
+      /* ── FOOTER ── */
+      .site-footer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 80px 24px;
+        position: relative;
+      }
+      .footer-logo-wrap {
+        position: relative;
+        max-width: 220px;
+        width: 100%;
+      }
+      .footer-logo-wrap img {
+        width: 100%;
+        display: block;
+        -webkit-mask-image:
+          radial-gradient(ellipse 80% 60% at 50% 50%, black 30%, transparent 100%);
+        mask-image:
+          radial-gradient(ellipse 80% 60% at 50% 50%, black 30%, transparent 100%);
+        mix-blend-mode: screen;
+        opacity: 0.7;
       }
     </style>
   </head>
@@ -1066,7 +955,7 @@
       </h1>
 
       <p class="hero-sub">
-        Job stacking is legal, but the risks are personal. Find out yours.
+        Job stacking is legal, but the risks are personal. Find out yours with a report.
       </p>
 
       <!-- Video placeholder -->
@@ -1100,506 +989,159 @@
       <p class="cta-note">Report delivered in 20 minutes.</p>
     </section>
 
-    <div class="report-mobile">
-      <!-- WHAT'S IN THE REPORT — horizontal snap scroll -->
-      <div id="report-section">
-        <div class="report-section-header">
-          <div class="section-eyebrow">Inside the report</div>
-          <h2 class="section-title">What's in the Report?</h2>
-        </div>
+    <!-- WHAT'S IN THE REPORT — vertical unified -->
+    <div id="report-section">
+      <div class="report-section-header">
+        <div class="section-eyebrow">Inside the report</div>
+        <h2 class="section-title">What's in the Report</h2>
+      </div>
+      <div class="rp-rows">
 
-        <div class="report-scroller" id="report-scroller">
-          <!-- Card 1: Job Data -->
-          <div class="report-card active">
-            <div class="card-label">Job Market Data</div>
-            <div class="card-title">Your Job Title</div>
-            <div class="job-pills">
-              <div class="job-pill">
-                <span class="job-pill-num">106,212</span>
-                <span class="job-pill-label">Openings</span>
-              </div>
-              <div class="job-pill">
-                <span class="job-pill-num">48,227</span>
-                <span class="job-pill-label">Remote Jobs</span>
-              </div>
-              <div class="job-pill">
-                <span class="job-pill-pct">41%</span>
-                <span class="job-pill-label">Remote Rate</span>
-              </div>
-            </div>
-            <p style="font-size: 12px; color: #333; line-height: 1.6">
-              Live data pulled at report generation time for your exact role.
-            </p>
+        <!-- Row 1: Job Market Data -->
+        <div class="rp-row">
+          <div class="rp-left">
+            <div class="rp-step">01 of 05</div>
+            <div class="rp-title">Job Market Data</div>
+            <p class="rp-desc">Live openings and remote availability for your exact job title — pulled at report generation time.</p>
           </div>
-
-          <!-- Card 2: Salary -->
-          <div class="report-card">
-            <div class="card-label">Income Potential</div>
-            <div class="card-title">Average Salary</div>
-            <div class="salary-display">
-              <div class="salary-num">$167,227</div>
-              <div class="salary-sub">Combined annual income</div>
-            </div>
-            <div class="salary-breakdown">
-              <div class="salary-col">
-                <div class="salary-col-label">J1</div>
-                <div class="salary-col-num">$95,000</div>
-              </div>
-              <div class="salary-col">
-                <div class="salary-col-label">J2</div>
-                <div class="salary-col-num" style="color: var(--red)">
-                  +$72,227
+          <div class="rp-right">
+            <div class="rp-viz">
+              <div class="rd-job">
+                <div class="rd-live-badge">
+                  <div class="rd-live-dot"></div><span>Live</span>
                 </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Card 3: Readiness Score -->
-          <div class="report-card">
-            <div class="card-label">Readiness Score</div>
-            <div class="card-title">Are You Ready?</div>
-            <div class="speedometer-wrap">
-              <svg viewBox="0 0 200 110" width="190" height="105">
-                <path
-                  d="M20,100 A80,80 0 0,1 180,100"
-                  fill="none"
-                  stroke="#1a1a1a"
-                  stroke-width="16"
-                  stroke-linecap="round"
-                />
-                <path
-                  d="M20,100 A80,80 0 0,1 180,100"
-                  fill="none"
-                  stroke="#d91e1e"
-                  stroke-width="16"
-                  stroke-linecap="round"
-                  stroke-dasharray="251"
-                  stroke-dashoffset="70"
-                  opacity="0.9"
-                />
-                <line
-                  x1="100"
-                  y1="100"
-                  x2="58"
-                  y2="38"
-                  stroke="#fff"
-                  stroke-width="2.5"
-                  stroke-linecap="round"
-                />
-                <circle cx="100" cy="100" r="6" fill="#fff" />
-                <text
-                  x="100"
-                  y="88"
-                  text-anchor="middle"
-                  fill="#fff"
-                  font-size="22"
-                  font-weight="900"
-                  font-family="Inter,sans-serif"
-                >
-                  72
-                </text>
-                <text
-                  x="100"
-                  y="108"
-                  text-anchor="middle"
-                  fill="#555"
-                  font-size="10"
-                  font-family="Inter,sans-serif"
-                >
-                  READINESS SCORE
-                </text>
-              </svg>
-            </div>
-            <p
-              style="
-                font-size: 12px;
-                color: #555;
-                text-align: center;
-                line-height: 1.6;
-              "
-            >
-              Based on your workload, schedule, and role profile.
-            </p>
-          </div>
-
-          <!-- Card 4: Risk Factors -->
-          <div class="report-card">
-            <div class="card-label">Risk Analysis</div>
-            <div class="card-title">Your Risk Factors</div>
-            <div class="risk-circles">
-              <div class="risk-circle risk-c1">Non<br />Compete</div>
-              <div class="risk-circle risk-c2">IP<br />Clause</div>
-              <div class="risk-circle risk-c3">Moon<br />light</div>
-              <div class="risk-circle risk-c4">Time<br />zone</div>
-              <div class="risk-circle risk-c5">IT</div>
-            </div>
-            <div class="risk-labels">
-              <div class="risk-label">
-                <div class="risk-dot"></div>
-                Non-compete enforceability by state
-              </div>
-              <div class="risk-label">
-                <div class="risk-dot" style="opacity: 0.6"></div>
-                IP assignment clauses
-              </div>
-              <div class="risk-label">
-                <div class="risk-dot" style="opacity: 0.3"></div>
-                Monitoring software prevalence
-              </div>
-            </div>
-          </div>
-
-          <!-- Card 5: Bonus Videos -->
-          <div class="report-card">
-            <div class="card-label">Exclusive Content</div>
-            <div class="card-title">Bonus Videos</div>
-            <div class="bonus-videos">
-              <div class="bonus-video">
-                <div class="yt-thumb">
-                  <span class="yt-icon">▶</span
-                  ><span class="exclusive-tag">Exclusive</span>
+                <div class="rd-job-title">Your Job Title</div>
+                <div class="rd-pills">
+                  <div class="rd-pill">
+                    <span class="rd-pill-num">106,212</span>
+                    <span class="rd-pill-lab">Openings</span>
+                  </div>
+                  <div class="rd-pill">
+                    <span class="rd-pill-num">48,227</span>
+                    <span class="rd-pill-lab">Remote Jobs</span>
+                  </div>
                 </div>
-                <div class="yt-info">
-                  <p>How to pass background checks</p>
-                  <span>12 min</span>
-                </div>
-              </div>
-              <div class="bonus-video">
-                <div class="yt-thumb">
-                  <span class="yt-icon">▶</span
-                  ><span class="exclusive-tag">Exclusive</span>
-                </div>
-                <div class="yt-info">
-                  <p>Managing two calendars without losing your mind</p>
-                  <span>8 min</span>
-                </div>
-              </div>
-              <div class="bonus-video">
-                <div class="yt-thumb">
-                  <span class="yt-icon">▶</span
-                  ><span class="exclusive-tag">Exclusive</span>
-                </div>
-                <div class="yt-info">
-                  <p>The OE exit strategy</p>
-                  <span>15 min</span>
+                <div class="rd-pill-full">
+                  <span class="rd-pill-num" style="font-size:28px;color:var(--red)">41%</span>
+                  <span class="rd-pill-lab">Remote Rate</span>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Progress dots -->
-        <div class="report-dots" id="report-dots">
-          <div class="report-dot active"></div>
-          <div class="report-dot"></div>
-          <div class="report-dot"></div>
-          <div class="report-dot"></div>
-          <div class="report-dot"></div>
+        <!-- Row 2: Salary -->
+        <div class="rp-row">
+          <div class="rp-left">
+            <div class="rp-step">02 of 05</div>
+            <div class="rp-title">Average Salary</div>
+            <p class="rp-desc">What you could realistically be making with a second income stacked on top of your current salary.</p>
+          </div>
+          <div class="rp-right">
+            <div class="rp-viz">
+              <div class="rd-salary">
+                <div class="rd-salary-top">
+                  <div class="rd-salary-num">$167,227</div>
+                  <div class="rd-salary-sub">Combined annual income</div>
+                </div>
+                <div class="rd-salary-bot">
+                  <div class="rd-salary-col">
+                    <div class="rd-salary-col-l">J1</div>
+                    <div class="rd-salary-col-n">$95,000</div>
+                  </div>
+                  <div class="rd-salary-col">
+                    <div class="rd-salary-col-l">J2</div>
+                    <div class="rd-salary-col-n" style="color:var(--red)">+$72,227</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
+
+        <!-- Row 3: Readiness Score -->
+        <div class="rp-row">
+          <div class="rp-left">
+            <div class="rp-step">03 of 05</div>
+            <div class="rp-title">Readiness Score</div>
+            <p class="rp-desc">A score from 0 to 100 based on your real workload and schedule — not how many hours you sit at a desk.</p>
+          </div>
+          <div class="rp-right">
+            <div class="rp-viz">
+              <div class="rd-score">
+                <svg viewBox="0 0 220 125" width="100%" style="max-width:300px">
+                  <path d="M22,110 A88,88 0 0,1 198,110" fill="none" stroke="#1a1a1a" stroke-width="16" stroke-linecap="round"/>
+                  <path d="M22,110 A88,88 0 0,1 198,110" fill="none" stroke="#d91e1e" stroke-width="16" stroke-linecap="round" stroke-dasharray="276" stroke-dashoffset="76"/>
+                  <line x1="110" y1="110" x2="166" y2="42" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
+                  <circle cx="110" cy="110" r="7" fill="#fff"/>
+                  <text x="110" y="82" text-anchor="middle" fill="#fff" font-size="26" font-weight="900" font-family="Inter,sans-serif">72</text>
+                  <text x="110" y="124" text-anchor="middle" fill="#444" font-size="10" font-family="Inter,sans-serif">READINESS SCORE</text>
+                </svg>
+                <div style="font-size:12px;color:#333;margin-top:8px;text-align:center">Based on your workload, meetings, and schedule</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 4: Risk Factors -->
+        <div class="rp-row">
+          <div class="rp-left">
+            <div class="rp-step">04 of 05</div>
+            <div class="rp-title">Risk Factors</div>
+            <p class="rp-desc">Non-competes, IP assignment clauses, monitoring software. All the ways you could get caught, deciphered.</p>
+          </div>
+          <div class="rp-right">
+            <div class="rp-viz">
+              <div class="rd-risk">
+                <div class="rd-risk-circles">
+                  <div class="rrc rrc1">Non<br>Compete</div>
+                  <div class="rrc rrc2">IP<br>Clause</div>
+                  <div class="rrc rrc3">Monitor</div>
+                  <div class="rrc rrc4">TZ</div>
+                  <div class="rrc rrc5">IT</div>
+                </div>
+                <div class="rd-risk-rows">
+                  <div class="rd-risk-row"><div class="rd-risk-dot"></div>Non-compete enforceability by state</div>
+                  <div class="rd-risk-row"><div class="rd-risk-dot" style="opacity:.6"></div>IP assignment clauses</div>
+                  <div class="rd-risk-row"><div class="rd-risk-dot" style="opacity:.35"></div>Monitoring software prevalence</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 5: Bonus Videos -->
+        <div class="rp-row">
+          <div class="rp-left">
+            <div class="rp-step">05 of 05</div>
+            <div class="rp-title">Bonus Videos</div>
+            <p class="rp-desc">Three exclusive videos. Two unlock immediately. The third arrives with your report.</p>
+          </div>
+          <div class="rp-right">
+            <div class="rp-viz">
+              <div class="rd-vids">
+                <div class="rd-vid">
+                  <div class="rd-vid-thumb">&#9658;<span class="rd-vid-excl">NEW</span></div>
+                  <div class="rd-vid-info"><p>How to pass background checks</p><span>12 min &middot; Exclusive</span></div>
+                </div>
+                <div class="rd-vid">
+                  <div class="rd-vid-thumb">&#9658;<span class="rd-vid-excl">NEW</span></div>
+                  <div class="rd-vid-info"><p>Managing two calendars without losing your mind</p><span>8 min &middot; Exclusive</span></div>
+                </div>
+                <div class="rd-vid" style="opacity:.4">
+                  <div class="rd-vid-thumb" style="font-size:18px">&#128274;</div>
+                  <div class="rd-vid-info">
+                    <p style="color:#333">The OE exit strategy</p>
+                    <span style="color:var(--red);font-weight:600">In your report</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
-    <!-- /report-mobile -->
-
-    <!-- DESKTOP REPORT SECTION -->
-    <div class="report-desktop" id="report-desktop">
-      <div class="rd-sticky">
-        <div class="rd-track" id="rd-track">
-          <div class="rd-panel">
-            <div class="rd-panel-inner">
-              <div class="rd-left">
-                <div class="rd-step">01 of 05</div>
-                <div class="rd-title">Job Market Data</div>
-                <p class="rd-sub">
-                  Live openings and remote availability for your exact job
-                  title.
-                </p>
-              </div>
-              <div class="rd-right">
-                <div class="rd-viz">
-                  <div class="rd-job">
-                    <div class="rd-live-badge">
-                      <div class="rd-live-dot"></div>
-                      <span>Live</span>
-                    </div>
-                    <div class="rd-job-title">Your Job Title</div>
-                    <div class="rd-pills">
-                      <div class="rd-pill">
-                        <span class="rd-pill-num">106,212</span
-                        ><span class="rd-pill-lab">Openings</span>
-                      </div>
-                      <div class="rd-pill">
-                        <span class="rd-pill-num">48,227</span
-                        ><span class="rd-pill-lab">Remote Jobs</span>
-                      </div>
-                    </div>
-                    <div class="rd-pill-full">
-                      <span
-                        class="rd-pill-num"
-                        style="font-size: 28px; color: var(--red)"
-                        >41%</span
-                      ><span class="rd-pill-lab">Remote Rate</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="rd-panel">
-            <div class="rd-panel-inner">
-              <div class="rd-left">
-                <div class="rd-step">02 of 05</div>
-                <div class="rd-title">Average Salary</div>
-                <p class="rd-sub">
-                  What you could realistically be making with a second income
-                  stacked on top.
-                </p>
-              </div>
-              <div class="rd-right">
-                <div class="rd-viz">
-                  <div class="rd-salary">
-                    <div class="rd-salary-top">
-                      <div class="rd-salary-num">$167,227</div>
-                      <div class="rd-salary-sub">Combined annual income</div>
-                    </div>
-                    <div class="rd-salary-bot">
-                      <div class="rd-salary-col">
-                        <div class="rd-salary-col-l">J1</div>
-                        <div class="rd-salary-col-n">$95,000</div>
-                      </div>
-                      <div class="rd-salary-col">
-                        <div class="rd-salary-col-l">J2</div>
-                        <div class="rd-salary-col-n" style="color: var(--red)">
-                          +$72,227
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="rd-panel">
-            <div class="rd-panel-inner">
-              <div class="rd-left">
-                <div class="rd-step">03 of 05</div>
-                <div class="rd-title">Readiness Score</div>
-                <p class="rd-sub">
-                  A score from 0 to 100 based on your real workload, not time at
-                  your desk.
-                </p>
-              </div>
-              <div class="rd-right">
-                <div class="rd-viz">
-                  <div class="rd-score">
-                    <svg
-                      viewBox="0 0 220 125"
-                      width="100%"
-                      style="max-width: 300px"
-                    >
-                      <path
-                        d="M22,110 A88,88 0 0,1 198,110"
-                        fill="none"
-                        stroke="#1a1a1a"
-                        stroke-width="16"
-                        stroke-linecap="round"
-                      />
-                      <path
-                        d="M22,110 A88,88 0 0,1 198,110"
-                        fill="none"
-                        stroke="#d91e1e"
-                        stroke-width="16"
-                        stroke-linecap="round"
-                        stroke-dasharray="276"
-                        stroke-dashoffset="76"
-                      />
-                      <line
-                        x1="110"
-                        y1="110"
-                        x2="166"
-                        y2="42"
-                        stroke="#fff"
-                        stroke-width="2.5"
-                        stroke-linecap="round"
-                      />
-                      <circle cx="110" cy="110" r="7" fill="#fff" />
-                      <text
-                        x="110"
-                        y="82"
-                        text-anchor="middle"
-                        fill="#fff"
-                        font-size="26"
-                        font-weight="900"
-                        font-family="Inter,sans-serif"
-                      >
-                        72
-                      </text>
-                      <text
-                        x="110"
-                        y="124"
-                        text-anchor="middle"
-                        fill="#444"
-                        font-size="10"
-                        font-family="Inter,sans-serif"
-                      >
-                        READINESS SCORE
-                      </text>
-                    </svg>
-                    <div style="font-size: 12px; color: #333; margin-top: 8px">
-                      Based on your workload, meetings, and schedule
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="rd-panel">
-            <div class="rd-panel-inner">
-              <div class="rd-left">
-                <div class="rd-step">04 of 05</div>
-                <div class="rd-title">Risk Factors</div>
-                <p class="rd-sub">
-                  Non-competes, IP assignment clauses, monitoring software. All
-                  the ways you could get caught, deciphered.
-                </p>
-              </div>
-              <div class="rd-right">
-                <div class="rd-viz">
-                  <div class="rd-risk">
-                    <div class="rd-risk-circles">
-                      <div class="rrc rrc1">Non<br />Compete</div>
-                      <div class="rrc rrc2">IP<br />Clause</div>
-                      <div class="rrc rrc3">Monitor</div>
-                      <div class="rrc rrc4">TZ</div>
-                      <div class="rrc rrc5">IT</div>
-                    </div>
-                    <div class="rd-risk-rows">
-                      <div class="rd-risk-row">
-                        <div class="rd-risk-dot"></div>
-                        Non-compete enforceability by state
-                      </div>
-                      <div class="rd-risk-row">
-                        <div class="rd-risk-dot" style="opacity: 0.6"></div>
-                        IP assignment clauses
-                      </div>
-                      <div class="rd-risk-row">
-                        <div class="rd-risk-dot" style="opacity: 0.35"></div>
-                        Monitoring software prevalence
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="rd-panel">
-            <div class="rd-panel-inner">
-              <div class="rd-left">
-                <div class="rd-step">05 of 05</div>
-                <div class="rd-title">Bonus Videos</div>
-                <p class="rd-sub">
-                  Three exclusive videos. Two unlock immediately. The third
-                  arrives with your report.
-                </p>
-              </div>
-              <div class="rd-right">
-                <div class="rd-viz">
-                  <div class="rd-vids">
-                    <div class="rd-vid">
-                      <div class="rd-vid-thumb">
-                        &#9658;<span class="rd-vid-excl">NEW</span>
-                      </div>
-                      <div class="rd-vid-info">
-                        <p>How to pass background checks</p>
-                        <span>12 min &middot; Exclusive</span>
-                      </div>
-                    </div>
-                    <div class="rd-vid">
-                      <div class="rd-vid-thumb">
-                        &#9658;<span class="rd-vid-excl">NEW</span>
-                      </div>
-                      <div class="rd-vid-info">
-                        <p>Managing two calendars without losing your mind</p>
-                        <span>8 min &middot; Exclusive</span>
-                      </div>
-                    </div>
-                    <div class="rd-vid" style="opacity: 0.4">
-                      <div class="rd-vid-thumb" style="font-size: 18px">
-                        &#128274;
-                      </div>
-                      <div class="rd-vid-info">
-                        <p style="color: #333">The OE exit strategy</p>
-                        <span style="color: var(--red); font-weight: 600"
-                          >In your report</span
-                        >
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="rd-spacer"></div>
-    </div>
-
-    <script>
-      (function () {
-        const scroller = document.getElementById("report-scroller");
-        const cards = scroller.querySelectorAll(".report-card");
-        const dots = document.querySelectorAll(".report-dot");
-
-        /* ── Active card via IntersectionObserver ── */
-        const io = new IntersectionObserver(
-          (entries) => {
-            entries.forEach((entry) => {
-              if (entry.intersectionRatio >= 0.5) {
-                const idx = Array.from(cards).indexOf(entry.target);
-                cards.forEach((c, i) =>
-                  c.classList.toggle("active", i === idx),
-                );
-                dots.forEach((d, i) => d.classList.toggle("active", i === idx));
-              }
-            });
-          },
-          { root: scroller, threshold: 0.5 },
-        );
-        cards.forEach((c) => io.observe(c));
-
-        /* ── Mouse drag-to-scroll ── */
-        let isDown = false,
-          startX,
-          scrollLeft;
-        scroller.addEventListener("mousedown", (e) => {
-          isDown = true;
-          startX = e.pageX - scroller.offsetLeft;
-          scrollLeft = scroller.scrollLeft;
-        });
-        scroller.addEventListener("mouseleave", () => (isDown = false));
-        scroller.addEventListener("mouseup", () => (isDown = false));
-        scroller.addEventListener("mousemove", (e) => {
-          if (!isDown) return;
-          e.preventDefault();
-          const x = e.pageX - scroller.offsetLeft;
-          scroller.scrollLeft = scrollLeft - (x - startX);
-        });
-
-        /* ── Dot click navigation ── */
-        dots.forEach((dot, i) => {
-          dot.addEventListener("click", () => {
-            cards[i].scrollIntoView({
-              behavior: "smooth",
-              block: "nearest",
-              inline: "center",
-            });
-          });
-        });
-      })();
-    </script>
 
     <!-- HOW IT WORKS -->
     <section id="how-it-works">
@@ -1658,18 +1200,6 @@
 
       <!-- Report pages anchor -->
       <div class="report-pages">
-        <div class="report-page" style="--r: -10deg; z-index: 1">
-          <div class="report-page-lines">
-            <div class="rpl"></div>
-            <div class="rpl"></div>
-            <div class="rpl"></div>
-            <div class="rpl"></div>
-            <div class="rpl"></div>
-            <div class="rpl"></div>
-            <div class="rpl"></div>
-            <div class="rpl"></div>
-          </div>
-        </div>
         <div class="report-page" style="--r: -4deg; z-index: 2">
           <div class="report-page-lines">
             <div class="rpl"></div>
@@ -1706,47 +1236,8 @@
             <div class="rpl"></div>
           </div>
         </div>
-        <div class="report-page" style="--r: 14deg; z-index: 1">
-          <div class="report-page-lines">
-            <div class="rpl"></div>
-            <div class="rpl"></div>
-            <div class="rpl"></div>
-            <div class="rpl"></div>
-            <div class="rpl"></div>
-            <div class="rpl"></div>
-            <div class="rpl"></div>
-            <div class="rpl"></div>
-          </div>
-        </div>
       </div>
     </section>
-
-    <script>
-      // Desktop report scroll (large breakpoint only)
-      (function () {
-        var section = document.getElementById("report-desktop");
-        var track = document.getElementById("rd-track");
-        if (!section || !track) return;
-        var NUM = 5;
-
-        function onScroll() {
-          if (window.innerWidth < 1024) return;
-          var panelW = section.offsetWidth;
-          var top = section.getBoundingClientRect().top + window.scrollY;
-          var spacer = section.querySelector(".rd-spacer").offsetHeight;
-          var scrollIn = window.scrollY - top;
-          if (scrollIn < 0 || scrollIn > spacer) return;
-          var p = Math.max(0, Math.min(1, scrollIn / spacer));
-          track.style.transform =
-            "translateX(" + -p * (NUM - 1) * panelW + "px)";
-          track.style.transition = "none";
-        }
-
-        window.addEventListener("scroll", onScroll, { passive: true });
-        window.addEventListener("resize", onScroll);
-        onScroll();
-      })();
-    </script>
 
     <!-- Checkout drawer -->
     <div id="checkout-overlay" onclick="closeCheckout()"></div>
@@ -1821,5 +1312,12 @@
         if (e.key === "Escape") closeCheckout();
       });
     </script>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+      <div class="footer-logo-wrap">
+        <img src="jumpseat-logo.png" alt="Jumpseat">
+      </div>
+    </footer>
   </body>
 </html>
