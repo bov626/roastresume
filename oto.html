@@ -400,8 +400,8 @@
         width: 50%;
         min-width: 480px;
         max-width: 680px;
-        background: #0e0e0e;
-        border-left: 1px solid #1e1e1e;
+        background: #000;
+        border-left: 1px solid #222;
         transform: translateX(100%);
         transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         z-index: 1001;
@@ -417,7 +417,8 @@
         align-items: center;
         justify-content: space-between;
         padding: 20px 28px;
-        border-bottom: 1px solid #1a1a1a;
+        background: #000;
+        border-bottom: 1px solid #222;
         flex-shrink: 0;
       }
       .cd-title {
@@ -441,7 +442,7 @@
       .cd-body {
         flex: 1;
         padding: 0;
-        background: #0e0e0e;
+        background: #000;
       }
       @media (max-width: 768px) {
         #checkout-drawer {
@@ -1307,9 +1308,6 @@
           embed.innerHTML = "";
           checkoutInstance = await stripe.initEmbeddedCheckout({
             clientSecret: data.clientSecret,
-            appearance: {
-              variables: { colorBackground: "#0e0e0e" },
-            },
           });
           checkoutInstance.mount("#checkout-embed");
         } catch (err) {
