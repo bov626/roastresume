@@ -440,7 +440,8 @@
       }
       .cd-body {
         flex: 1;
-        padding: 28px;
+        padding: 0;
+        background: #0e0e0e;
       }
       @media (max-width: 768px) {
         #checkout-drawer {
@@ -1306,6 +1307,13 @@
           embed.innerHTML = "";
           checkoutInstance = await stripe.initEmbeddedCheckout({
             clientSecret: data.clientSecret,
+            appearance: {
+              theme: "night",
+              variables: {
+                colorBackground: "#0e0e0e",
+                colorSurface: "#161616",
+              },
+            },
           });
           checkoutInstance.mount("#checkout-embed");
         } catch (err) {
