@@ -186,6 +186,23 @@
         text-underline-offset: 4px;
         text-decoration-thickness: 2px;
       }
+      .hl-free {
+        position: relative;
+        text-decoration: none;
+        white-space: nowrap;
+      }
+      .hl-free::after {
+        content: "";
+        position: absolute;
+        bottom: -6px;
+        left: -3px;
+        right: -3px;
+        height: 5px;
+        background: var(--red);
+        border-radius: 2px;
+        transform: rotate(-0.7deg) skewX(-3deg);
+        opacity: 0.9;
+      }
 
       @media (max-width: 600px) {
         .hero-sub,
@@ -208,13 +225,11 @@
         max-width: 720px;
         aspect-ratio: 16/9;
         background: #0f0f0f;
-        border: 1px solid rgba(217, 30, 30, 0.35);
         border-radius: 18px;
         overflow: hidden;
         position: relative;
         margin: 28px 0;
         box-shadow:
-          0 0 0 1px rgba(217, 30, 30, 0.1),
           0 0 25px rgba(217, 30, 30, 0.28),
           0 0 60px rgba(217, 30, 30, 0.15),
           0 0 100px rgba(180, 20, 20, 0.08),
@@ -2365,7 +2380,7 @@
         </p>
         <p class="hero-cta-copy">
           And give you a template to fix it.
-          <span class="red-text">For free.</span>
+          <span class="red-text hl-free">For free.</span>
         </p>
       </div>
 
@@ -2456,12 +2471,6 @@
     <!-- ═══════════════════════ WHILE YOU WAIT ═══════════════════════ -->
     <section id="while-you-wait">
       <div class="wyw-inner">
-        <h2 class="wyw-heading">While you wait.</h2>
-        <p class="wyw-body">
-          You will be given access to the resume template we use for all
-          clients.
-        </p>
-
         <div class="wyw-bold">FOR FREE? WHY?</div>
         <p class="wyw-body">
           We get content. You get feedback.<br />If that ain't a symbiotic
@@ -3462,9 +3471,9 @@
         }
 
         // Initial spawn
-        for (let i = 0; i < 18; i++) spawn();
+        for (let i = 0; i < 35; i++) spawn();
         // Keep spawning
-        setInterval(spawn, 1800);
+        setInterval(spawn, 900);
       })();
     </script>
 
@@ -3522,13 +3531,6 @@
         // ─────────────────────────────────────────────
         // 3. WHILE YOU WAIT — entrance
         // ─────────────────────────────────────────────
-        gsap.from(".wyw-heading", {
-          y: 30,
-          opacity: 0,
-          duration: 0.7,
-          ease: "power3.out",
-          scrollTrigger: { trigger: "#while-you-wait", start: "top 80%" },
-        });
         gsap.from(".wyw-bold", {
           y: 20,
           opacity: 0,
