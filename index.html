@@ -208,23 +208,23 @@
         max-width: 720px;
         aspect-ratio: 16/9;
         background: #0f0f0f;
-        border: 1px solid rgba(217,30,30,0.35);
+        border: 1px solid rgba(217, 30, 30, 0.35);
         border-radius: 18px;
         overflow: hidden;
         position: relative;
         margin: 28px 0;
         box-shadow:
-          0 0 0 1px rgba(217,30,30,0.1),
-          0 0 25px rgba(217,30,30,0.28),
-          0 0 60px rgba(217,30,30,0.15),
-          0 0 100px rgba(180,20,20,0.08),
-          0 20px 60px rgba(0,0,0,0.7);
+          0 0 0 1px rgba(217, 30, 30, 0.1),
+          0 0 25px rgba(217, 30, 30, 0.28),
+          0 0 60px rgba(217, 30, 30, 0.15),
+          0 0 100px rgba(180, 20, 20, 0.08),
+          0 20px 60px rgba(0, 0, 0, 0.7);
       }
       .hero-video {
         width: 100%;
         height: 100%;
-        object-fit: cover;
-        border-radius: 18px;
+        border: none;
+        display: block;
       }
 
       /* CTA */
@@ -2351,15 +2351,12 @@
       </p>
 
       <div class="video-wrap">
-        <video
+        <iframe
           class="hero-video"
-          controls
-          playsinline
-          preload="metadata"
-          poster="/video-poster.jpg"
-        >
-          <source src="/hero-video.mp4" type="video/mp4" />
-        </video>
+          src="https://www.youtube.com/embed/IcYxCUsdITI?rel=0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+        ></iframe>
       </div>
 
       <div class="hero-cta-block">
@@ -3068,13 +3065,19 @@
           goToStep(3);
           fetch("/api/queue-count")
             .then((r) => r.json())
-            .then((d) => { QUEUE_COUNT = d.count; })
+            .then((d) => {
+              QUEUE_COUNT = d.count;
+            })
             .catch(() => {})
             .finally(() => {
               setTimeout(() => {
                 document.getElementById("fo-3").classList.add("q-live");
                 armOtoModal();
-                countUp(document.getElementById("fo-queue-num"), QUEUE_COUNT, 1800);
+                countUp(
+                  document.getElementById("fo-queue-num"),
+                  QUEUE_COUNT,
+                  1800,
+                );
                 setTimeout(launchFireworks, 200);
               }, 80);
             });
@@ -3560,11 +3563,11 @@
         // Trigger 1: exit intent — mouse leaves top of page
         function onExitIntent(e) {
           if (e.clientY <= 5) {
-            document.removeEventListener('mousemove', onExitIntent);
+            document.removeEventListener("mousemove", onExitIntent);
             showOtoModal();
           }
         }
-        document.addEventListener('mousemove', onExitIntent);
+        document.addEventListener("mousemove", onExitIntent);
 
         // Trigger 2: timer — 4 seconds after queue screen
         setTimeout(showOtoModal, 4000);
@@ -3573,29 +3576,35 @@
       function showOtoModal() {
         if (otoShown) return;
         otoShown = true;
-        const modal = document.getElementById('oto-modal');
-        modal.style.display = 'flex';
+        const modal = document.getElementById("oto-modal");
+        modal.style.display = "flex";
         // Reset to q1 in case it was triggered twice somehow
-        document.getElementById('oto-q1').style.display = 'block';
-        document.getElementById('oto-q2').style.display = 'none';
+        document.getElementById("oto-q1").style.display = "block";
+        document.getElementById("oto-q2").style.display = "none";
       }
 
       function otoYes() {
-        document.getElementById('oto-q1').style.display = 'none';
-        document.getElementById('oto-q2').style.display = 'block';
+        document.getElementById("oto-q1").style.display = "none";
+        document.getElementById("oto-q2").style.display = "block";
       }
 
       function otoNo() {
-        document.getElementById('oto-modal').style.display = 'none';
+        document.getElementById("oto-modal").style.display = "none";
       }
 
       function otoUSYes() {
-        const veil = document.createElement('div');
-        veil.style.cssText = 'position:fixed;inset:0;background:#0a0a0a;z-index:99999;opacity:0;transition:opacity .45s ease;';
+        const veil = document.createElement("div");
+        veil.style.cssText =
+          "position:fixed;inset:0;background:#0a0a0a;z-index:99999;opacity:0;transition:opacity .45s ease;";
         document.body.appendChild(veil);
+        const email = document.getElementById("fo-email").value.trim();
+        const nameParam = foName ? "name=" + encodeURIComponent(foName) : "";
+        const emailParam = email ? "&email=" + encodeURIComponent(email) : "";
         requestAnimationFrame(() => {
-          veil.style.opacity = '1';
-          setTimeout(() => { window.location.href = '/oto'; }, 460);
+          veil.style.opacity = "1";
+          setTimeout(() => {
+            window.location.href = "/oto?" + nameParam + emailParam;
+          }, 460);
         });
       }
     </script>
@@ -3622,30 +3631,125 @@
     </footer>
 
     <!-- ═══════════════════════ DEV TOOLBAR ═══════════════════════ -->
-    <div id="dev-toolbar" style="position:fixed;top:12px;right:12px;z-index:99999;display:flex;flex-direction:column;gap:6px;align-items:flex-end;">
-      <button onclick="devToggle()" style="background:rgba(20,20,20,0.95);border:1px solid #2a2a2a;color:#555;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:5px 10px;border-radius:6px;cursor:pointer;font-family:inherit;">DEV ▾</button>
-      <div id="dev-panel" style="display:none;background:rgba(12,12,12,0.97);border:1px solid #222;border-radius:10px;padding:10px;display:none;flex-direction:column;gap:5px;min-width:160px;">
-        <div style="font-size:9px;font-weight:800;letter-spacing:.15em;text-transform:uppercase;color:#333;padding:2px 4px 6px;border-bottom:1px solid #1a1a1a;margin-bottom:2px;">Form Steps</div>
+    <div
+      id="dev-toolbar"
+      style="
+        position: fixed;
+        top: 12px;
+        right: 12px;
+        z-index: 99999;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        align-items: flex-end;
+      "
+    >
+      <button
+        onclick="devToggle()"
+        style="
+          background: rgba(20, 20, 20, 0.95);
+          border: 1px solid #2a2a2a;
+          color: #555;
+          font-size: 10px;
+          font-weight: 700;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          padding: 5px 10px;
+          border-radius: 6px;
+          cursor: pointer;
+          font-family: inherit;
+        "
+      >
+        DEV ▾
+      </button>
+      <div
+        id="dev-panel"
+        style="
+          display: none;
+          background: rgba(12, 12, 12, 0.97);
+          border: 1px solid #222;
+          border-radius: 10px;
+          padding: 10px;
+          display: none;
+          flex-direction: column;
+          gap: 5px;
+          min-width: 160px;
+        "
+      >
+        <div
+          style="
+            font-size: 9px;
+            font-weight: 800;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: #333;
+            padding: 2px 4px 6px;
+            border-bottom: 1px solid #1a1a1a;
+            margin-bottom: 2px;
+          "
+        >
+          Form Steps
+        </div>
         <button onclick="devGoStep(0)" class="dev-btn">① Name</button>
         <button onclick="devGoStep(1)" class="dev-btn">② Email</button>
         <button onclick="devGoStep(2)" class="dev-btn">③ Upload</button>
         <button onclick="devGoQueue()" class="dev-btn">④ Queue screen</button>
         <button onclick="showOtoModal()" class="dev-btn">⑤ OTO popup</button>
-        <div style="font-size:9px;font-weight:800;letter-spacing:.15em;text-transform:uppercase;color:#333;padding:6px 4px 4px;border-top:1px solid #1a1a1a;margin-top:2px;">Pages</div>
-        <button onclick="window.open('/resources','_blank')" class="dev-btn">Resources</button>
-        <button onclick="window.open('/oto','_blank')" class="dev-btn">OTO</button>
-        <button onclick="window.open('/questionnaire','_blank')" class="dev-btn">Questionnaire</button>
-        <button onclick="window.open('/waiting','_blank')" class="dev-btn">Waiting</button>
+        <div
+          style="
+            font-size: 9px;
+            font-weight: 800;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: #333;
+            padding: 6px 4px 4px;
+            border-top: 1px solid #1a1a1a;
+            margin-top: 2px;
+          "
+        >
+          Pages
+        </div>
+        <button onclick="window.open('/resources','_blank')" class="dev-btn">
+          Resources
+        </button>
+        <button onclick="window.open('/oto','_blank')" class="dev-btn">
+          OTO
+        </button>
+        <button
+          onclick="window.open('/questionnaire','_blank')"
+          class="dev-btn"
+        >
+          Questionnaire
+        </button>
+        <button onclick="window.open('/waiting','_blank')" class="dev-btn">
+          Waiting
+        </button>
       </div>
     </div>
     <style>
-      .dev-btn{background:rgba(255,255,255,0.04);border:1px solid #1e1e1e;color:#777;font-size:11px;font-weight:600;padding:6px 10px;border-radius:6px;cursor:pointer;font-family:inherit;text-align:left;transition:all .1s;}
-      .dev-btn:hover{background:rgba(255,255,255,0.08);color:#ccc;border-color:#333;}
+      .dev-btn {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid #1e1e1e;
+        color: #777;
+        font-size: 11px;
+        font-weight: 600;
+        padding: 6px 10px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-family: inherit;
+        text-align: left;
+        transition: all 0.1s;
+      }
+      .dev-btn:hover {
+        background: rgba(255, 255, 255, 0.08);
+        color: #ccc;
+        border-color: #333;
+      }
     </style>
     <script>
       function devToggle() {
-        const p = document.getElementById('dev-panel');
-        p.style.display = p.style.display === 'flex' ? 'none' : 'flex';
+        const p = document.getElementById("dev-panel");
+        p.style.display = p.style.display === "flex" ? "none" : "flex";
       }
       function devGoStep(n) {
         openForm();
@@ -3655,31 +3759,175 @@
         openForm();
         setTimeout(() => {
           goToStep(3);
-          document.getElementById('fo-3').classList.add('q-live');
-          if (typeof launchFireworks === 'function') launchFireworks();
-          if (typeof armOtoModal === 'function') { otoShown = false; armOtoModal(); }
-          if (typeof countUp === 'function') countUp(document.getElementById('fo-queue-num'), 42, 1500);
+          document.getElementById("fo-3").classList.add("q-live");
+          if (typeof launchFireworks === "function") launchFireworks();
+          if (typeof armOtoModal === "function") {
+            otoShown = false;
+            armOtoModal();
+          }
+          if (typeof countUp === "function")
+            countUp(document.getElementById("fo-queue-num"), 42, 1500);
         }, 50);
       }
     </script>
 
     <!-- ═══════════════════════ OTO MODAL ═══════════════════════ -->
-    <div id="oto-modal" style="display:none;position:fixed;inset:0;z-index:9999;align-items:center;justify-content:center;padding:24px;">
-      <div id="oto-backdrop" onclick="otoNo()" style="position:absolute;inset:0;background:rgba(0,0,0,0.82);backdrop-filter:blur(4px);"></div>
-      <div style="position:relative;z-index:1;background:#0e0e0e;border:1px solid #1e1e1e;border-radius:16px;padding:36px 32px;max-width:400px;width:100%;text-align:center;animation:slideUp .35s ease;">
-        <p style="font-size:10px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:#333;margin-bottom:20px;">Before you go</p>
+    <div
+      id="oto-modal"
+      style="
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+      "
+    >
+      <div
+        id="oto-backdrop"
+        onclick="otoNo()"
+        style="
+          position: absolute;
+          inset: 0;
+          background: rgba(0, 0, 0, 0.82);
+          backdrop-filter: blur(4px);
+        "
+      ></div>
+      <div
+        style="
+          position: relative;
+          z-index: 1;
+          background: #0e0e0e;
+          border: 1px solid #1e1e1e;
+          border-radius: 16px;
+          padding: 36px 32px;
+          max-width: 400px;
+          width: 100%;
+          text-align: center;
+          animation: slideUp 0.35s ease;
+        "
+      >
+        <p
+          style="
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: #333;
+            margin-bottom: 20px;
+          "
+        >
+          Before you go
+        </p>
         <div id="oto-q1">
-          <p style="font-size:20px;font-weight:800;letter-spacing:-.02em;color:#fff;margin-bottom:24px;line-height:1.3;">Are you interested in job stacking?</p>
-          <div style="display:flex;flex-direction:column;gap:10px;">
-            <button onclick="otoYes()" style="background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.3);color:#4ade80;font-size:15px;font-weight:700;padding:14px 20px;border-radius:10px;cursor:pointer;font-family:inherit;transition:all .15s;" onmouseover="this.style.background='rgba(34,197,94,.25)'" onmouseout="this.style.background='rgba(34,197,94,.15)'">Yeah</button>
-            <button onclick="otoNo()" style="background:none;border:none;color:#333;font-size:13px;font-weight:500;padding:8px;cursor:pointer;font-family:inherit;text-decoration:underline;text-underline-offset:3px;transition:color .15s;" onmouseover="this.style.color='#555'" onmouseout="this.style.color='#333'">No, I'm fine with one income</button>
+          <p
+            style="
+              font-size: 20px;
+              font-weight: 800;
+              letter-spacing: -0.02em;
+              color: #fff;
+              margin-bottom: 24px;
+              line-height: 1.3;
+            "
+          >
+            Are you interested in job stacking?
+          </p>
+          <div style="display: flex; flex-direction: column; gap: 10px">
+            <button
+              onclick="otoYes()"
+              style="
+                background: rgba(34, 197, 94, 0.15);
+                border: 1px solid rgba(34, 197, 94, 0.3);
+                color: #4ade80;
+                font-size: 15px;
+                font-weight: 700;
+                padding: 14px 20px;
+                border-radius: 10px;
+                cursor: pointer;
+                font-family: inherit;
+                transition: all 0.15s;
+              "
+              onmouseover="this.style.background='rgba(34,197,94,.25)'"
+              onmouseout="this.style.background='rgba(34,197,94,.15)'"
+            >
+              Yeah
+            </button>
+            <button
+              onclick="otoNo()"
+              style="
+                background: none;
+                border: none;
+                color: #333;
+                font-size: 13px;
+                font-weight: 500;
+                padding: 8px;
+                cursor: pointer;
+                font-family: inherit;
+                text-decoration: underline;
+                text-underline-offset: 3px;
+                transition: color 0.15s;
+              "
+              onmouseover="this.style.color='#555'"
+              onmouseout="this.style.color='#333'"
+            >
+              No, I'm fine with one income
+            </button>
           </div>
         </div>
-        <div id="oto-q2" style="display:none;animation:slideUp .35s ease;">
-          <p style="font-size:20px;font-weight:800;letter-spacing:-.02em;color:#fff;margin-bottom:24px;line-height:1.3;">Are you based in the US?</p>
-          <div style="display:flex;flex-direction:column;gap:10px;">
-            <button onclick="otoUSYes()" style="background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.3);color:#4ade80;font-size:15px;font-weight:700;padding:14px 20px;border-radius:10px;cursor:pointer;font-family:inherit;transition:all .15s;" onmouseover="this.style.background='rgba(34,197,94,.25)'" onmouseout="this.style.background='rgba(34,197,94,.15)'">Yes</button>
-            <button onclick="otoNo()" style="background:none;border:none;color:#333;font-size:13px;font-weight:500;padding:8px;cursor:pointer;font-family:inherit;text-decoration:underline;text-underline-offset:3px;transition:color .15s;" onmouseover="this.style.color='#555'" onmouseout="this.style.color='#333'">No</button>
+        <div id="oto-q2" style="display: none; animation: slideUp 0.35s ease">
+          <p
+            style="
+              font-size: 20px;
+              font-weight: 800;
+              letter-spacing: -0.02em;
+              color: #fff;
+              margin-bottom: 24px;
+              line-height: 1.3;
+            "
+          >
+            Are you based in the US?
+          </p>
+          <div style="display: flex; flex-direction: column; gap: 10px">
+            <button
+              onclick="otoUSYes()"
+              style="
+                background: rgba(34, 197, 94, 0.15);
+                border: 1px solid rgba(34, 197, 94, 0.3);
+                color: #4ade80;
+                font-size: 15px;
+                font-weight: 700;
+                padding: 14px 20px;
+                border-radius: 10px;
+                cursor: pointer;
+                font-family: inherit;
+                transition: all 0.15s;
+              "
+              onmouseover="this.style.background='rgba(34,197,94,.25)'"
+              onmouseout="this.style.background='rgba(34,197,94,.15)'"
+            >
+              Yes
+            </button>
+            <button
+              onclick="otoNo()"
+              style="
+                background: none;
+                border: none;
+                color: #333;
+                font-size: 13px;
+                font-weight: 500;
+                padding: 8px;
+                cursor: pointer;
+                font-family: inherit;
+                text-decoration: underline;
+                text-underline-offset: 3px;
+                transition: color 0.15s;
+              "
+              onmouseover="this.style.color='#555'"
+              onmouseout="this.style.color='#333'"
+            >
+              No
+            </button>
           </div>
         </div>
       </div>

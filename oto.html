@@ -1,849 +1,1842 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OE Risk Report — Could You Pull It Off?</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-<script src="https://js.stripe.com/v3/"></script>
-<style>
-  :root{--red:#d91e1e;--black:#0a0a0a;--border:#1a1a1a}
-  *{box-sizing:border-box;margin:0;padding:0}
-  html{scroll-behavior:smooth}
-  body{font-family:'Inter',sans-serif;background:var(--black);color:#fff;overflow-x:hidden;animation:pageIn .5s ease forwards}
-  @keyframes pageIn{from{opacity:0}to{opacity:1}}
-
-  /* ── HERO ── */
-  #hero{
-    min-height:100vh;
-    display:flex;flex-direction:column;align-items:center;justify-content:center;
-    text-align:center;padding:80px 24px 80px;
-    position:relative;overflow:hidden;
-    background:
-      radial-gradient(ellipse 60% 60% at 100% 0%, rgba(139,0,0,0.22) 0%, transparent 60%),
-      var(--black);
-  }
-
-  /* Pill badge */
-  .pill{
-    display:inline-block;
-    background:var(--red);color:#fff;
-    font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;
-    padding:6px 16px;border-radius:100px;
-    margin-bottom:28px;
-  }
-
-  .hero-headline{
-    font-size:clamp(36px,5.5vw,68px);
-    font-weight:900;letter-spacing:-.035em;line-height:1.05;
-    margin-bottom:20px;max-width:820px;
-  }
-
-  /* Animated red underline on "you" */
-  .hl-you{
-    position:relative;display:inline-block;
-  }
-  .hl-you::after{
-    content:'';position:absolute;bottom:-4px;left:0;width:0;height:3px;
-    background:var(--red);border-radius:2px;
-    animation:drawLine .8s ease 0.5s forwards;
-  }
-  @keyframes drawLine{to{width:100%}}
-
-  /* Hero subheadline — force single line via nowrap on desktop */
-  .hero-sub{
-    font-size:clamp(14px,1.8vw,19px);
-    color:rgba(255,255,255,0.65);
-    white-space:nowrap;
-    line-height:1.65;margin-bottom:36px;
-  }
-  @media(max-width:600px){
-    .hero-sub{white-space:normal;max-width:320px}
-  }
-
-  /* Video placeholder */
-  .video-wrap{
-    width:100%;max-width:720px;aspect-ratio:16/9;
-    background:#0f0f0f;border:1px solid var(--border);
-    border-radius:16px;overflow:hidden;position:relative;
-    margin:0 0 36px;
-    box-shadow:0 0 50px rgba(139,0,0,0.15);
-  }
-  .video-placeholder{
-    width:100%;height:100%;display:flex;align-items:center;justify-content:center;
-    flex-direction:column;gap:12px;color:#222;
-  }
-  .video-placeholder span{font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
-
-  /* Footnote — same size/color as hero-sub, with breathing room */
-  .hero-footnote{
-    font-size:clamp(14px,1.8vw,19px);
-    color:rgba(255,255,255,0.65);
-    margin-bottom:36px;
-  }
-
-  .cta-btn{
-    display:inline-flex;align-items:center;gap:10px;
-    background:var(--red);color:#fff;
-    font-size:15px;font-weight:700;
-    padding:16px 36px;border-radius:10px;
-    text-decoration:none;letter-spacing:-.01em;
-    box-shadow:0 4px 36px rgba(217,30,30,0.38);
-    transition:transform .15s,box-shadow .15s;
-    cursor:pointer;border:none;font-family:'Inter',sans-serif;
-  }
-  .cta-btn:hover{transform:translateY(-1px);box-shadow:0 6px 32px rgba(217,30,30,0.45)}
-  .cta-note{font-size:12px;color:#333;margin-top:12px}
-
-  /* ── WHAT'S IN THE REPORT — horizontal snap scroll ── */
-  #report-section{
-    border-top:1px solid #111;
-    padding:72px 0 88px;
-  }
-
-  .section-eyebrow{
-    font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
-    color:var(--red);margin-bottom:10px;
-  }
-  .section-title{
-    font-size:clamp(24px,3.5vw,40px);font-weight:900;letter-spacing:-.03em;line-height:1.1;
-  }
-
-  .report-section-header{
-    text-align:center;
-    padding:0 32px;
-    margin-bottom:44px;
-  }
-
-  /* Horizontal scrolling lane */
-  .report-scroller{
-    display:flex;
-    gap:16px;
-    overflow-x:scroll;
-    scroll-snap-type:x mandatory;
-    -webkit-overflow-scrolling:touch;
-    padding:8px 5vw 28px;
-    scrollbar-width:none;
-    cursor:grab;
-  }
-  .report-scroller:active{cursor:grabbing}
-  .report-scroller::-webkit-scrollbar{display:none}
-
-  /* Progress dots */
-  .report-dots{
-    display:flex;gap:6px;justify-content:center;
-    padding-top:4px;
-  }
-  .report-dot{
-    width:6px;height:6px;border-radius:50%;
-    background:#1a1a1a;transition:background .25s,width .25s;
-  }
-  .report-dot.active{background:var(--red);width:18px;border-radius:3px}
-
-  .report-card{
-    flex-shrink:0;
-    width:min(320px,80vw);
-    scroll-snap-align:center;
-    background:#0e0e0e;
-    border:1px solid #1a1a1a;
-    border-radius:16px;
-    padding:28px;
-    transition:border-color .25s;
-  }
-  .report-card.active{border-color:rgba(217,30,30,0.35)}
-
-  .card-label{
-    font-size:10px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;
-    color:#333;margin-bottom:14px;
-  }
-  .card-title{font-size:17px;font-weight:700;margin-bottom:18px}
-
-  /* Job data card */
-  .job-pills{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
-  .job-pill{
-    background:#111;border:1px solid #1e1e1e;border-radius:8px;
-    padding:10px 14px;text-align:center;
-  }
-  .job-pill-num{font-size:17px;font-weight:800;color:#fff;display:block}
-  .job-pill-label{font-size:10px;color:#444;margin-top:3px;display:block}
-  .job-pill-pct{font-size:22px;font-weight:900;color:var(--red)}
-
-  /* Salary card */
-  .salary-display{
-    background:var(--red);border-radius:10px;
-    padding:14px 20px;text-align:center;margin-bottom:14px;
-  }
-  .salary-num{font-size:26px;font-weight:900;letter-spacing:-.02em}
-  .salary-sub{font-size:11px;opacity:.8;margin-top:2px}
-  .salary-breakdown{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-  .salary-col{background:#111;border:1px solid #1e1e1e;border-radius:8px;padding:12px;text-align:center}
-  .salary-col-label{font-size:10px;color:#555;margin-bottom:4px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
-  .salary-col-num{font-size:15px;font-weight:700}
-
-  /* Readiness card */
-  .speedometer-wrap{display:flex;align-items:center;justify-content:center;padding:16px 0}
-
-  /* Risk factors card */
-  .risk-circles{display:flex;align-items:center;justify-content:center;padding:16px 0}
-  .risk-circle{
-    width:60px;height:60px;border-radius:50%;
-    display:flex;align-items:center;justify-content:center;
-    font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;
-    text-align:center;line-height:1.3;flex-shrink:0;
-  }
-  .risk-circle:not(:first-child){margin-left:-14px}
-  .risk-c1{background:rgba(217,30,30,0.9);color:#fff;z-index:5}
-  .risk-c2{background:rgba(217,30,30,0.65);color:#fff;z-index:4;width:52px;height:52px}
-  .risk-c3{background:rgba(217,30,30,0.4);color:#fff;z-index:3;width:44px;height:44px}
-  .risk-c4{background:rgba(217,30,30,0.2);color:#fff;z-index:2;width:36px;height:36px}
-  .risk-c5{background:rgba(217,30,30,0.08);color:#555;z-index:1;width:28px;height:28px}
-  .risk-labels{display:flex;flex-direction:column;gap:7px;margin-top:14px}
-  .risk-label{display:flex;align-items:center;gap:10px;font-size:11px;color:#555}
-  .risk-dot{width:7px;height:7px;border-radius:50%;background:var(--red);flex-shrink:0}
-
-  /* Bonus videos card */
-  .bonus-videos{display:flex;flex-direction:column;gap:10px}
-  .bonus-video{
-    background:#111;border:1px solid #1e1e1e;border-radius:10px;
-    padding:12px;display:flex;align-items:center;gap:12px;
-  }
-  .yt-thumb{
-    width:52px;height:36px;background:#1a1a1a;border-radius:6px;
-    display:flex;align-items:center;justify-content:center;
-    flex-shrink:0;position:relative;
-  }
-  .yt-icon{color:var(--red);font-size:16px}
-  .exclusive-tag{
-    position:absolute;top:-5px;right:-5px;
-    background:var(--red);color:#fff;
-    font-size:6px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;
-    padding:2px 4px;border-radius:3px;
-  }
-  .yt-info p{font-size:11px;font-weight:600;color:#888;margin-bottom:1px}
-  .yt-info span{font-size:10px;color:#333}
-
-  @keyframes livePulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(0.7)}}
-
-  /* ── Desktop report: hide on tablet/mobile ── */
-  .report-desktop{display:none}
-  @media(min-width:1024px){
-    .report-desktop{display:block}
-    .report-mobile{display:none}
-  }
-
-  /* ── Stripe checkout drawer ── */
-  #checkout-overlay{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.7);opacity:0;pointer-events:none;transition:opacity .35s ease;backdrop-filter:blur(4px)}
-  #checkout-overlay.open{opacity:1;pointer-events:all}
-  #checkout-drawer{position:fixed;top:0;right:0;bottom:0;width:50%;min-width:480px;max-width:680px;background:#0e0e0e;border-left:1px solid #1e1e1e;transform:translateX(100%);transition:transform .4s cubic-bezier(0.4,0,0.2,1);z-index:1001;overflow-y:auto;display:flex;flex-direction:column}
-  #checkout-drawer.open{transform:translateX(0)}
-  .cd-header{display:flex;align-items:center;justify-content:space-between;padding:20px 28px;border-bottom:1px solid #1a1a1a;flex-shrink:0}
-  .cd-title{font-size:14px;font-weight:700;letter-spacing:-.01em}
-  .cd-close{background:none;border:none;color:#555;cursor:pointer;line-height:1;padding:4px;border-radius:6px;transition:color .15s}
-  .cd-close:hover{color:#fff}
-  .cd-body{flex:1;padding:28px}
-  @media(max-width:600px){#checkout-drawer{width:100%;min-width:0;max-width:none}}
-
-  /* ── Desktop sticky panels ── */
-  @media(min-width:1024px){
-    #report-desktop{position:relative;max-width:1280px;margin:0 auto}
-    .rd-sticky{position:sticky;top:0;height:100vh;overflow:hidden;background:var(--black);border-top:1px solid #111}
-    .rd-track{display:flex;height:100%;will-change:transform}
-    .rd-panel{min-width:100%;height:100%;display:grid;grid-template-columns:1fr 1fr;align-items:center;border-right:1px solid #333}
-    .rd-panel-inner{display:contents}
-    .rd-left{padding:60px 32px 60px 80px;display:flex;flex-direction:column;justify-content:center;height:100%}
-    .rd-step{font-size:11px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;background:var(--red);color:#fff;padding:5px 14px;border-radius:100px;display:inline-block;margin-bottom:20px;align-self:flex-start}
-    .rd-title{font-size:clamp(28px,3.2vw,46px);font-weight:900;letter-spacing:-.035em;line-height:1.05;margin-bottom:12px}
-    .rd-sub{font-size:15px;color:#444;line-height:1.75;max-width:400px}
-    .rd-right{padding:60px 80px 60px 32px;height:100%;display:flex;align-items:center;justify-content:flex-start}
-    .rd-viz{width:100%;max-width:460px}
-    .rd-spacer{height:500vh}
-
-    .rd-live-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(217,30,30,0.12);border:1px solid rgba(217,30,30,0.25);border-radius:100px;padding:3px 10px 3px 7px;position:absolute;top:16px;right:16px}
-    .rd-live-dot{width:6px;height:6px;border-radius:50%;background:var(--red);animation:livePulse 1.8s ease-in-out infinite}
-    .rd-live-badge span{font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--red)}
-
-    .rd-job{background:#0d0d0d;border-radius:12px;padding:24px;display:flex;flex-direction:column;gap:12px;position:relative}
-    .rd-job-title{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#333}
-    .rd-pills{display:flex;gap:8px}
-    .rd-pill{background:#111;border:1px solid #1e1e1e;border-radius:8px;padding:14px 16px;text-align:center;flex:1}
-    .rd-pill-num{font-size:20px;font-weight:900;display:block}
-    .rd-pill-lab{font-size:9px;color:#444;margin-top:4px;display:block}
-    .rd-pill-full{background:#111;border:1px solid #1e1e1e;border-radius:8px;padding:14px 16px;text-align:center;width:100%}
-
-    .rd-salary{background:#0d0d0d;border-radius:12px;overflow:hidden}
-    .rd-salary-top{background:var(--red);padding:20px 16px;text-align:center}
-    .rd-salary-num{font-size:30px;font-weight:900;letter-spacing:-.02em}
-    .rd-salary-sub{font-size:10px;opacity:.8;margin-top:2px}
-    .rd-salary-bot{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:#1a1a1a}
-    .rd-salary-col{background:#0d0d0d;padding:18px 14px;text-align:center}
-    .rd-salary-col-l{font-size:9px;color:#555;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px}
-    .rd-salary-col-n{font-size:20px;font-weight:800}
-
-    .rd-score{background:#0d0d0d;border-radius:12px;padding:20px;display:flex;flex-direction:column;align-items:center}
-
-    .rd-risk{background:#0d0d0d;border-radius:12px;padding:24px}
-    .rd-risk-circles{display:flex;align-items:center;justify-content:center;margin-bottom:16px}
-    .rrc{border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;text-transform:uppercase;text-align:center;line-height:1.2;flex-shrink:0}
-    .rrc:not(:first-child){margin-left:-14px}
-    .rrc1{width:68px;height:68px;background:rgba(217,30,30,.9);color:#fff;z-index:5;font-size:9px}
-    .rrc2{width:56px;height:56px;background:rgba(217,30,30,.65);color:#fff;z-index:4}
-    .rrc3{width:46px;height:46px;background:rgba(217,30,30,.4);color:#fff;z-index:3}
-    .rrc4{width:36px;height:36px;background:rgba(217,30,30,.2);color:#fff;z-index:2}
-    .rrc5{width:26px;height:26px;background:rgba(217,30,30,.08);color:#555;z-index:1}
-    .rd-risk-rows{display:flex;flex-direction:column;gap:10px}
-    .rd-risk-row{display:flex;align-items:center;gap:8px;font-size:12px;color:#444}
-    .rd-risk-dot{width:6px;height:6px;border-radius:50%;background:var(--red);flex-shrink:0}
-
-    .rd-vids{background:#0d0d0d;border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:10px}
-    .rd-vid{display:flex;align-items:center;gap:10px;background:#111;border:1px solid #1e1e1e;border-radius:8px;padding:12px}
-    .rd-vid-thumb{width:52px;height:36px;background:#1a1a1a;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--red);font-size:16px;position:relative}
-    .rd-vid-excl{position:absolute;top:-4px;right:-4px;background:var(--red);color:#fff;font-size:6px;font-weight:800;padding:1px 4px;border-radius:3px}
-    .rd-vid-info p{font-size:12px;font-weight:600;color:#777;margin-bottom:1px}
-    .rd-vid-info span{font-size:10px;color:#2a2a2a}
-  }
-
-  /* ── HOW IT WORKS ── */
-  #how-it-works{
-    padding:100px 24px;
-    max-width:640px;margin:0 auto;text-align:center;
-    border-top:1px solid #111;
-  }
-  .how-sub{font-size:16px;color:#444;margin-bottom:48px;font-style:italic}
-
-  .how-steps{display:flex;flex-direction:column;gap:16px;margin-bottom:48px;text-align:left}
-  .how-step{
-    display:flex;align-items:flex-start;gap:18px;
-    background:#0e0e0e;border:1px solid var(--border);
-    border-radius:14px;padding:20px 22px;
-  }
-  .how-num{
-    width:32px;height:32px;border-radius:8px;
-    background:var(--red);color:#fff;
-    font-size:13px;font-weight:800;
-    display:flex;align-items:center;justify-content:center;
-    flex-shrink:0;margin-top:2px;
-  }
-  .how-text h3{font-size:15px;font-weight:700;margin-bottom:4px}
-  .how-text p{font-size:13px;color:#555;line-height:1.6}
-
-  /* ── REPORT PAGES ANCHOR ── */
-  .report-pages{
-    display:flex;gap:0;justify-content:center;
-    margin-top:56px;padding:0 24px;
-    overflow:hidden;
-  }
-  .report-page{
-    width:180px;
-    height:240px;
-    background:#0e0e0e;
-    border:1px solid #1e1e1e;
-    border-radius:6px 6px 0 0;
-    flex-shrink:0;
-    transform:rotate(var(--r));
-    transform-origin:bottom center;
-    position:relative;
-    margin:0 -8px;
-  }
-  .report-page::before{
-    content:'';
-    position:absolute;top:16px;left:16px;right:16px;height:2px;
-    background:#1e1e1e;border-radius:2px;
-  }
-  .report-page::after{
-    content:'';
-    position:absolute;top:26px;left:16px;right:32px;height:2px;
-    background:#161616;border-radius:2px;
-  }
-  .report-page-lines{
-    position:absolute;top:36px;left:16px;right:16px;
-    display:flex;flex-direction:column;gap:8px;
-  }
-  .rpl{height:1px;background:#131313;border-radius:1px}
-  .rpl:nth-child(3){width:70%}
-  .rpl:nth-child(5){width:85%}
-  .rpl:nth-child(7){width:60%}
-
-  /* Red accent on first page */
-  .report-page:nth-child(2) .rpl:first-child{background:rgba(217,30,30,0.2);height:2px}
-</style>
-</head>
-<body>
-
-<!-- HERO -->
-<section id="hero">
-  <div class="pill">OE Risk Report</div>
-
-  <h1 class="hero-headline">
-    Could <span class="hl-you">you</span> pull it off?
-  </h1>
-
-  <p class="hero-sub">
-    Job stacking is legal, but the risks are personal. Find out yours.
-  </p>
-
-  <!-- Video placeholder -->
-  <div class="video-wrap">
-    <div class="video-placeholder">
-      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polygon points="10,8 16,12 10,16" fill="#333" stroke="none"/></svg>
-      <span>Sales video coming soon</span>
-    </div>
-  </div>
-
-  <p class="hero-footnote">Custom built for you from live job market data and 10,000 OE case studies.</p>
-
-  <button class="cta-btn" onclick="openCheckout()">
-    Calculate my risk — $29
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-  </button>
-  <p class="cta-note">Report delivered in 20 minutes.</p>
-</section>
-
-<div class="report-mobile">
-<!-- WHAT'S IN THE REPORT — horizontal snap scroll -->
-<div id="report-section">
-
-  <div class="report-section-header">
-    <div class="section-eyebrow">Inside the report</div>
-    <h2 class="section-title">What's in the Report?</h2>
-  </div>
-
-  <div class="report-scroller" id="report-scroller">
-
-    <!-- Card 1: Job Data -->
-    <div class="report-card active">
-      <div class="card-label">Job Market Data</div>
-      <div class="card-title">Your Job Title</div>
-      <div class="job-pills">
-        <div class="job-pill">
-          <span class="job-pill-num">106,212</span>
-          <span class="job-pill-label">Openings</span>
-        </div>
-        <div class="job-pill">
-          <span class="job-pill-num">48,227</span>
-          <span class="job-pill-label">Remote Jobs</span>
-        </div>
-        <div class="job-pill">
-          <span class="job-pill-pct">41%</span>
-          <span class="job-pill-label">Remote Rate</span>
-        </div>
-      </div>
-      <p style="font-size:12px;color:#333;line-height:1.6">Live data pulled at report generation time for your exact role.</p>
-    </div>
-
-    <!-- Card 2: Salary -->
-    <div class="report-card">
-      <div class="card-label">Income Potential</div>
-      <div class="card-title">Average Salary</div>
-      <div class="salary-display">
-        <div class="salary-num">$167,227</div>
-        <div class="salary-sub">Combined annual income</div>
-      </div>
-      <div class="salary-breakdown">
-        <div class="salary-col">
-          <div class="salary-col-label">J1</div>
-          <div class="salary-col-num">$95,000</div>
-        </div>
-        <div class="salary-col">
-          <div class="salary-col-label">J2</div>
-          <div class="salary-col-num" style="color:var(--red)">+$72,227</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Card 3: Readiness Score -->
-    <div class="report-card">
-      <div class="card-label">Readiness Score</div>
-      <div class="card-title">Are You Ready?</div>
-      <div class="speedometer-wrap">
-        <svg viewBox="0 0 200 110" width="190" height="105">
-          <path d="M20,100 A80,80 0 0,1 180,100" fill="none" stroke="#1a1a1a" stroke-width="16" stroke-linecap="round"/>
-          <path d="M20,100 A80,80 0 0,1 180,100" fill="none" stroke="#d91e1e" stroke-width="16" stroke-linecap="round"
-            stroke-dasharray="251" stroke-dashoffset="70" opacity="0.9"/>
-          <line x1="100" y1="100" x2="58" y2="38" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
-          <circle cx="100" cy="100" r="6" fill="#fff"/>
-          <text x="100" y="88" text-anchor="middle" fill="#fff" font-size="22" font-weight="900" font-family="Inter,sans-serif">72</text>
-          <text x="100" y="108" text-anchor="middle" fill="#555" font-size="10" font-family="Inter,sans-serif">READINESS SCORE</text>
-        </svg>
-      </div>
-      <p style="font-size:12px;color:#555;text-align:center;line-height:1.6">Based on your workload, schedule, and role profile.</p>
-    </div>
-
-    <!-- Card 4: Risk Factors -->
-    <div class="report-card">
-      <div class="card-label">Risk Analysis</div>
-      <div class="card-title">Your Risk Factors</div>
-      <div class="risk-circles">
-        <div class="risk-circle risk-c1">Non<br>Compete</div>
-        <div class="risk-circle risk-c2">IP<br>Clause</div>
-        <div class="risk-circle risk-c3">Moon<br>light</div>
-        <div class="risk-circle risk-c4">Time<br>zone</div>
-        <div class="risk-circle risk-c5">IT</div>
-      </div>
-      <div class="risk-labels">
-        <div class="risk-label"><div class="risk-dot"></div>Non-compete enforceability by state</div>
-        <div class="risk-label"><div class="risk-dot" style="opacity:.6"></div>IP assignment clauses</div>
-        <div class="risk-label"><div class="risk-dot" style="opacity:.3"></div>Monitoring software prevalence</div>
-      </div>
-    </div>
-
-    <!-- Card 5: Bonus Videos -->
-    <div class="report-card">
-      <div class="card-label">Exclusive Content</div>
-      <div class="card-title">Bonus Videos</div>
-      <div class="bonus-videos">
-        <div class="bonus-video">
-          <div class="yt-thumb"><span class="yt-icon">▶</span><span class="exclusive-tag">Exclusive</span></div>
-          <div class="yt-info"><p>How to pass background checks</p><span>12 min</span></div>
-        </div>
-        <div class="bonus-video">
-          <div class="yt-thumb"><span class="yt-icon">▶</span><span class="exclusive-tag">Exclusive</span></div>
-          <div class="yt-info"><p>Managing two calendars without losing your mind</p><span>8 min</span></div>
-        </div>
-        <div class="bonus-video">
-          <div class="yt-thumb"><span class="yt-icon">▶</span><span class="exclusive-tag">Exclusive</span></div>
-          <div class="yt-info"><p>The OE exit strategy</p><span>15 min</span></div>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- Progress dots -->
-  <div class="report-dots" id="report-dots">
-    <div class="report-dot active"></div>
-    <div class="report-dot"></div>
-    <div class="report-dot"></div>
-    <div class="report-dot"></div>
-    <div class="report-dot"></div>
-  </div>
-
-</div>
-
-</div><!-- /report-mobile -->
-
-<!-- DESKTOP REPORT SECTION -->
-<div class="report-desktop" id="report-desktop">
-  <div class="rd-sticky">
-    <div class="rd-track" id="rd-track">
-
-      <div class="rd-panel">
-        <div class="rd-panel-inner">
-          <div class="rd-left">
-            <div class="rd-step">01 of 05</div>
-            <div class="rd-title">Job Market Data</div>
-            <p class="rd-sub">Live openings and remote availability for your exact job title.</p>
-          </div>
-          <div class="rd-right">
-            <div class="rd-viz">
-              <div class="rd-job">
-                <div class="rd-live-badge"><div class="rd-live-dot"></div><span>Live</span></div>
-                <div class="rd-job-title">Your Job Title</div>
-                <div class="rd-pills">
-                  <div class="rd-pill"><span class="rd-pill-num">106,212</span><span class="rd-pill-lab">Openings</span></div>
-                  <div class="rd-pill"><span class="rd-pill-num">48,227</span><span class="rd-pill-lab">Remote Jobs</span></div>
-                </div>
-                <div class="rd-pill-full"><span class="rd-pill-num" style="font-size:28px;color:var(--red)">41%</span><span class="rd-pill-lab">Remote Rate</span></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="rd-panel">
-        <div class="rd-panel-inner">
-          <div class="rd-left">
-            <div class="rd-step">02 of 05</div>
-            <div class="rd-title">Average Salary</div>
-            <p class="rd-sub">What you could realistically be making with a second income stacked on top.</p>
-          </div>
-          <div class="rd-right">
-            <div class="rd-viz">
-              <div class="rd-salary">
-                <div class="rd-salary-top"><div class="rd-salary-num">$167,227</div><div class="rd-salary-sub">Combined annual income</div></div>
-                <div class="rd-salary-bot">
-                  <div class="rd-salary-col"><div class="rd-salary-col-l">J1</div><div class="rd-salary-col-n">$95,000</div></div>
-                  <div class="rd-salary-col"><div class="rd-salary-col-l">J2</div><div class="rd-salary-col-n" style="color:var(--red)">+$72,227</div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="rd-panel">
-        <div class="rd-panel-inner">
-          <div class="rd-left">
-            <div class="rd-step">03 of 05</div>
-            <div class="rd-title">Readiness Score</div>
-            <p class="rd-sub">A score from 0 to 100 based on your real workload, not time at your desk.</p>
-          </div>
-          <div class="rd-right">
-            <div class="rd-viz">
-              <div class="rd-score">
-                <svg viewBox="0 0 220 125" width="100%" style="max-width:300px">
-                  <path d="M22,110 A88,88 0 0,1 198,110" fill="none" stroke="#1a1a1a" stroke-width="16" stroke-linecap="round"/>
-                  <path d="M22,110 A88,88 0 0,1 198,110" fill="none" stroke="#d91e1e" stroke-width="16" stroke-linecap="round" stroke-dasharray="276" stroke-dashoffset="76"/>
-                  <line x1="110" y1="110" x2="166" y2="42" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
-                  <circle cx="110" cy="110" r="7" fill="#fff"/>
-                  <text x="110" y="82" text-anchor="middle" fill="#fff" font-size="26" font-weight="900" font-family="Inter,sans-serif">72</text>
-                  <text x="110" y="124" text-anchor="middle" fill="#444" font-size="10" font-family="Inter,sans-serif">READINESS SCORE</text>
-                </svg>
-                <div style="font-size:12px;color:#333;margin-top:8px">Based on your workload, meetings, and schedule</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="rd-panel">
-        <div class="rd-panel-inner">
-          <div class="rd-left">
-            <div class="rd-step">04 of 05</div>
-            <div class="rd-title">Risk Factors</div>
-            <p class="rd-sub">Non-competes, IP assignment clauses, monitoring software. All the ways you could get caught, deciphered.</p>
-          </div>
-          <div class="rd-right">
-            <div class="rd-viz">
-              <div class="rd-risk">
-                <div class="rd-risk-circles">
-                  <div class="rrc rrc1">Non<br>Compete</div>
-                  <div class="rrc rrc2">IP<br>Clause</div>
-                  <div class="rrc rrc3">Monitor</div>
-                  <div class="rrc rrc4">TZ</div>
-                  <div class="rrc rrc5">IT</div>
-                </div>
-                <div class="rd-risk-rows">
-                  <div class="rd-risk-row"><div class="rd-risk-dot"></div>Non-compete enforceability by state</div>
-                  <div class="rd-risk-row"><div class="rd-risk-dot" style="opacity:.6"></div>IP assignment clauses</div>
-                  <div class="rd-risk-row"><div class="rd-risk-dot" style="opacity:.35"></div>Monitoring software prevalence</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="rd-panel">
-        <div class="rd-panel-inner">
-          <div class="rd-left">
-            <div class="rd-step">05 of 05</div>
-            <div class="rd-title">Bonus Videos</div>
-            <p class="rd-sub">Three exclusive videos. Two unlock immediately. The third arrives with your report.</p>
-          </div>
-          <div class="rd-right">
-            <div class="rd-viz">
-              <div class="rd-vids">
-                <div class="rd-vid"><div class="rd-vid-thumb">&#9658;<span class="rd-vid-excl">NEW</span></div><div class="rd-vid-info"><p>How to pass background checks</p><span>12 min &middot; Exclusive</span></div></div>
-                <div class="rd-vid"><div class="rd-vid-thumb">&#9658;<span class="rd-vid-excl">NEW</span></div><div class="rd-vid-info"><p>Managing two calendars without losing your mind</p><span>8 min &middot; Exclusive</span></div></div>
-                <div class="rd-vid" style="opacity:.4"><div class="rd-vid-thumb" style="font-size:18px">&#128274;</div><div class="rd-vid-info"><p style="color:#333">The OE exit strategy</p><span style="color:var(--red);font-weight:600">In your report</span></div></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-  <div class="rd-spacer"></div>
-</div>
-
-<script>
-  (function(){
-    const scroller = document.getElementById('report-scroller');
-    const cards    = scroller.querySelectorAll('.report-card');
-    const dots     = document.querySelectorAll('.report-dot');
-
-    /* ── Active card via IntersectionObserver ── */
-    const io = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if(entry.intersectionRatio >= 0.5){
-          const idx = Array.from(cards).indexOf(entry.target);
-          cards.forEach((c,i) => c.classList.toggle('active', i === idx));
-          dots.forEach((d,i)  => d.classList.toggle('active',  i === idx));
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OE Risk Report — Could You Pull It Off?</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://js.stripe.com/v3/"></script>
+    <style>
+      :root {
+        --red: #d91e1e;
+        --black: #0a0a0a;
+        --border: #1a1a1a;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family: "Inter", sans-serif;
+        background: var(--black);
+        color: #fff;
+        overflow-x: hidden;
+        animation: pageIn 0.5s ease forwards;
+      }
+      @keyframes pageIn {
+        from {
+          opacity: 0;
         }
+        to {
+          opacity: 1;
+        }
+      }
+
+      /* ── HERO ── */
+      #hero {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 80px 24px 80px;
+        position: relative;
+        overflow: hidden;
+        background:
+          radial-gradient(
+            ellipse 60% 60% at 100% 0%,
+            rgba(139, 0, 0, 0.22) 0%,
+            transparent 60%
+          ),
+          var(--black);
+      }
+
+      /* Pill badge */
+      .pill {
+        display: inline-block;
+        background: var(--red);
+        color: #fff;
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        padding: 6px 16px;
+        border-radius: 100px;
+        margin-bottom: 28px;
+      }
+
+      .hero-headline {
+        font-size: clamp(36px, 5.5vw, 68px);
+        font-weight: 900;
+        letter-spacing: -0.035em;
+        line-height: 1.05;
+        margin-bottom: 20px;
+        max-width: 820px;
+      }
+
+      /* Animated red underline on "you" */
+      .hl-you {
+        position: relative;
+        display: inline-block;
+      }
+      .hl-you::after {
+        content: "";
+        position: absolute;
+        bottom: -4px;
+        left: 0;
+        width: 0;
+        height: 3px;
+        background: var(--red);
+        border-radius: 2px;
+        animation: drawLine 0.8s ease 0.5s forwards;
+      }
+      @keyframes drawLine {
+        to {
+          width: 100%;
+        }
+      }
+
+      /* Hero subheadline — force single line via nowrap on desktop */
+      .hero-sub {
+        font-size: clamp(14px, 1.8vw, 19px);
+        color: rgba(255, 255, 255, 0.65);
+        white-space: nowrap;
+        line-height: 1.65;
+        margin-bottom: 36px;
+      }
+      @media (max-width: 600px) {
+        .hero-sub {
+          white-space: normal;
+          max-width: 320px;
+        }
+      }
+
+      /* Video placeholder */
+      .video-wrap {
+        width: 100%;
+        max-width: 720px;
+        aspect-ratio: 16/9;
+        background: #0f0f0f;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        overflow: hidden;
+        position: relative;
+        margin: 0 0 36px;
+        box-shadow: 0 0 50px rgba(139, 0, 0, 0.15);
+      }
+      .video-placeholder {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 12px;
+        color: #222;
+      }
+      .video-placeholder span {
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      /* Footnote — same size/color as hero-sub, with breathing room */
+      .hero-footnote {
+        font-size: clamp(14px, 1.8vw, 19px);
+        color: rgba(255, 255, 255, 0.65);
+        margin-bottom: 36px;
+      }
+
+      .cta-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        background: var(--red);
+        color: #fff;
+        font-size: 15px;
+        font-weight: 700;
+        padding: 16px 36px;
+        border-radius: 10px;
+        text-decoration: none;
+        letter-spacing: -0.01em;
+        box-shadow: 0 4px 36px rgba(217, 30, 30, 0.38);
+        transition:
+          transform 0.15s,
+          box-shadow 0.15s;
+        cursor: pointer;
+        border: none;
+        font-family: "Inter", sans-serif;
+      }
+      .cta-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 32px rgba(217, 30, 30, 0.45);
+      }
+      .cta-note {
+        font-size: 12px;
+        color: #333;
+        margin-top: 12px;
+      }
+
+      /* ── WHAT'S IN THE REPORT — horizontal snap scroll ── */
+      #report-section {
+        border-top: 1px solid #111;
+        padding: 72px 0 88px;
+      }
+
+      .section-eyebrow {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--red);
+        margin-bottom: 10px;
+      }
+      .section-title {
+        font-size: clamp(24px, 3.5vw, 40px);
+        font-weight: 900;
+        letter-spacing: -0.03em;
+        line-height: 1.1;
+      }
+
+      .report-section-header {
+        text-align: center;
+        padding: 0 32px;
+        margin-bottom: 44px;
+      }
+
+      /* Horizontal scrolling lane */
+      .report-scroller {
+        display: flex;
+        gap: 16px;
+        overflow-x: scroll;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        padding: 8px 5vw 28px;
+        scrollbar-width: none;
+        cursor: grab;
+      }
+      .report-scroller:active {
+        cursor: grabbing;
+      }
+      .report-scroller::-webkit-scrollbar {
+        display: none;
+      }
+
+      /* Progress dots */
+      .report-dots {
+        display: flex;
+        gap: 6px;
+        justify-content: center;
+        padding-top: 4px;
+      }
+      .report-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #1a1a1a;
+        transition:
+          background 0.25s,
+          width 0.25s;
+      }
+      .report-dot.active {
+        background: var(--red);
+        width: 18px;
+        border-radius: 3px;
+      }
+
+      .report-card {
+        flex-shrink: 0;
+        width: min(320px, 80vw);
+        scroll-snap-align: center;
+        background: #0e0e0e;
+        border: 1px solid #1a1a1a;
+        border-radius: 16px;
+        padding: 28px;
+        transition: border-color 0.25s;
+      }
+      .report-card.active {
+        border-color: rgba(217, 30, 30, 0.35);
+      }
+
+      .card-label {
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: #333;
+        margin-bottom: 14px;
+      }
+      .card-title {
+        font-size: 17px;
+        font-weight: 700;
+        margin-bottom: 18px;
+      }
+
+      /* Job data card */
+      .job-pills {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 14px;
+      }
+      .job-pill {
+        background: #111;
+        border: 1px solid #1e1e1e;
+        border-radius: 8px;
+        padding: 10px 14px;
+        text-align: center;
+      }
+      .job-pill-num {
+        font-size: 17px;
+        font-weight: 800;
+        color: #fff;
+        display: block;
+      }
+      .job-pill-label {
+        font-size: 10px;
+        color: #444;
+        margin-top: 3px;
+        display: block;
+      }
+      .job-pill-pct {
+        font-size: 22px;
+        font-weight: 900;
+        color: var(--red);
+      }
+
+      /* Salary card */
+      .salary-display {
+        background: var(--red);
+        border-radius: 10px;
+        padding: 14px 20px;
+        text-align: center;
+        margin-bottom: 14px;
+      }
+      .salary-num {
+        font-size: 26px;
+        font-weight: 900;
+        letter-spacing: -0.02em;
+      }
+      .salary-sub {
+        font-size: 11px;
+        opacity: 0.8;
+        margin-top: 2px;
+      }
+      .salary-breakdown {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+      .salary-col {
+        background: #111;
+        border: 1px solid #1e1e1e;
+        border-radius: 8px;
+        padding: 12px;
+        text-align: center;
+      }
+      .salary-col-label {
+        font-size: 10px;
+        color: #555;
+        margin-bottom: 4px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .salary-col-num {
+        font-size: 15px;
+        font-weight: 700;
+      }
+
+      /* Readiness card */
+      .speedometer-wrap {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 16px 0;
+      }
+
+      /* Risk factors card */
+      .risk-circles {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 16px 0;
+      }
+      .risk-circle {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 8px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        text-align: center;
+        line-height: 1.3;
+        flex-shrink: 0;
+      }
+      .risk-circle:not(:first-child) {
+        margin-left: -14px;
+      }
+      .risk-c1 {
+        background: rgba(217, 30, 30, 0.9);
+        color: #fff;
+        z-index: 5;
+      }
+      .risk-c2 {
+        background: rgba(217, 30, 30, 0.65);
+        color: #fff;
+        z-index: 4;
+        width: 52px;
+        height: 52px;
+      }
+      .risk-c3 {
+        background: rgba(217, 30, 30, 0.4);
+        color: #fff;
+        z-index: 3;
+        width: 44px;
+        height: 44px;
+      }
+      .risk-c4 {
+        background: rgba(217, 30, 30, 0.2);
+        color: #fff;
+        z-index: 2;
+        width: 36px;
+        height: 36px;
+      }
+      .risk-c5 {
+        background: rgba(217, 30, 30, 0.08);
+        color: #555;
+        z-index: 1;
+        width: 28px;
+        height: 28px;
+      }
+      .risk-labels {
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+        margin-top: 14px;
+      }
+      .risk-label {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 11px;
+        color: #555;
+      }
+      .risk-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--red);
+        flex-shrink: 0;
+      }
+
+      /* Bonus videos card */
+      .bonus-videos {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .bonus-video {
+        background: #111;
+        border: 1px solid #1e1e1e;
+        border-radius: 10px;
+        padding: 12px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .yt-thumb {
+        width: 52px;
+        height: 36px;
+        background: #1a1a1a;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        position: relative;
+      }
+      .yt-icon {
+        color: var(--red);
+        font-size: 16px;
+      }
+      .exclusive-tag {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        background: var(--red);
+        color: #fff;
+        font-size: 6px;
+        font-weight: 800;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        padding: 2px 4px;
+        border-radius: 3px;
+      }
+      .yt-info p {
+        font-size: 11px;
+        font-weight: 600;
+        color: #888;
+        margin-bottom: 1px;
+      }
+      .yt-info span {
+        font-size: 10px;
+        color: #333;
+      }
+
+      @keyframes livePulse {
+        0%,
+        100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 0.4;
+          transform: scale(0.7);
+        }
+      }
+
+      /* ── Desktop report: hide on tablet/mobile ── */
+      .report-desktop {
+        display: none;
+      }
+      @media (min-width: 1024px) {
+        .report-desktop {
+          display: block;
+        }
+        .report-mobile {
+          display: none;
+        }
+      }
+
+      /* ── Stripe checkout drawer ── */
+      #checkout-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 1000;
+        background: rgba(0, 0, 0, 0.7);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.35s ease;
+        backdrop-filter: blur(4px);
+      }
+      #checkout-overlay.open {
+        opacity: 1;
+        pointer-events: all;
+      }
+      #checkout-drawer {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: 50%;
+        min-width: 480px;
+        max-width: 680px;
+        background: #0e0e0e;
+        border-left: 1px solid #1e1e1e;
+        transform: translateX(100%);
+        transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 1001;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+      }
+      #checkout-drawer.open {
+        transform: translateX(0);
+      }
+      .cd-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px 28px;
+        border-bottom: 1px solid #1a1a1a;
+        flex-shrink: 0;
+      }
+      .cd-title {
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+      }
+      .cd-close {
+        background: none;
+        border: none;
+        color: #555;
+        cursor: pointer;
+        line-height: 1;
+        padding: 4px;
+        border-radius: 6px;
+        transition: color 0.15s;
+      }
+      .cd-close:hover {
+        color: #fff;
+      }
+      .cd-body {
+        flex: 1;
+        padding: 28px;
+      }
+      @media (max-width: 600px) {
+        #checkout-drawer {
+          width: 100%;
+          min-width: 0;
+          max-width: none;
+        }
+      }
+
+      /* ── Desktop sticky panels ── */
+      @media (min-width: 1024px) {
+        #report-desktop {
+          position: relative;
+          max-width: 1280px;
+          margin: 0 auto;
+        }
+        .rd-sticky {
+          position: sticky;
+          top: 0;
+          height: 100vh;
+          overflow: hidden;
+          background: var(--black);
+          border-top: 1px solid #111;
+        }
+        .rd-track {
+          display: flex;
+          height: 100%;
+          will-change: transform;
+        }
+        .rd-panel {
+          min-width: 100%;
+          height: 100%;
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          align-items: center;
+          border-right: 1px solid #333;
+        }
+        .rd-panel-inner {
+          display: contents;
+        }
+        .rd-left {
+          padding: 60px 32px 60px 80px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          height: 100%;
+        }
+        .rd-step {
+          font-size: 11px;
+          font-weight: 800;
+          letter-spacing: 0.2em;
+          text-transform: uppercase;
+          background: var(--red);
+          color: #fff;
+          padding: 5px 14px;
+          border-radius: 100px;
+          display: inline-block;
+          margin-bottom: 20px;
+          align-self: flex-start;
+        }
+        .rd-title {
+          font-size: clamp(28px, 3.2vw, 46px);
+          font-weight: 900;
+          letter-spacing: -0.035em;
+          line-height: 1.05;
+          margin-bottom: 12px;
+        }
+        .rd-sub {
+          font-size: 15px;
+          color: #444;
+          line-height: 1.75;
+          max-width: 400px;
+        }
+        .rd-right {
+          padding: 60px 80px 60px 32px;
+          height: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: flex-start;
+        }
+        .rd-viz {
+          width: 100%;
+          max-width: 460px;
+        }
+        .rd-spacer {
+          height: 500vh;
+        }
+
+        .rd-live-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 5px;
+          background: rgba(217, 30, 30, 0.12);
+          border: 1px solid rgba(217, 30, 30, 0.25);
+          border-radius: 100px;
+          padding: 3px 10px 3px 7px;
+          position: absolute;
+          top: 16px;
+          right: 16px;
+        }
+        .rd-live-dot {
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          background: var(--red);
+          animation: livePulse 1.8s ease-in-out infinite;
+        }
+        .rd-live-badge span {
+          font-size: 10px;
+          font-weight: 800;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          color: var(--red);
+        }
+
+        .rd-job {
+          background: #0d0d0d;
+          border-radius: 12px;
+          padding: 24px;
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+          position: relative;
+        }
+        .rd-job-title {
+          font-size: 11px;
+          font-weight: 700;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          color: #333;
+        }
+        .rd-pills {
+          display: flex;
+          gap: 8px;
+        }
+        .rd-pill {
+          background: #111;
+          border: 1px solid #1e1e1e;
+          border-radius: 8px;
+          padding: 14px 16px;
+          text-align: center;
+          flex: 1;
+        }
+        .rd-pill-num {
+          font-size: 20px;
+          font-weight: 900;
+          display: block;
+        }
+        .rd-pill-lab {
+          font-size: 9px;
+          color: #444;
+          margin-top: 4px;
+          display: block;
+        }
+        .rd-pill-full {
+          background: #111;
+          border: 1px solid #1e1e1e;
+          border-radius: 8px;
+          padding: 14px 16px;
+          text-align: center;
+          width: 100%;
+        }
+
+        .rd-salary {
+          background: #0d0d0d;
+          border-radius: 12px;
+          overflow: hidden;
+        }
+        .rd-salary-top {
+          background: var(--red);
+          padding: 20px 16px;
+          text-align: center;
+        }
+        .rd-salary-num {
+          font-size: 30px;
+          font-weight: 900;
+          letter-spacing: -0.02em;
+        }
+        .rd-salary-sub {
+          font-size: 10px;
+          opacity: 0.8;
+          margin-top: 2px;
+        }
+        .rd-salary-bot {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 1px;
+          background: #1a1a1a;
+        }
+        .rd-salary-col {
+          background: #0d0d0d;
+          padding: 18px 14px;
+          text-align: center;
+        }
+        .rd-salary-col-l {
+          font-size: 9px;
+          color: #555;
+          font-weight: 700;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          margin-bottom: 5px;
+        }
+        .rd-salary-col-n {
+          font-size: 20px;
+          font-weight: 800;
+        }
+
+        .rd-score {
+          background: #0d0d0d;
+          border-radius: 12px;
+          padding: 20px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .rd-risk {
+          background: #0d0d0d;
+          border-radius: 12px;
+          padding: 24px;
+        }
+        .rd-risk-circles {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-bottom: 16px;
+        }
+        .rrc {
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 8px;
+          font-weight: 700;
+          text-transform: uppercase;
+          text-align: center;
+          line-height: 1.2;
+          flex-shrink: 0;
+        }
+        .rrc:not(:first-child) {
+          margin-left: -14px;
+        }
+        .rrc1 {
+          width: 68px;
+          height: 68px;
+          background: rgba(217, 30, 30, 0.9);
+          color: #fff;
+          z-index: 5;
+          font-size: 9px;
+        }
+        .rrc2 {
+          width: 56px;
+          height: 56px;
+          background: rgba(217, 30, 30, 0.65);
+          color: #fff;
+          z-index: 4;
+        }
+        .rrc3 {
+          width: 46px;
+          height: 46px;
+          background: rgba(217, 30, 30, 0.4);
+          color: #fff;
+          z-index: 3;
+        }
+        .rrc4 {
+          width: 36px;
+          height: 36px;
+          background: rgba(217, 30, 30, 0.2);
+          color: #fff;
+          z-index: 2;
+        }
+        .rrc5 {
+          width: 26px;
+          height: 26px;
+          background: rgba(217, 30, 30, 0.08);
+          color: #555;
+          z-index: 1;
+        }
+        .rd-risk-rows {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+        }
+        .rd-risk-row {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          font-size: 12px;
+          color: #444;
+        }
+        .rd-risk-dot {
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          background: var(--red);
+          flex-shrink: 0;
+        }
+
+        .rd-vids {
+          background: #0d0d0d;
+          border-radius: 12px;
+          padding: 16px;
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+        }
+        .rd-vid {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          background: #111;
+          border: 1px solid #1e1e1e;
+          border-radius: 8px;
+          padding: 12px;
+        }
+        .rd-vid-thumb {
+          width: 52px;
+          height: 36px;
+          background: #1a1a1a;
+          border-radius: 6px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+          color: var(--red);
+          font-size: 16px;
+          position: relative;
+        }
+        .rd-vid-excl {
+          position: absolute;
+          top: -4px;
+          right: -4px;
+          background: var(--red);
+          color: #fff;
+          font-size: 6px;
+          font-weight: 800;
+          padding: 1px 4px;
+          border-radius: 3px;
+        }
+        .rd-vid-info p {
+          font-size: 12px;
+          font-weight: 600;
+          color: #777;
+          margin-bottom: 1px;
+        }
+        .rd-vid-info span {
+          font-size: 10px;
+          color: #2a2a2a;
+        }
+      }
+
+      /* ── HOW IT WORKS ── */
+      #how-it-works {
+        padding: 100px 24px;
+        max-width: 640px;
+        margin: 0 auto;
+        text-align: center;
+        border-top: 1px solid #111;
+      }
+      .how-sub {
+        font-size: 16px;
+        color: #444;
+        margin-bottom: 48px;
+        font-style: italic;
+      }
+
+      .how-steps {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        margin-bottom: 48px;
+        text-align: left;
+      }
+      .how-step {
+        display: flex;
+        align-items: flex-start;
+        gap: 18px;
+        background: #0e0e0e;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 20px 22px;
+      }
+      .how-num {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        background: var(--red);
+        color: #fff;
+        font-size: 13px;
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        margin-top: 2px;
+      }
+      .how-text h3 {
+        font-size: 15px;
+        font-weight: 700;
+        margin-bottom: 4px;
+      }
+      .how-text p {
+        font-size: 13px;
+        color: #555;
+        line-height: 1.6;
+      }
+
+      /* ── REPORT PAGES ANCHOR ── */
+      .report-pages {
+        display: flex;
+        gap: 0;
+        justify-content: center;
+        margin-top: 56px;
+        padding: 0 24px;
+        overflow: hidden;
+      }
+      .report-page {
+        width: 180px;
+        height: 240px;
+        background: #0e0e0e;
+        border: 1px solid #1e1e1e;
+        border-radius: 6px 6px 0 0;
+        flex-shrink: 0;
+        transform: rotate(var(--r));
+        transform-origin: bottom center;
+        position: relative;
+        margin: 0 -8px;
+      }
+      .report-page::before {
+        content: "";
+        position: absolute;
+        top: 16px;
+        left: 16px;
+        right: 16px;
+        height: 2px;
+        background: #1e1e1e;
+        border-radius: 2px;
+      }
+      .report-page::after {
+        content: "";
+        position: absolute;
+        top: 26px;
+        left: 16px;
+        right: 32px;
+        height: 2px;
+        background: #161616;
+        border-radius: 2px;
+      }
+      .report-page-lines {
+        position: absolute;
+        top: 36px;
+        left: 16px;
+        right: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .rpl {
+        height: 1px;
+        background: #131313;
+        border-radius: 1px;
+      }
+      .rpl:nth-child(3) {
+        width: 70%;
+      }
+      .rpl:nth-child(5) {
+        width: 85%;
+      }
+      .rpl:nth-child(7) {
+        width: 60%;
+      }
+
+      /* Red accent on first page */
+      .report-page:nth-child(2) .rpl:first-child {
+        background: rgba(217, 30, 30, 0.2);
+        height: 2px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- HERO -->
+    <section id="hero">
+      <div class="pill">OE Risk Report</div>
+
+      <h1 class="hero-headline">
+        Could <span class="hl-you">you</span> pull it off?
+      </h1>
+
+      <p class="hero-sub">
+        Job stacking is legal, but the risks are personal. Find out yours.
+      </p>
+
+      <!-- Video placeholder -->
+      <div class="video-wrap">
+        <div class="video-placeholder">
+          <svg
+            width="48"
+            height="48"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#333"
+            stroke-width="1.5"
+          >
+            <circle cx="12" cy="12" r="10" />
+            <polygon points="10,8 16,12 10,16" fill="#333" stroke="none" />
+          </svg>
+          <span>Sales video coming soon</span>
+        </div>
+      </div>
+
+      <p class="hero-footnote">
+        Custom built for you from live job market data and 10,000 OE case
+        studies.
+      </p>
+
+      <button class="cta-btn" onclick="openCheckout()">
+        Calculate my risk — $29
+        <svg
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.5"
+        >
+          <path d="M5 12h14M12 5l7 7-7 7" />
+        </svg>
+      </button>
+      <p class="cta-note">Report delivered in 20 minutes.</p>
+    </section>
+
+    <div class="report-mobile">
+      <!-- WHAT'S IN THE REPORT — horizontal snap scroll -->
+      <div id="report-section">
+        <div class="report-section-header">
+          <div class="section-eyebrow">Inside the report</div>
+          <h2 class="section-title">What's in the Report?</h2>
+        </div>
+
+        <div class="report-scroller" id="report-scroller">
+          <!-- Card 1: Job Data -->
+          <div class="report-card active">
+            <div class="card-label">Job Market Data</div>
+            <div class="card-title">Your Job Title</div>
+            <div class="job-pills">
+              <div class="job-pill">
+                <span class="job-pill-num">106,212</span>
+                <span class="job-pill-label">Openings</span>
+              </div>
+              <div class="job-pill">
+                <span class="job-pill-num">48,227</span>
+                <span class="job-pill-label">Remote Jobs</span>
+              </div>
+              <div class="job-pill">
+                <span class="job-pill-pct">41%</span>
+                <span class="job-pill-label">Remote Rate</span>
+              </div>
+            </div>
+            <p style="font-size: 12px; color: #333; line-height: 1.6">
+              Live data pulled at report generation time for your exact role.
+            </p>
+          </div>
+
+          <!-- Card 2: Salary -->
+          <div class="report-card">
+            <div class="card-label">Income Potential</div>
+            <div class="card-title">Average Salary</div>
+            <div class="salary-display">
+              <div class="salary-num">$167,227</div>
+              <div class="salary-sub">Combined annual income</div>
+            </div>
+            <div class="salary-breakdown">
+              <div class="salary-col">
+                <div class="salary-col-label">J1</div>
+                <div class="salary-col-num">$95,000</div>
+              </div>
+              <div class="salary-col">
+                <div class="salary-col-label">J2</div>
+                <div class="salary-col-num" style="color: var(--red)">
+                  +$72,227
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3: Readiness Score -->
+          <div class="report-card">
+            <div class="card-label">Readiness Score</div>
+            <div class="card-title">Are You Ready?</div>
+            <div class="speedometer-wrap">
+              <svg viewBox="0 0 200 110" width="190" height="105">
+                <path
+                  d="M20,100 A80,80 0 0,1 180,100"
+                  fill="none"
+                  stroke="#1a1a1a"
+                  stroke-width="16"
+                  stroke-linecap="round"
+                />
+                <path
+                  d="M20,100 A80,80 0 0,1 180,100"
+                  fill="none"
+                  stroke="#d91e1e"
+                  stroke-width="16"
+                  stroke-linecap="round"
+                  stroke-dasharray="251"
+                  stroke-dashoffset="70"
+                  opacity="0.9"
+                />
+                <line
+                  x1="100"
+                  y1="100"
+                  x2="58"
+                  y2="38"
+                  stroke="#fff"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                />
+                <circle cx="100" cy="100" r="6" fill="#fff" />
+                <text
+                  x="100"
+                  y="88"
+                  text-anchor="middle"
+                  fill="#fff"
+                  font-size="22"
+                  font-weight="900"
+                  font-family="Inter,sans-serif"
+                >
+                  72
+                </text>
+                <text
+                  x="100"
+                  y="108"
+                  text-anchor="middle"
+                  fill="#555"
+                  font-size="10"
+                  font-family="Inter,sans-serif"
+                >
+                  READINESS SCORE
+                </text>
+              </svg>
+            </div>
+            <p
+              style="
+                font-size: 12px;
+                color: #555;
+                text-align: center;
+                line-height: 1.6;
+              "
+            >
+              Based on your workload, schedule, and role profile.
+            </p>
+          </div>
+
+          <!-- Card 4: Risk Factors -->
+          <div class="report-card">
+            <div class="card-label">Risk Analysis</div>
+            <div class="card-title">Your Risk Factors</div>
+            <div class="risk-circles">
+              <div class="risk-circle risk-c1">Non<br />Compete</div>
+              <div class="risk-circle risk-c2">IP<br />Clause</div>
+              <div class="risk-circle risk-c3">Moon<br />light</div>
+              <div class="risk-circle risk-c4">Time<br />zone</div>
+              <div class="risk-circle risk-c5">IT</div>
+            </div>
+            <div class="risk-labels">
+              <div class="risk-label">
+                <div class="risk-dot"></div>
+                Non-compete enforceability by state
+              </div>
+              <div class="risk-label">
+                <div class="risk-dot" style="opacity: 0.6"></div>
+                IP assignment clauses
+              </div>
+              <div class="risk-label">
+                <div class="risk-dot" style="opacity: 0.3"></div>
+                Monitoring software prevalence
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 5: Bonus Videos -->
+          <div class="report-card">
+            <div class="card-label">Exclusive Content</div>
+            <div class="card-title">Bonus Videos</div>
+            <div class="bonus-videos">
+              <div class="bonus-video">
+                <div class="yt-thumb">
+                  <span class="yt-icon">▶</span
+                  ><span class="exclusive-tag">Exclusive</span>
+                </div>
+                <div class="yt-info">
+                  <p>How to pass background checks</p>
+                  <span>12 min</span>
+                </div>
+              </div>
+              <div class="bonus-video">
+                <div class="yt-thumb">
+                  <span class="yt-icon">▶</span
+                  ><span class="exclusive-tag">Exclusive</span>
+                </div>
+                <div class="yt-info">
+                  <p>Managing two calendars without losing your mind</p>
+                  <span>8 min</span>
+                </div>
+              </div>
+              <div class="bonus-video">
+                <div class="yt-thumb">
+                  <span class="yt-icon">▶</span
+                  ><span class="exclusive-tag">Exclusive</span>
+                </div>
+                <div class="yt-info">
+                  <p>The OE exit strategy</p>
+                  <span>15 min</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Progress dots -->
+        <div class="report-dots" id="report-dots">
+          <div class="report-dot active"></div>
+          <div class="report-dot"></div>
+          <div class="report-dot"></div>
+          <div class="report-dot"></div>
+          <div class="report-dot"></div>
+        </div>
+      </div>
+    </div>
+    <!-- /report-mobile -->
+
+    <!-- DESKTOP REPORT SECTION -->
+    <div class="report-desktop" id="report-desktop">
+      <div class="rd-sticky">
+        <div class="rd-track" id="rd-track">
+          <div class="rd-panel">
+            <div class="rd-panel-inner">
+              <div class="rd-left">
+                <div class="rd-step">01 of 05</div>
+                <div class="rd-title">Job Market Data</div>
+                <p class="rd-sub">
+                  Live openings and remote availability for your exact job
+                  title.
+                </p>
+              </div>
+              <div class="rd-right">
+                <div class="rd-viz">
+                  <div class="rd-job">
+                    <div class="rd-live-badge">
+                      <div class="rd-live-dot"></div>
+                      <span>Live</span>
+                    </div>
+                    <div class="rd-job-title">Your Job Title</div>
+                    <div class="rd-pills">
+                      <div class="rd-pill">
+                        <span class="rd-pill-num">106,212</span
+                        ><span class="rd-pill-lab">Openings</span>
+                      </div>
+                      <div class="rd-pill">
+                        <span class="rd-pill-num">48,227</span
+                        ><span class="rd-pill-lab">Remote Jobs</span>
+                      </div>
+                    </div>
+                    <div class="rd-pill-full">
+                      <span
+                        class="rd-pill-num"
+                        style="font-size: 28px; color: var(--red)"
+                        >41%</span
+                      ><span class="rd-pill-lab">Remote Rate</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="rd-panel">
+            <div class="rd-panel-inner">
+              <div class="rd-left">
+                <div class="rd-step">02 of 05</div>
+                <div class="rd-title">Average Salary</div>
+                <p class="rd-sub">
+                  What you could realistically be making with a second income
+                  stacked on top.
+                </p>
+              </div>
+              <div class="rd-right">
+                <div class="rd-viz">
+                  <div class="rd-salary">
+                    <div class="rd-salary-top">
+                      <div class="rd-salary-num">$167,227</div>
+                      <div class="rd-salary-sub">Combined annual income</div>
+                    </div>
+                    <div class="rd-salary-bot">
+                      <div class="rd-salary-col">
+                        <div class="rd-salary-col-l">J1</div>
+                        <div class="rd-salary-col-n">$95,000</div>
+                      </div>
+                      <div class="rd-salary-col">
+                        <div class="rd-salary-col-l">J2</div>
+                        <div class="rd-salary-col-n" style="color: var(--red)">
+                          +$72,227
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="rd-panel">
+            <div class="rd-panel-inner">
+              <div class="rd-left">
+                <div class="rd-step">03 of 05</div>
+                <div class="rd-title">Readiness Score</div>
+                <p class="rd-sub">
+                  A score from 0 to 100 based on your real workload, not time at
+                  your desk.
+                </p>
+              </div>
+              <div class="rd-right">
+                <div class="rd-viz">
+                  <div class="rd-score">
+                    <svg
+                      viewBox="0 0 220 125"
+                      width="100%"
+                      style="max-width: 300px"
+                    >
+                      <path
+                        d="M22,110 A88,88 0 0,1 198,110"
+                        fill="none"
+                        stroke="#1a1a1a"
+                        stroke-width="16"
+                        stroke-linecap="round"
+                      />
+                      <path
+                        d="M22,110 A88,88 0 0,1 198,110"
+                        fill="none"
+                        stroke="#d91e1e"
+                        stroke-width="16"
+                        stroke-linecap="round"
+                        stroke-dasharray="276"
+                        stroke-dashoffset="76"
+                      />
+                      <line
+                        x1="110"
+                        y1="110"
+                        x2="166"
+                        y2="42"
+                        stroke="#fff"
+                        stroke-width="2.5"
+                        stroke-linecap="round"
+                      />
+                      <circle cx="110" cy="110" r="7" fill="#fff" />
+                      <text
+                        x="110"
+                        y="82"
+                        text-anchor="middle"
+                        fill="#fff"
+                        font-size="26"
+                        font-weight="900"
+                        font-family="Inter,sans-serif"
+                      >
+                        72
+                      </text>
+                      <text
+                        x="110"
+                        y="124"
+                        text-anchor="middle"
+                        fill="#444"
+                        font-size="10"
+                        font-family="Inter,sans-serif"
+                      >
+                        READINESS SCORE
+                      </text>
+                    </svg>
+                    <div style="font-size: 12px; color: #333; margin-top: 8px">
+                      Based on your workload, meetings, and schedule
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="rd-panel">
+            <div class="rd-panel-inner">
+              <div class="rd-left">
+                <div class="rd-step">04 of 05</div>
+                <div class="rd-title">Risk Factors</div>
+                <p class="rd-sub">
+                  Non-competes, IP assignment clauses, monitoring software. All
+                  the ways you could get caught, deciphered.
+                </p>
+              </div>
+              <div class="rd-right">
+                <div class="rd-viz">
+                  <div class="rd-risk">
+                    <div class="rd-risk-circles">
+                      <div class="rrc rrc1">Non<br />Compete</div>
+                      <div class="rrc rrc2">IP<br />Clause</div>
+                      <div class="rrc rrc3">Monitor</div>
+                      <div class="rrc rrc4">TZ</div>
+                      <div class="rrc rrc5">IT</div>
+                    </div>
+                    <div class="rd-risk-rows">
+                      <div class="rd-risk-row">
+                        <div class="rd-risk-dot"></div>
+                        Non-compete enforceability by state
+                      </div>
+                      <div class="rd-risk-row">
+                        <div class="rd-risk-dot" style="opacity: 0.6"></div>
+                        IP assignment clauses
+                      </div>
+                      <div class="rd-risk-row">
+                        <div class="rd-risk-dot" style="opacity: 0.35"></div>
+                        Monitoring software prevalence
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="rd-panel">
+            <div class="rd-panel-inner">
+              <div class="rd-left">
+                <div class="rd-step">05 of 05</div>
+                <div class="rd-title">Bonus Videos</div>
+                <p class="rd-sub">
+                  Three exclusive videos. Two unlock immediately. The third
+                  arrives with your report.
+                </p>
+              </div>
+              <div class="rd-right">
+                <div class="rd-viz">
+                  <div class="rd-vids">
+                    <div class="rd-vid">
+                      <div class="rd-vid-thumb">
+                        &#9658;<span class="rd-vid-excl">NEW</span>
+                      </div>
+                      <div class="rd-vid-info">
+                        <p>How to pass background checks</p>
+                        <span>12 min &middot; Exclusive</span>
+                      </div>
+                    </div>
+                    <div class="rd-vid">
+                      <div class="rd-vid-thumb">
+                        &#9658;<span class="rd-vid-excl">NEW</span>
+                      </div>
+                      <div class="rd-vid-info">
+                        <p>Managing two calendars without losing your mind</p>
+                        <span>8 min &middot; Exclusive</span>
+                      </div>
+                    </div>
+                    <div class="rd-vid" style="opacity: 0.4">
+                      <div class="rd-vid-thumb" style="font-size: 18px">
+                        &#128274;
+                      </div>
+                      <div class="rd-vid-info">
+                        <p style="color: #333">The OE exit strategy</p>
+                        <span style="color: var(--red); font-weight: 600"
+                          >In your report</span
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="rd-spacer"></div>
+    </div>
+
+    <script>
+      (function () {
+        const scroller = document.getElementById("report-scroller");
+        const cards = scroller.querySelectorAll(".report-card");
+        const dots = document.querySelectorAll(".report-dot");
+
+        /* ── Active card via IntersectionObserver ── */
+        const io = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.intersectionRatio >= 0.5) {
+                const idx = Array.from(cards).indexOf(entry.target);
+                cards.forEach((c, i) =>
+                  c.classList.toggle("active", i === idx),
+                );
+                dots.forEach((d, i) => d.classList.toggle("active", i === idx));
+              }
+            });
+          },
+          { root: scroller, threshold: 0.5 },
+        );
+        cards.forEach((c) => io.observe(c));
+
+        /* ── Mouse drag-to-scroll ── */
+        let isDown = false,
+          startX,
+          scrollLeft;
+        scroller.addEventListener("mousedown", (e) => {
+          isDown = true;
+          startX = e.pageX - scroller.offsetLeft;
+          scrollLeft = scroller.scrollLeft;
+        });
+        scroller.addEventListener("mouseleave", () => (isDown = false));
+        scroller.addEventListener("mouseup", () => (isDown = false));
+        scroller.addEventListener("mousemove", (e) => {
+          if (!isDown) return;
+          e.preventDefault();
+          const x = e.pageX - scroller.offsetLeft;
+          scroller.scrollLeft = scrollLeft - (x - startX);
+        });
+
+        /* ── Dot click navigation ── */
+        dots.forEach((dot, i) => {
+          dot.addEventListener("click", () => {
+            cards[i].scrollIntoView({
+              behavior: "smooth",
+              block: "nearest",
+              inline: "center",
+            });
+          });
+        });
+      })();
+    </script>
+
+    <!-- HOW IT WORKS -->
+    <section id="how-it-works">
+      <div class="section-eyebrow">Process</div>
+      <h2 class="section-title" style="text-align: center; margin-bottom: 14px">
+        How it works?
+      </h2>
+      <p class="how-sub">Dead simple.</p>
+
+      <div class="how-steps">
+        <div class="how-step">
+          <div class="how-num">1</div>
+          <div class="how-text">
+            <h3>Answer some questions</h3>
+            <p>
+              Tell us about your role, schedule, and situation. Takes less than
+              3 minutes.
+            </p>
+          </div>
+        </div>
+        <div class="how-step">
+          <div class="how-num">2</div>
+          <div class="how-text">
+            <h3>We build the report</h3>
+            <p>
+              Our team pulls live job market data and runs your profile against
+              10,000 OE case studies.
+            </p>
+          </div>
+        </div>
+        <div class="how-step">
+          <div class="how-num">3</div>
+          <div class="how-text">
+            <h3>Delivered in 20 minutes</h3>
+            <p>
+              The work is done by humans. You get a full personalized report in
+              your inbox.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <button class="cta-btn" onclick="openCheckout()">
+        Create my report — $29
+        <svg
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.5"
+        >
+          <path d="M5 12h14M12 5l7 7-7 7" />
+        </svg>
+      </button>
+
+      <!-- Report pages anchor -->
+      <div class="report-pages">
+        <div class="report-page" style="--r: -10deg; z-index: 1">
+          <div class="report-page-lines">
+            <div class="rpl"></div>
+            <div class="rpl"></div>
+            <div class="rpl"></div>
+            <div class="rpl"></div>
+            <div class="rpl"></div>
+            <div class="rpl"></div>
+            <div class="rpl"></div>
+            <div class="rpl"></div>
+          </div>
+        </div>
+        <div class="report-page" style="--r: -4deg; z-index: 2">
+          <div class="report-page-lines">
+            <div class="rpl"></div>
+            <div class="rpl"></div>
+            <div class="rpl"></div>
+            <div class="rpl"></div>
+            <div class="rpl"></div>
+            <div class="rpl"></div>
+            <div class="rpl"></div>
+            <div class="rpl"></div>
+          </div>
+        </div>
+        <div class="report-page" style="--r: 2deg; z-index: 3">
+          <div class="report-page-lines">
+            <div class="rpl"></div>
+            <div class="rpl"></div>
+            <div class="rpl"></div>
+            <div class="rpl"></div>
+            <div class="rpl"></div>
+            <div class="rpl"></div>
+            <div class="rpl"></div>
+            <div class="rpl"></div>
+          </div>
+        </div>
+        <div class="report-page" style="--r: 8deg; z-index: 2">
+          <div class="report-page-lines">
+            <div class="rpl"></div>
+            <div class="rpl"></div>
+            <div class="rpl"></div>
+            <div class="rpl"></div>
+            <div class="rpl"></div>
+            <div class="rpl"></div>
+            <div class="rpl"></div>
+            <div class="rpl"></div>
+          </div>
+        </div>
+        <div class="report-page" style="--r: 14deg; z-index: 1">
+          <div class="report-page-lines">
+            <div class="rpl"></div>
+            <div class="rpl"></div>
+            <div class="rpl"></div>
+            <div class="rpl"></div>
+            <div class="rpl"></div>
+            <div class="rpl"></div>
+            <div class="rpl"></div>
+            <div class="rpl"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <script>
+      // Desktop report scroll (large breakpoint only)
+      (function () {
+        var section = document.getElementById("report-desktop");
+        var track = document.getElementById("rd-track");
+        if (!section || !track) return;
+        var NUM = 5;
+
+        function onScroll() {
+          if (window.innerWidth < 1024) return;
+          var panelW = section.offsetWidth;
+          var top = section.getBoundingClientRect().top + window.scrollY;
+          var spacer = section.querySelector(".rd-spacer").offsetHeight;
+          var scrollIn = window.scrollY - top;
+          if (scrollIn < 0 || scrollIn > spacer) return;
+          var p = Math.max(0, Math.min(1, scrollIn / spacer));
+          track.style.transform =
+            "translateX(" + -p * (NUM - 1) * panelW + "px)";
+          track.style.transition = "none";
+        }
+
+        window.addEventListener("scroll", onScroll, { passive: true });
+        window.addEventListener("resize", onScroll);
+        onScroll();
+      })();
+    </script>
+
+    <!-- Checkout drawer -->
+    <div id="checkout-overlay" onclick="closeCheckout()"></div>
+    <div id="checkout-drawer">
+      <div class="cd-header">
+        <span class="cd-title">OE Risk Report — $29</span>
+        <button class="cd-close" onclick="closeCheckout()" aria-label="Close">
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+          >
+            <path d="M18 6 6 18M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <div class="cd-body" id="checkout-embed"></div>
+    </div>
+
+    <script>
+      var stripe = Stripe("PUBLISHABLE_KEY_PLACEHOLDER");
+      var checkoutMounted = false;
+      var checkoutInstance = null;
+
+      function closeCheckout() {
+        document.getElementById("checkout-overlay").classList.remove("open");
+        document.getElementById("checkout-drawer").classList.remove("open");
+        document.body.style.overflow = "";
+      }
+
+      async function openCheckout() {
+        document.getElementById("checkout-overlay").classList.add("open");
+        document.getElementById("checkout-drawer").classList.add("open");
+        document.body.style.overflow = "hidden";
+
+        if (checkoutMounted) return;
+        checkoutMounted = true;
+
+        var embed = document.getElementById("checkout-embed");
+        embed.innerHTML =
+          '<div style="padding:60px 0;text-align:center;color:#444;font-size:13px">Loading…</div>';
+
+        var params = new URLSearchParams(window.location.search);
+        var name = params.get("name") || "";
+        var email = params.get("email") || "";
+
+        try {
+          var res = await fetch("/api/create-checkout-session", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name, email }),
+          });
+          var data = await res.json();
+          if (data.error) throw new Error(data.error);
+          embed.innerHTML = "";
+          checkoutInstance = await stripe.initEmbeddedCheckout({
+            clientSecret: data.clientSecret,
+          });
+          checkoutInstance.mount("#checkout-embed");
+        } catch (err) {
+          embed.innerHTML =
+            '<div style="padding:60px 0;text-align:center;color:#d91e1e;font-size:13px">Something went wrong. Refresh and try again.</div>';
+          checkoutMounted = false;
+          console.error(err);
+        }
+      }
+
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") closeCheckout();
       });
-    }, { root: scroller, threshold: 0.5 });
-    cards.forEach(c => io.observe(c));
-
-    /* ── Mouse drag-to-scroll ── */
-    let isDown = false, startX, scrollLeft;
-    scroller.addEventListener('mousedown', e => {
-      isDown = true;
-      startX = e.pageX - scroller.offsetLeft;
-      scrollLeft = scroller.scrollLeft;
-    });
-    scroller.addEventListener('mouseleave', () => isDown = false);
-    scroller.addEventListener('mouseup',    () => isDown = false);
-    scroller.addEventListener('mousemove', e => {
-      if(!isDown) return;
-      e.preventDefault();
-      const x = e.pageX - scroller.offsetLeft;
-      scroller.scrollLeft = scrollLeft - (x - startX);
-    });
-
-    /* ── Dot click navigation ── */
-    dots.forEach((dot, i) => {
-      dot.addEventListener('click', () => {
-        cards[i].scrollIntoView({ behavior:'smooth', block:'nearest', inline:'center' });
-      });
-    });
-  })();
-</script>
-
-<!-- HOW IT WORKS -->
-<section id="how-it-works">
-  <div class="section-eyebrow">Process</div>
-  <h2 class="section-title" style="text-align:center;margin-bottom:14px">How it works?</h2>
-  <p class="how-sub">Dead simple.</p>
-
-  <div class="how-steps">
-    <div class="how-step">
-      <div class="how-num">1</div>
-      <div class="how-text">
-        <h3>Answer some questions</h3>
-        <p>Tell us about your role, schedule, and situation. Takes less than 3 minutes.</p>
-      </div>
-    </div>
-    <div class="how-step">
-      <div class="how-num">2</div>
-      <div class="how-text">
-        <h3>We build the report</h3>
-        <p>Our team pulls live job market data and runs your profile against 10,000 OE case studies.</p>
-      </div>
-    </div>
-    <div class="how-step">
-      <div class="how-num">3</div>
-      <div class="how-text">
-        <h3>Delivered in 20 minutes</h3>
-        <p>The work is done by humans. You get a full personalized report in your inbox.</p>
-      </div>
-    </div>
-  </div>
-
-  <button class="cta-btn" onclick="openCheckout()">
-    Create my report — $29
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-  </button>
-
-  <!-- Report pages anchor -->
-  <div class="report-pages">
-    <div class="report-page" style="--r:-10deg;z-index:1">
-      <div class="report-page-lines">
-        <div class="rpl"></div><div class="rpl"></div><div class="rpl"></div>
-        <div class="rpl"></div><div class="rpl"></div><div class="rpl"></div>
-        <div class="rpl"></div><div class="rpl"></div>
-      </div>
-    </div>
-    <div class="report-page" style="--r:-4deg;z-index:2">
-      <div class="report-page-lines">
-        <div class="rpl"></div><div class="rpl"></div><div class="rpl"></div>
-        <div class="rpl"></div><div class="rpl"></div><div class="rpl"></div>
-        <div class="rpl"></div><div class="rpl"></div>
-      </div>
-    </div>
-    <div class="report-page" style="--r:2deg;z-index:3">
-      <div class="report-page-lines">
-        <div class="rpl"></div><div class="rpl"></div><div class="rpl"></div>
-        <div class="rpl"></div><div class="rpl"></div><div class="rpl"></div>
-        <div class="rpl"></div><div class="rpl"></div>
-      </div>
-    </div>
-    <div class="report-page" style="--r:8deg;z-index:2">
-      <div class="report-page-lines">
-        <div class="rpl"></div><div class="rpl"></div><div class="rpl"></div>
-        <div class="rpl"></div><div class="rpl"></div><div class="rpl"></div>
-        <div class="rpl"></div><div class="rpl"></div>
-      </div>
-    </div>
-    <div class="report-page" style="--r:14deg;z-index:1">
-      <div class="report-page-lines">
-        <div class="rpl"></div><div class="rpl"></div><div class="rpl"></div>
-        <div class="rpl"></div><div class="rpl"></div><div class="rpl"></div>
-        <div class="rpl"></div><div class="rpl"></div>
-      </div>
-    </div>
-  </div>
-
-</section>
-
-
-<script>
-  // Desktop report scroll (large breakpoint only)
-  (function() {
-    var section = document.getElementById('report-desktop');
-    var track   = document.getElementById('rd-track');
-    if (!section || !track) return;
-    var NUM = 5;
-
-    function onScroll() {
-      if (window.innerWidth < 1024) return;
-      var panelW   = section.offsetWidth;
-      var top      = section.getBoundingClientRect().top + window.scrollY;
-      var spacer   = section.querySelector('.rd-spacer').offsetHeight;
-      var scrollIn = window.scrollY - top;
-      if (scrollIn < 0 || scrollIn > spacer) return;
-      var p = Math.max(0, Math.min(1, scrollIn / spacer));
-      track.style.transform  = 'translateX(' + (-p * (NUM - 1) * panelW) + 'px)';
-      track.style.transition = 'none';
-    }
-
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll);
-    onScroll();
-  })();
-</script>
-
-<!-- Checkout drawer -->
-<div id="checkout-overlay" onclick="closeCheckout()"></div>
-<div id="checkout-drawer">
-  <div class="cd-header">
-    <span class="cd-title">OE Risk Report — $29</span>
-    <button class="cd-close" onclick="closeCheckout()" aria-label="Close">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6 6 18M6 6l12 12"/></svg>
-    </button>
-  </div>
-  <div class="cd-body" id="checkout-embed"></div>
-</div>
-
-<script>
-  var stripe = Stripe('PUBLISHABLE_KEY_PLACEHOLDER');
-  var checkoutMounted = false;
-  var checkoutInstance = null;
-
-  function closeCheckout() {
-    document.getElementById('checkout-overlay').classList.remove('open');
-    document.getElementById('checkout-drawer').classList.remove('open');
-    document.body.style.overflow = '';
-  }
-
-  async function openCheckout() {
-    document.getElementById('checkout-overlay').classList.add('open');
-    document.getElementById('checkout-drawer').classList.add('open');
-    document.body.style.overflow = 'hidden';
-
-    if (checkoutMounted) return;
-    checkoutMounted = true;
-
-    var embed = document.getElementById('checkout-embed');
-    embed.innerHTML = '<div style="padding:60px 0;text-align:center;color:#444;font-size:13px">Loading…</div>';
-
-    try {
-      var res  = await fetch('/api/create-checkout-session', { method: 'POST' });
-      var data = await res.json();
-      if (data.error) throw new Error(data.error);
-      embed.innerHTML = '';
-      checkoutInstance = await stripe.initEmbeddedCheckout({ clientSecret: data.clientSecret });
-      checkoutInstance.mount('#checkout-embed');
-    } catch (err) {
-      embed.innerHTML = '<div style="padding:60px 0;text-align:center;color:#d91e1e;font-size:13px">Something went wrong. Refresh and try again.</div>';
-      checkoutMounted = false;
-      console.error(err);
-    }
-  }
-
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') closeCheckout();
-  });
-</script>
-</body>
+    </script>
+  </body>
 </html>

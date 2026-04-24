@@ -161,7 +161,6 @@ Want us to land you a second job? jumpseatjobs.com`,
   });
   return res.ok;
 }
-
 async function sendResourcesEmail(toEmail) {
   const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
@@ -178,7 +177,7 @@ async function sendResourcesEmail(toEmail) {
 <html>
 <head><meta charset="UTF-8"></head>
 <body style="margin:0;padding:0;background:#ffffff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
-  <div style="display:none;max-height:0;overflow:hidden;mso-hide:all;">Your resume template is at the bottom of this email.&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;</div>
+  <div style="display:none;max-height:0;overflow:hidden;mso-hide:all;">Your resume template is inside.&#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847;</div>
   <div style="max-width:560px;margin:0 auto;padding:48px 32px;color:#111111;">
     <p style="font-size:15px;line-height:1.9;margin:0 0 16px;">"I think Wilson has a blind barber," David said while tugging my hair.</p>
     <p style="font-size:15px;line-height:1.9;margin:0 0 16px;">Everyone laughed. My cheeks lit up.</p>
@@ -195,10 +194,10 @@ async function sendResourcesEmail(toEmail) {
     <p style="font-size:15px;line-height:1.9;margin:0 0 16px;">One simple change fixed it: I showed the barber pictures. That's it.</p>
     <p style="font-size:15px;line-height:1.9;margin:0 0 16px;">You can't explain your way to a good haircut.</p>
     <p style="font-size:15px;line-height:1.9;margin:0 0 32px;">You need a solid starting point.</p>
-    <p style="font-size:15px;line-height:1.9;margin:0 0 16px;">Same goes for your resume.</p>
-    <p style="font-size:15px;line-height:1.9;margin:0 0 32px;">Here's the template: <a href="https://pleaseroastmyresume.com/resources" style="color:#111111;text-decoration:underline;">pleaseroastmyresume.com/resources</a></p>
-    <p style="font-size:15px;line-height:1.9;margin:0 0 32px;">-W.W.</p>
-    <p style="font-size:13px;line-height:1.7;color:#888888;border-top:1px solid #eeeeee;padding-top:20px;margin:0;">P.S. There's also a full video walk-through of every decision we made in building it. Enjoy.</p>
+    <p style="font-size:15px;line-height:1.9;margin:0 0 32px;">Same goes for your resume.</p>
+    <a href="https://pleaseroastmyresume.com/resources" style="display:inline-block;background:#d91e1e;color:#ffffff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-weight:700;font-size:16px;padding:16px 32px;border-radius:8px;text-decoration:none;letter-spacing:-0.01em;">Get the template →</a>
+    <p style="font-size:15px;line-height:1.9;margin:40px 0 0;">-W.W.</p>
+    <p style="font-size:13px;line-height:1.7;color:#888888;border-top:1px solid #eeeeee;padding-top:20px;margin:32px 0 0;">P.S. There's also a full video walk-through of every decision we made in building it. Enjoy.</p>
   </div>
 </body>
 </html>`,
