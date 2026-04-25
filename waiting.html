@@ -158,7 +158,7 @@
       </div>
       <div class="vid-info">
         <div class="vid-title">How to pass background checks</div>
-        <div class="vid-meta">12 min · Exclusive</div>
+        <div class="vid-meta">9 min · Exclusive</div>
       </div>
     </button>
 
@@ -169,7 +169,7 @@
       </div>
       <div class="vid-info">
         <div class="vid-title">Managing two calendars without losing your mind</div>
-        <div class="vid-meta">8 min · Exclusive</div>
+        <div class="vid-meta">14 min · Exclusive</div>
       </div>
     </button>
 
@@ -251,7 +251,7 @@
     const v = VIDEOS[currentVideo];
     document.getElementById('vm-title-text').textContent = v.title;
     document.getElementById('vm-iframe').src =
-      'https://www.youtube.com/embed/' + v.youtubeId + '?autoplay=1&rel=0';
+      'https://www.youtube.com/embed/' + v.youtubeId + '?rel=0';
     document.getElementById('vm-counter').textContent =
       (currentVideo + 1) + ' of ' + VIDEOS.length;
     document.getElementById('vm-prev').disabled = currentVideo === 0;
