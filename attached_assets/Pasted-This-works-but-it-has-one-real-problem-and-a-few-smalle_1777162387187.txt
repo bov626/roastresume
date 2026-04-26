@@ -1,0 +1,29 @@
+This works, but it has one real problem and a few smaller ones.
+The real problem: server restarts kill scheduled emails.
+setTimeout lives in memory. If Replit restarts your server (deploys, crashes, idle restarts on free/hacker tier), every pending email vanishes. No retry, no record. The user paid $29 and never gets the report.
+For a paid product, this is a meaningful risk. Replit Reserved VM tier reduces it but doesn't eliminate it.
+The fix I recommended originally (Resend's scheduled_at) doesn't have this problem. Resend persists the queue on their side. Server restarts don't matter.
+Smaller issues with the current approach:
+
+No tracking. You can't see what's queued, can't cancel, can't audit. Resend's dashboard would show every scheduled send.
+Random 10-20 min delay vs. waiting page says 20 min. If your waiting page tells the user "about 20 minutes" and they get it in 11, the early ones might think the report is rushed/automated. The pain point you're paying for with the delay is the perception of work being done. Random undermines that. Just pick 20.
+Memory leak risk under load. Not a real concern at your volume, but if 50 reports are pending simultaneously, that's 50 timers sitting in Node's event loop. Fine. Just noting it.
+
+My recommendation: use Resend's scheduled_at instead. It's actually simpler than what you have:
+javascriptapp.post("/api/report-ready", async (req, res) => {
+  if (req.headers["x-make-secret"] !== process.env.MAKE_WEBHOOK_SECRET) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+  const { email, first_name, pdf_url } = req.body;
+  try {
+    await sendReportReadyEmail(email, first_name, pdf_url);
+    console.log("[Report] Scheduled for", email);
+  } catch (e) {
+    console.error("[Report] Email failed:", e.message);
+  }
+  res.json({ ok: true });
+});
+Then inside sendReportReadyEmail, on the resend.emails.send() call, add the one line:
+javascriptscheduled_at: new Date(Date.now() + 20 * 60 * 1000).toISOString()
+Same end result — 20 min delay, Make gets ack fast — but Resend handles the queue, server restarts don't matter, and you get visibility in their dashboard.
+If you specifically want the randomized 10-20 min spread, fine, you can compute the delay before passing it. But I'd just go with a fixed 20 to match your waiting page copy.
