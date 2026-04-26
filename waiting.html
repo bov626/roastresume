@@ -8,7 +8,11 @@
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
   body{
-    font-family:'Inter',sans-serif;background:#0a0a0a;color:#fff;
+    font-family:'Inter',sans-serif;
+    background:#000;
+    background-image: radial-gradient(ellipse 80% 50% at 10% 0%, rgba(180,20,20,0.13) 0%, transparent 70%),
+                      radial-gradient(ellipse 60% 40% at 90% 100%, rgba(80,10,10,0.10) 0%, transparent 70%);
+    color:#fff;
     min-height:100vh;overflow-x:hidden;
   }
 
@@ -19,7 +23,7 @@
 
   .eyebrow{
     font-size:10px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;
-    color:#333;margin-bottom:16px;
+    color:#666;margin-bottom:16px;
   }
   .headline{
     font-size:clamp(28px,5vw,44px);
@@ -27,7 +31,7 @@
     margin-bottom:8px;
   }
   .headline span{color:#d91e1e}
-  .subline{font-size:15px;color:#444;margin-bottom:48px}
+  .subline{font-size:15px;color:#888;margin-bottom:48px}
 
   .section-rule{
     width:40px;height:3px;background:#d91e1e;
@@ -37,22 +41,21 @@
     font-size:20px;font-weight:800;letter-spacing:-.02em;
     margin-bottom:6px;
   }
-  .while-sub{font-size:14px;color:#444;margin-bottom:24px}
+  .while-sub{font-size:14px;color:#888;margin-bottom:24px}
 
   /* Video cards */
   .video-cards{display:flex;flex-direction:column;gap:12px}
   .video-card{
     display:flex;align-items:center;gap:16px;
-    background:#0e0e0e;border:1px solid #1a1a1a;
+    background:#0d0d0d;border:1px solid #222;
     border-radius:12px;padding:16px;
     color:#fff;
     transition:border-color .15s, background .15s;
     cursor:pointer;
     width:100%;text-align:left;
     font-family:'Inter',sans-serif;
-    border:1px solid #1a1a1a;
   }
-  .video-card:hover{border-color:#2a2a2a;background:#111}
+  .video-card:hover{border-color:#333;background:#111}
   .video-card.locked{
     cursor:default;opacity:.5;
     background:#0e0e0e;
@@ -78,7 +81,7 @@
     font-size:8px;padding:3px 5px;border-radius:3px;
   }
   .vid-title{font-size:13px;font-weight:700;margin-bottom:3px}
-  .vid-meta{font-size:11px;color:#333}
+  .vid-meta{font-size:11px;color:#777}
   .vid-locked-label{font-size:11px;color:#d91e1e;font-weight:600;margin-top:4px}
 
   /* Video Modal */
