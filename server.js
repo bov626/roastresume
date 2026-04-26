@@ -218,7 +218,7 @@ async function sendReportReadyEmail(toEmail, firstName, pdfUrl) {
       to: [toEmail],
       reply_to: process.env.GMAIL_USER,
       subject: "We need to talk",
-      scheduled_at: new Date(Date.now() + 20 * 60 * 1000).toISOString(),
+      scheduled_at: new Date(Date.now() + 10 * 60 * 1000).toISOString(),
       html: `<!DOCTYPE html>
 <html>
 <head><meta charset="UTF-8"></head>
