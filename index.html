@@ -3175,6 +3175,14 @@
         // Disable file input during scan
         document.getElementById("fo-file").disabled = true;
 
+        // Fire submit immediately — fire-and-forget, don't block the animation
+        const fd = new FormData();
+        fd.append("name", foName);
+        fd.append("email", document.getElementById("fo-email").value.trim());
+        const fileInput = document.getElementById("fo-file");
+        if (fileInput.files.length) fd.append("resume", fileInput.files[0]);
+        fetch("/api/submit", { method: "POST", body: fd }).catch(e => console.error("Submit error:", e));
+
         // Phase 1: RED — scanning
         drop.classList.add("scanning");
         icon.textContent = "📄";
@@ -3192,28 +3200,12 @@
             fname.style.color = "rgba(0,220,80,0.9)";
             status.textContent = "Just kidding.";
 
-            // Submit to server then advance
-            setTimeout(async () => {
-              const fd = new FormData();
-              fd.append("name", foName);
-              fd.append(
-                "email",
-                document.getElementById("fo-email").value.trim(),
-              );
-              const fileInput = document.getElementById("fo-file");
-              if (fileInput.files.length)
-                fd.append("resume", fileInput.files[0]);
-
-              try {
-                await fetch("/api/submit", { method: "POST", body: fd });
-              } catch (e) {
-                console.error("Submit error:", e);
-              }
-
+            // Advance to queue screen immediately — submit already in flight
+            setTimeout(() => {
               foContinue();
-            }, 1200);
-          }, 1200);
-        }, 1800);
+            }, 500);
+          }, 600);
+        }, 700);
       }
 
       /* ── Template reveal ── */
