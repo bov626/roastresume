@@ -130,14 +130,15 @@
           padding-top: 110px;
         }
 
-        /* 2. Headline scales down to fit one line */
+        /* 2. Headline scales down to fit one line + tighter gap to subheader */
         .hero-headline {
           font-size: clamp(22px, 8vw, 36px);
+          margin-bottom: 10px;
         }
 
-        /* 3. Subtle glow on mobile */
+        /* 3. Subtle glow on mobile — halo halved */
         .video-wrap {
-          box-shadow: 0 0 20px rgba(180, 0, 0, 0.22), 0 0 36px rgba(139, 0, 0, 0.10);
+          box-shadow: 0 0 20px rgba(180, 0, 0, 0.22), 0 0 18px rgba(139, 0, 0, 0.10);
         }
 
         /* 4. Smaller CTA + footnote prefix on its own line */
@@ -147,7 +148,7 @@
         }
         .footnote-prefix {
           display: block;
-          margin-bottom: 2px;
+          margin-bottom: 8px;
         }
 
         /* 5. Less space between footnote and button */
