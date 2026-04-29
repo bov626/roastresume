@@ -3656,10 +3656,11 @@
           background: #0e0e0e;
           border: 1px solid #1e1e1e;
           border-radius: 16px;
-          padding: 36px 32px;
+          padding: 52px 32px 36px;
           max-width: 520px;
           width: 100%;
           text-align: center;
+          overflow: visible;
           animation: slideUp 0.35s ease;
         "
       >
@@ -3685,6 +3686,11 @@
         >&times;</button>
         <p
           style="
+            position: absolute;
+            top: -14px;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
             display: inline-block;
             font-size: 10px;
             font-weight: 800;
@@ -3694,7 +3700,6 @@
             background: #d91e1e;
             padding: 5px 12px;
             border-radius: 5px;
-            margin-bottom: 20px;
           "
         >
           One more thing
