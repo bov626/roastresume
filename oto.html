@@ -117,6 +117,12 @@
           max-width: 320px;
         }
 
+        /* Remove full-viewport height lock so content dictates section height */
+        #hero {
+          min-height: unset;
+          padding-bottom: 40px;
+        }
+
         /* 2. Headline scales down to fit one line + spacing */
         .hero-headline {
           font-size: clamp(24px, 8.5vw, 36px);
