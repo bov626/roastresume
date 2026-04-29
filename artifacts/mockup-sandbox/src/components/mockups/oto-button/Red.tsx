@@ -27,7 +27,7 @@ export function Red() {
         <p
           style={{
             position: "absolute",
-            top: "-14px",
+            top: "-18px",
             left: "50%",
             transform: "translateX(-50%)",
             whiteSpace: "nowrap",
