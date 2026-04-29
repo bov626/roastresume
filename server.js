@@ -19,9 +19,22 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_KEY,
 );
 
-/* ── Uploads dir (resumes only, temp) ── */
+/* ── Uploads dir (videos only — resumes go to Supabase Storage) ── */
 const UPLOADS = path.join(__dirname, "uploads");
 if (!fs.existsSync(UPLOADS)) fs.mkdirSync(UPLOADS);
+
+/* ── Ensure Supabase Storage bucket exists ── */
+(async () => {
+  const { error } = await supabase.storage.createBucket("resumes", {
+    public: false,
+    fileSizeLimit: 10 * 1024 * 1024,
+  });
+  if (error && !error.message.includes("already exists")) {
+    console.error("[Storage] Bucket creation error:", error.message);
+  } else {
+    console.log("[Storage] resumes bucket ready");
+  }
+})();
 
 /* ── Middleware ── */
 app.use(express.json());
@@ -47,17 +60,12 @@ app.use((req, res, next) => {
   next();
 });
 
-/* ── Resume upload ── */
-const resumeStorage = multer.diskStorage({
-  destination: UPLOADS,
-  filename: (req, file, cb) =>
-    cb(null, "resume_" + uuid() + path.extname(file.originalname)),
-});
+/* ── Resume upload — memory storage, goes to Supabase Storage ── */
 const resumeUpload = multer({
-  storage: resumeStorage,
+  storage: multer.memoryStorage(),
   limits: { fileSize: 10 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
-    const ok = [".pdf", ".doc", ".docx"].includes(
+    const ok = [".pdf", ".doc", ".docx", ".rtf", ".odt", ".pages", ".txt"].includes(
       path.extname(file.originalname).toLowerCase(),
     );
     cb(ok ? null : new Error("Invalid file type"), ok);
@@ -318,10 +326,28 @@ app.post("/api/submit", resumeUpload.single("resume"), async (req, res) => {
       .status(400)
       .json({ ok: false, error: "Name and email required" });
 
+  /* Upload resume to Supabase Storage if provided */
+  let resumeStoragePath = null;
+  if (req.file) {
+    const ext = path.extname(req.file.originalname).toLowerCase();
+    const storageName = "resume_" + uuid() + ext;
+    const { error: uploadErr } = await supabase.storage
+      .from("resumes")
+      .upload(storageName, req.file.buffer, {
+        contentType: req.file.mimetype,
+        upsert: false,
+      });
+    if (uploadErr) {
+      console.error("[Storage] Upload error:", uploadErr.message);
+    } else {
+      resumeStoragePath = storageName;
+    }
+  }
+
   const { error } = await supabase.from("submissions").insert({
     name,
     email,
-    resume_filename: req.file?.filename || null,
+    resume_filename: resumeStoragePath,
     resume_orig_name: req.file?.originalname || null,
   });
 
@@ -539,10 +565,13 @@ app.post(
   },
 );
 
-app.get("/admin/uploads/:filename", requireAuth, (req, res) => {
-  const file = path.join(UPLOADS, path.basename(req.params.filename));
-  if (!fs.existsSync(file)) return res.status(404).send("Not found");
-  res.sendFile(file);
+app.get("/admin/uploads/:filename", requireAuth, async (req, res) => {
+  const filename = path.basename(req.params.filename);
+  const { data, error } = await supabase.storage
+    .from("resumes")
+    .createSignedUrl(filename, 3600); // 1-hour signed URL
+  if (error || !data?.signedUrl) return res.status(404).send("Resume not found in storage");
+  res.redirect(data.signedUrl);
 });
 
 app.get("/admin/*path", requireAuth, (req, res) => res.redirect("/admin"));
