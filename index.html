@@ -3135,6 +3135,14 @@
                   1800,
                 );
                 setTimeout(launchFireworks, 200);
+                // Preload Calendly in the background so the popup opens instantly
+                if (!document.getElementById("calendly-prefetch")) {
+                  const link = document.createElement("link");
+                  link.id = "calendly-prefetch";
+                  link.rel = "prefetch";
+                  link.href = "https://calendly.com/wyedoyoudothis/resume_roast";
+                  document.head.appendChild(link);
+                }
                 setTimeout(() => {
                   const wrap = document.getElementById("fo-calendly-wrap");
                   wrap.style.opacity = "1";
