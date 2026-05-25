@@ -3603,47 +3603,6 @@
         if (!isOpen) item.classList.add("open");
       }
 
-      /* ── DEV SHORTCUT (non-prod only) ── */
-      if (!location.hostname.includes('pleaseroastmyresume.com')) {
-        const devBtn = document.createElement('button');
-        devBtn.textContent = '⚡ Queue';
-        devBtn.title = 'Dev: jump to queue screen';
-        devBtn.style.cssText = 'position:fixed;bottom:16px;right:16px;z-index:99999;background:#1a1a1a;color:#888;border:1px solid #333;font-size:11px;font-weight:700;padding:6px 10px;border-radius:6px;cursor:pointer;font-family:inherit;';
-        devBtn.onmouseover = () => devBtn.style.color = '#fff';
-        devBtn.onmouseout  = () => devBtn.style.color = '#888';
-        devBtn.onclick = () => {
-          foName = 'Dev';
-          // Open the form overlay first — that's the container that holds the steps
-          document.getElementById('form-overlay').classList.add('open');
-          document.body.style.overflow = 'hidden';
-          // Deactivate whichever step is currently showing
-          document.querySelectorAll('.fo-step.active').forEach(el => el.classList.remove('active'));
-          // Remove q-live so animation re-triggers
-          const s3 = document.getElementById('fo-3');
-          s3.classList.remove('q-live');
-          const wrap = document.getElementById('fo-calendly-wrap');
-          wrap.style.opacity = '0';
-          wrap.style.pointerEvents = 'none';
-          // Activate step 3
-          foStep = 3;
-          document.getElementById('fo-fill').style.width = '100%';
-          document.getElementById('fo-queue-num').textContent = '0';
-          s3.classList.add('active');
-          s3.style.animation = 'slideUp 0.35s ease';
-          fetch('/api/queue-count').then(r=>r.json()).then(d=>{ QUEUE_COUNT=d.count; }).catch(()=>{}).finally(()=>{
-            setTimeout(()=>{
-              s3.classList.add('q-live');
-              countUp(document.getElementById('fo-queue-num'), QUEUE_COUNT, 1800);
-              setTimeout(launchFireworks, 200);
-              setTimeout(()=>{
-                wrap.style.opacity = '1';
-                wrap.style.pointerEvents = 'auto';
-              }, 1000);
-            }, 80);
-          });
-        };
-        document.body.appendChild(devBtn);
-      }
     </script>
 
     <!-- ═══════════════════════ FOOTER ═══════════════════════ -->
