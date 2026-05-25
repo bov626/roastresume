@@ -3187,15 +3187,25 @@
       }
 
       /* ── File handling ── */
+      let foPendingFile = null;
       function handleFile(input) {
         if (!input.files.length) return;
-        startUpload(input.files[0].name);
+        foPendingFile = input.files[0];
+        startUpload(foPendingFile.name);
       }
       function handleDrop(e) {
         e.preventDefault();
         document.getElementById("fo-drop").classList.remove("drag");
         const file = e.dataTransfer.files[0];
-        if (file) startUpload(file.name);
+        if (!file) return;
+        foPendingFile = file;
+        // Sync into the file input so it survives anywhere that reads from it
+        try {
+          const dt = new DataTransfer();
+          dt.items.add(file);
+          document.getElementById("fo-file").files = dt.files;
+        } catch (_) {}
+        startUpload(file.name);
       }
 
       function startUpload(filename) {
@@ -3220,7 +3230,8 @@
         fd.append("name", foName);
         fd.append("email", document.getElementById("fo-email").value.trim());
         const fileInput = document.getElementById("fo-file");
-        if (fileInput.files.length) fd.append("resume", fileInput.files[0]);
+        const fileToSend = foPendingFile || (fileInput.files.length ? fileInput.files[0] : null);
+        if (fileToSend) fd.append("resume", fileToSend);
         fetch("/api/submit", { method: "POST", body: fd }).catch(e => console.error("Submit error:", e));
 
         // Phase 1: RED — scanning
