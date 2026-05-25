@@ -186,6 +186,20 @@ async function sendResourcesEmail(toEmail) {
 <head><meta charset="UTF-8"></head>
 <body style="margin:0;padding:0;background:#ffffff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
   <div style="display:none;max-height:0;overflow:hidden;mso-hide:all;">Your resume template is inside.&#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847; &#847;</div>
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#E50914;">
+    <tr>
+      <td align="center" style="padding:14px 20px;font-family:Arial,Helvetica,sans-serif;">
+        <span style="color:#ffffff;font-size:15px;font-weight:bold;vertical-align:middle;">
+          Don't apply to another job with that crappy resume. Skip the line.
+        </span>
+        &nbsp;&nbsp;
+        <a href="https://calendly.com/wyedoyoudothis/resume_roast"
+           style="display:inline-block;background-color:#ffffff;color:#111111;font-size:14px;font-weight:bold;text-decoration:none;padding:8px 18px;border-radius:6px;font-family:Arial,Helvetica,sans-serif;vertical-align:middle;">
+          Book a live roast &rarr;
+        </a>
+      </td>
+    </tr>
+  </table>
   <div style="max-width:560px;margin:0 auto;padding:48px 32px;color:#111111;">
     <p style="font-size:15px;line-height:1.9;margin:0 0 16px;">"I think Wilson has a blind barber," David said while tugging my hair.</p>
     <p style="font-size:15px;line-height:1.9;margin:0 0 16px;">Everyone laughed. My cheeks lit up.</p>
