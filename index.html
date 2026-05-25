@@ -2649,6 +2649,26 @@
             <div class="fo-q-sub">
               For now, check your email for the template.
             </div>
+
+            <a
+              href="https://calendly.com/wyedoyoudothis/resume_roast"
+              target="_blank"
+              style="
+                display: inline-block;
+                margin-top: 24px;
+                background: #d91e1e;
+                color: #fff;
+                font-size: 15px;
+                font-weight: 700;
+                padding: 12px 24px;
+                border-radius: 10px;
+                text-decoration: none;
+                font-family: inherit;
+                transition: background 0.15s;
+              "
+              onmouseover="this.style.background='#b91919'"
+              onmouseout="this.style.background='#d91e1e'"
+            >I don't want to wait. Roast it now &rarr;</a>
           </div>
         </div>
       </div>
@@ -3093,7 +3113,6 @@
             .finally(() => {
               setTimeout(() => {
                 document.getElementById("fo-3").classList.add("q-live");
-                armOtoModal();
                 countUp(
                   document.getElementById("fo-queue-num"),
                   QUEUE_COUNT,
@@ -3563,50 +3582,6 @@
         if (!isOpen) item.classList.add("open");
       }
 
-      let otoShown = false;
-
-      function armOtoModal() {
-        // Trigger 1: exit intent — mouse leaves top of page
-        function onExitIntent(e) {
-          if (e.clientY <= 5) {
-            document.removeEventListener("mousemove", onExitIntent);
-            showOtoModal();
-          }
-        }
-        document.addEventListener("mousemove", onExitIntent);
-
-        // Trigger 2: timer — 4 seconds after queue screen
-        setTimeout(showOtoModal, 4000);
-      }
-
-      function showOtoModal() {
-        if (otoShown) return;
-        otoShown = true;
-        const modal = document.getElementById("oto-modal");
-        modal.style.display = "flex";
-        // Reset to q1 in case it was triggered twice somehow
-        document.getElementById("oto-q1").style.display = "block";
-      }
-
-      function otoYes() {
-        const veil = document.createElement("div");
-        veil.style.cssText =
-          "position:fixed;inset:0;background:#0a0a0a;z-index:99999;opacity:0;transition:opacity .45s ease;";
-        document.body.appendChild(veil);
-        const email = document.getElementById("fo-email").value.trim();
-        const nameParam = foName ? "name=" + encodeURIComponent(foName) : "";
-        const emailParam = email ? "&email=" + encodeURIComponent(email) : "";
-        requestAnimationFrame(() => {
-          veil.style.opacity = "1";
-          setTimeout(() => {
-            window.location.href = "/oto?" + nameParam + emailParam;
-          }, 460);
-        });
-      }
-
-      function otoNo() {
-        document.getElementById("oto-modal").style.display = "none";
-      }
     </script>
 
     <!-- ═══════════════════════ FOOTER ═══════════════════════ -->
@@ -3626,153 +3601,5 @@
       </div>
     </footer>
 
-    <!-- ═══════════════════════ OTO MODAL ═══════════════════════ -->
-    <div
-      id="oto-modal"
-      style="
-        display: none;
-        position: fixed;
-        inset: 0;
-        z-index: 9999;
-        align-items: center;
-        justify-content: center;
-        padding: 24px;
-      "
-    >
-      <div
-        id="oto-backdrop"
-        onclick="otoNo()"
-        style="
-          position: absolute;
-          inset: 0;
-          background: rgba(0, 0, 0, 0.55);
-          backdrop-filter: blur(2px);
-        "
-      ></div>
-      <div
-        style="
-          position: relative;
-          z-index: 1;
-          background: #0e0e0e;
-          border: 1px solid #1e1e1e;
-          border-radius: 16px;
-          padding: 52px 32px 36px;
-          max-width: 520px;
-          width: 100%;
-          text-align: center;
-          overflow: visible;
-          animation: slideUp 0.35s ease;
-        "
-      >
-        <!-- X close button -->
-        <button
-          onclick="otoNo()"
-          style="
-            position: absolute;
-            top: 12px;
-            right: 14px;
-            background: none;
-            border: none;
-            color: #555;
-            font-size: 20px;
-            line-height: 1;
-            cursor: pointer;
-            padding: 4px 6px;
-            transition: color 0.15s;
-          "
-          onmouseover="this.style.color='#999'"
-          onmouseout="this.style.color='#555'"
-          aria-label="Close"
-        >&times;</button>
-        <p
-          style="
-            position: absolute;
-            top: -12px;
-            left: 50%;
-            transform: translateX(-50%);
-            white-space: nowrap;
-            display: inline-block;
-            font-size: 10px;
-            font-weight: 800;
-            letter-spacing: 0.18em;
-            text-transform: uppercase;
-            color: #fff;
-            background: #d91e1e;
-            padding: 5px 12px;
-            border-radius: 5px;
-          "
-        >
-          One more thing
-        </p>
-        <div id="oto-q1">
-          <p
-            style="
-              font-size: 20px;
-              font-weight: 800;
-              letter-spacing: -0.02em;
-              color: #fff;
-              margin-bottom: 10px;
-              line-height: 1.3;
-            "
-          >
-            You're probably leaving money on the table.
-          </p>
-          <p
-            style="
-              font-size: 14px;
-              font-weight: 400;
-              color: #999;
-              margin-bottom: 24px;
-              line-height: 1.5;
-            "
-          >
-            Let's find out if you could work two jobs at once.
-          </p>
-          <div style="display: flex; flex-direction: column; gap: 10px">
-            <button
-              onclick="otoYes()"
-              style="
-                background: #d91e1e;
-                border: 1px solid #d91e1e;
-                color: #ffffff;
-                font-size: 15px;
-                font-weight: 700;
-                padding: 10px 20px;
-                border-radius: 10px;
-                cursor: pointer;
-                font-family: inherit;
-                transition: all 0.15s;
-                width: 50%;
-                margin: 0 auto;
-              "
-              onmouseover="this.style.background='#b91919'"
-              onmouseout="this.style.background='#d91e1e'"
-            >
-              Show me &rarr;
-            </button>
-            <button
-              onclick="otoNo()"
-              style="
-                background: none;
-                border: none;
-                color: #666;
-                font-size: 13px;
-                font-weight: 500;
-                padding: 8px;
-                cursor: pointer;
-                font-family: inherit;
-                text-decoration: underline;
-                text-underline-offset: 3px;
-                transition: color 0.15s;
-              "
-              onmouseover="this.style.color='#999'"
-              onmouseout="this.style.color='#666'"
-            >
-              No, I'm fine with one income
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
   </body>
 </html>
