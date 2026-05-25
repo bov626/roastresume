@@ -3623,15 +3623,26 @@
         devBtn.onmouseout  = () => devBtn.style.color = '#888';
         devBtn.onclick = () => {
           foName = 'Dev';
+          // Deactivate whichever step is currently showing
+          document.querySelectorAll('.fo-step.active').forEach(el => el.classList.remove('active'));
+          // Remove q-live so animation re-triggers
+          const s3 = document.getElementById('fo-3');
+          s3.classList.remove('q-live');
+          const wrap = document.getElementById('fo-calendly-wrap');
+          wrap.style.opacity = '0';
+          wrap.style.pointerEvents = 'none';
+          // Activate step 3
+          foStep = 3;
+          document.getElementById('fo-fill').style.width = '100%';
           document.getElementById('fo-queue-num').textContent = '0';
-          goToStep(3);
+          s3.classList.add('active');
+          s3.style.animation = 'slideUp 0.35s ease';
           fetch('/api/queue-count').then(r=>r.json()).then(d=>{ QUEUE_COUNT=d.count; }).catch(()=>{}).finally(()=>{
             setTimeout(()=>{
-              document.getElementById('fo-3').classList.add('q-live');
+              s3.classList.add('q-live');
               countUp(document.getElementById('fo-queue-num'), QUEUE_COUNT, 1800);
               setTimeout(launchFireworks, 200);
               setTimeout(()=>{
-                const wrap = document.getElementById('fo-calendly-wrap');
                 wrap.style.opacity = '1';
                 wrap.style.pointerEvents = 'auto';
               }, 1000);
