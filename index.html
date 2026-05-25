@@ -3622,6 +3622,9 @@
         devBtn.onmouseout  = () => devBtn.style.color = '#888';
         devBtn.onclick = () => {
           foName = 'Dev';
+          // Open the form overlay first — that's the container that holds the steps
+          document.getElementById('form-overlay').classList.add('open');
+          document.body.style.overflow = 'hidden';
           // Deactivate whichever step is currently showing
           document.querySelectorAll('.fo-step.active').forEach(el => el.classList.remove('active'));
           // Remove q-live so animation re-triggers
