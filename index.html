@@ -1149,8 +1149,15 @@
       }
       #fo-queue-num {
         font-size: 18px !important;
-        padding: 2px 13px 5px !important;
         font-weight: 900 !important;
+        background: none !important;
+        color: #fff !important;
+        padding: 0 !important;
+        border-radius: 0 !important;
+        text-decoration: underline;
+        text-decoration-color: var(--red);
+        text-underline-offset: 4px;
+        text-decoration-thickness: 2px;
       }
 
       /* Sub copy */
@@ -1162,10 +1169,10 @@
         opacity: 0;
         transform: translateY(16px);
       }
-      #fo-3.q-live .fo-q-sub:first-of-type {
+      #fo-3.q-live .fo-q-sub:nth-child(4) {
         animation: qFadeUp 0.52s ease 1s both;
       }
-      #fo-3.q-live .fo-q-sub:last-of-type {
+      #fo-3.q-live .fo-q-sub:nth-child(5) {
         animation: qFadeUp 0.52s ease 1.2s both;
       }
 
@@ -2667,7 +2674,7 @@
                 letter-spacing: 0.12em;
                 text-transform: uppercase;
                 color: #444;
-                margin-bottom: 18px;
+                margin-bottom: 36px;
               ">OR</div>
               <button
                 onclick="Calendly.initPopupWidget({url:'https://calendly.com/wyedoyoudothis/resume_roast'}); return false;"
@@ -3142,7 +3149,7 @@
                   const wrap = document.getElementById("fo-calendly-wrap");
                   wrap.style.opacity = "1";
                   wrap.style.pointerEvents = "auto";
-                }, 2500);
+                }, 1000);
               }, 80);
             });
           return;
