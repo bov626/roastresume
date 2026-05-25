@@ -2359,6 +2359,8 @@
         color: rgba(255, 255, 255, 0.7);
       }
     </style>
+    <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
+    <script src="https://assets.calendly.com/assets/external/widget.js" async></script>
   </head>
   <body>
     <!-- ═══════════════════════ HERO ═══════════════════════ -->
@@ -2667,9 +2669,8 @@
                 color: #444;
                 margin-bottom: 18px;
               ">OR</div>
-              <a
-                href="https://calendly.com/wyedoyoudothis/resume_roast"
-                target="_blank"
+              <button
+                onclick="Calendly.initPopupWidget({url:'https://calendly.com/wyedoyoudothis/resume_roast'}); return false;"
                 style="
                   display: inline-block;
                   background: #d91e1e;
@@ -2678,13 +2679,14 @@
                   font-weight: 700;
                   padding: 12px 24px;
                   border-radius: 10px;
-                  text-decoration: none;
+                  border: none;
+                  cursor: pointer;
                   font-family: inherit;
                   transition: background 0.15s;
                 "
                 onmouseover="this.style.background='#b91919'"
                 onmouseout="this.style.background='#d91e1e'"
-              >I don't want to wait. Roast it now &rarr;</a>
+              >I don't want to wait. Roast it now &rarr;</button>
             </div>
           </div>
         </div>
