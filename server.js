@@ -684,6 +684,9 @@ app.get("/waiting", (req, res) =>
 app.get("/resources", (req, res) =>
   res.sendFile(path.join(__dirname, "resources.html")),
 );
+app.get("/queue", (req, res) =>
+  res.sendFile(path.join(__dirname, "queue.html")),
+);
 app.get("/", (req, res) => res.sendFile(path.join(__dirname, "index.html")));
 app.use(express.static(__dirname, { index: false, maxAge: "1h" }));
 

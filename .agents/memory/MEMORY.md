@@ -1,0 +1,1 @@
+- [Calendly inline widget auto-loads](calendly-inline-widget.md) — widget.js inits every .calendly-inline-widget on load even when display:none; gate by page, not CSS.
