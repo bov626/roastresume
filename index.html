@@ -109,14 +109,16 @@
        HERO
     ───────────────────────────────────────────── */
       #hero {
-        min-height: 100vh;
+        height: 100vh;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         padding: 80px 24px 60px;
         text-align: center;
-        position: relative;
+        position: sticky;
+        top: 0;
+        z-index: 0;
         overflow: hidden;
         background:
           radial-gradient(
@@ -2658,6 +2660,7 @@
   </head>
   <body>
     <!-- ═══════════════════════ HERO ═══════════════════════ -->
+    <div id="scroll-stack">
     <section id="hero">
       <div class="scribble-layer" id="scribble-layer"></div>
 
@@ -2773,6 +2776,7 @@
         </div>
       </div>
     </section>
+    </div>
 
     <!-- ═══════════════════════ WHILE YOU WAIT ═══════════════════════ -->
     <section id="while-you-wait">
