@@ -207,12 +207,33 @@
         opacity: 0.9;
       }
 
+      .br-mobile {
+        display: none;
+      }
+      .cta-copy-mobile {
+        display: none;
+      }
+
       @media (max-width: 600px) {
         .hero-sub,
         .hero-cta-copy {
           font-size: 12px;
           max-width: 100%;
           white-space: normal;
+        }
+        .br-mobile {
+          display: inline;
+        }
+        .cta-copy-desktop {
+          display: none;
+        }
+        .cta-copy-mobile {
+          display: inline;
+          white-space: nowrap;
+          font-size: 11px;
+        }
+        .cta-note-link {
+          font-size: 13px;
         }
         .hero-headline {
           font-size: 7vw;
@@ -2707,7 +2728,7 @@
       </h1>
 
       <p class="hero-sub">
-        We've reviewed <strong>5,000+ resumes.</strong> All of them had at least one fatal mistake.
+        We've reviewed <strong>5,000+ resumes.</strong><br class="br-mobile" /> All of them had at least one fatal mistake.
       </p>
 
       <div class="video-wrap">
@@ -2721,7 +2742,8 @@
 
       <div class="hero-cta-block">
         <p class="hero-cta-copy">
-          We'll anonymize your resume, then show you exactly what's wrong.
+          <span class="cta-copy-desktop">We'll anonymize your resume, then show you exactly what's wrong.</span>
+          <span class="cta-copy-mobile">We anonymize your resume, then call out all issues.</span>
         </p>
         <p class="hero-cta-copy">
           And give you a template to fix it.
