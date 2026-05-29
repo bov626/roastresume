@@ -908,12 +908,9 @@
         position: fixed;
         inset: 0;
         z-index: 900;
-        background: #000;
-        background-image: radial-gradient(
-          ellipse 55% 50% at 100% 100%,
-          rgba(100, 0, 0, 0.35) 0%,
-          transparent 60%
-        );
+        background: rgba(0, 0, 0, 0.82);
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
         flex-direction: column;
         align-items: center;
         justify-content: center;
@@ -923,8 +920,25 @@
         display: flex;
       }
       .tf-card {
+        position: relative;
         width: 100%;
-        max-width: 480px;
+        max-width: 540px;
+        background: #0c0c0c;
+        background-image: radial-gradient(
+          ellipse 60% 55% at 100% 100%,
+          rgba(100, 0, 0, 0.22) 0%,
+          transparent 65%
+        );
+        border: 1px solid rgba(255, 255, 255, 0.09);
+        border-radius: 22px;
+        padding: 52px 48px;
+        box-shadow: 0 40px 120px rgba(0, 0, 0, 0.65);
+        animation: slideUp 0.38s ease;
+      }
+      #template-overlay .fo-close {
+        position: absolute;
+        top: 16px;
+        right: 18px;
       }
       .tf-step {
         display: none;
@@ -993,15 +1007,15 @@
         align-self: center;
         background: var(--red);
         color: #fff;
-        font-size: 18px;
+        font-size: 21px;
         font-weight: 800;
-        padding: 14px 40px;
+        padding: 17px 60px;
         border: none;
         border-radius: 999px;
         cursor: pointer;
         letter-spacing: 0.01em;
         transition: background 0.2s, opacity 0.2s;
-        margin-top: 4px;
+        margin-top: 12px;
       }
       .tf-submit:hover {
         background: #f02525;
@@ -2904,8 +2918,8 @@
 
     <!-- ═══════════════════════ TEMPLATE-ONLY FORM ═══════════════════════ -->
     <div id="template-overlay">
-      <button class="fo-close" onclick="closeTemplateForm()">✕</button>
       <div class="tf-card">
+        <button class="fo-close" onclick="closeTemplateForm()">✕</button>
         <!-- Step 1: capture -->
         <div class="tf-step active" id="tf-form">
           <div class="tf-q">Where are we sending the template?</div>
