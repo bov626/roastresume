@@ -749,9 +749,13 @@
         align-items: center;
         justify-content: center;
         padding: 24px;
+        overflow-y: auto;
       }
       #form-overlay.open {
         display: flex;
+      }
+      #form-overlay .fo-steps {
+        margin: auto;
       }
 
       .fo-close {
@@ -1376,6 +1380,13 @@
         width: 100%;
         max-width: 420px;
       }
+      #fo-3.fo-step {
+        max-width: 520px;
+        margin: 0 auto;
+      }
+      #fo-3 .fo-q-inner {
+        max-width: 520px;
+      }
 
       /* SVG check */
       .fo-chk-wrap {
@@ -1481,6 +1492,14 @@
         margin-top: 4px;
         opacity: 0;
         transform: translateY(16px);
+      }
+      .fo-q-skip-line {
+        font-size: 18px;
+        font-weight: 800;
+        color: #fff;
+        letter-spacing: -0.01em;
+        margin-bottom: 16px;
+        text-align: center;
       }
       #fo-3.q-live .fo-q-sub:nth-child(4) {
         animation: qFadeUp 0.52s ease 1s both;
@@ -2924,27 +2943,16 @@
                 opacity: 0;
                 pointer-events: none;
                 transition: opacity 0.6s ease;
-                margin-top: 12px;
+                margin-top: 24px;
+                width: 100%;
               "
             >
-              <button
-                onclick="Calendly.initPopupWidget({url:'https://calendly.com/wyedoyoudothis/resume_roast'}); return false;"
-                style="
-                  display: inline-block;
-                  background: #d91e1e;
-                  color: #fff;
-                  font-size: 15px;
-                  font-weight: 700;
-                  padding: 12px 24px;
-                  border-radius: 10px;
-                  border: none;
-                  cursor: pointer;
-                  font-family: inherit;
-                  transition: background 0.15s;
-                "
-                onmouseover="this.style.background='#b91919'"
-                onmouseout="this.style.background='#d91e1e'"
-              >I don't want to wait. Roast it now &rarr;</button>
+              <div class="fo-q-skip-line">Skip the queue. Get roasted live.</div>
+              <div
+                class="calendly-inline-widget"
+                data-url="https://calendly.com/wyedoyoudothis/resume_roast"
+                style="min-width: 100%; height: 640px;"
+              ></div>
             </div>
           </div>
         </div>
@@ -3554,14 +3562,6 @@
                 1800,
               );
               setTimeout(launchFireworks, 200);
-              // Preload Calendly in the background so the popup opens instantly
-              if (!document.getElementById("calendly-prefetch")) {
-                const link = document.createElement("link");
-                link.id = "calendly-prefetch";
-                link.rel = "prefetch";
-                link.href = "https://calendly.com/wyedoyoudothis/resume_roast";
-                document.head.appendChild(link);
-              }
               setTimeout(() => {
                 const wrap = document.getElementById("fo-calendly-wrap");
                 wrap.style.opacity = "1";
