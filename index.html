@@ -950,7 +950,7 @@
         display: flex;
       }
       .tf-q {
-        font-size: clamp(18px, 5.4vw, 30px);
+        font-size: clamp(15px, 4.3vw, 22px);
         font-weight: 800;
         letter-spacing: -0.02em;
         line-height: 1.25;
@@ -1002,6 +1002,49 @@
         min-height: 18px;
         font-weight: 500;
         text-align: center;
+      }
+      .tf-checkrow {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        margin: 2px 2px 14px;
+        cursor: pointer;
+        user-select: none;
+      }
+      .tf-checkrow input {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+      }
+      .tf-checkbox {
+        width: 21px;
+        height: 21px;
+        border-radius: 6px;
+        border: 1.5px solid rgba(255, 255, 255, 0.28);
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.15s, border-color 0.15s;
+      }
+      .tf-checkrow input:checked + .tf-checkbox {
+        background: var(--red);
+        border-color: var(--red);
+      }
+      .tf-checkbox svg {
+        width: 13px;
+        height: 13px;
+        color: #fff;
+        opacity: 0;
+        transition: opacity 0.15s;
+      }
+      .tf-checkrow input:checked + .tf-checkbox svg {
+        opacity: 1;
+      }
+      .tf-check-label {
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.62);
+        line-height: 1.4;
       }
       .tf-submit {
         align-self: center;
@@ -2938,6 +2981,15 @@
             <input id="tf-email" type="email" placeholder="you@you.com" autocomplete="email" oninput="checkTemplate()" onkeydown="if(event.key==='Enter')submitTemplate()" />
           </div>
           <div class="tf-error" id="tf-err"></div>
+          <label class="tf-checkrow">
+            <input type="checkbox" id="tf-newsletter" checked />
+            <span class="tf-checkbox">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 13l4 4L19 7"></path>
+              </svg>
+            </span>
+            <span class="tf-check-label">I want weekly emails that help me get jobs faster.</span>
+          </label>
           <button class="tf-submit" id="tf-submit" onclick="submitTemplate()">Submit</button>
         </div>
         <!-- Step 2: confirmation -->
@@ -3397,10 +3449,11 @@
         const btn = document.getElementById("tf-submit");
         btn.disabled = true;
         btn.textContent = "Sending...";
+        const newsletter = document.getElementById("tf-newsletter").checked;
         fetch("/api/template-signup", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name, email }),
+          body: JSON.stringify({ name, email, newsletter }),
           keepalive: true,
         }).catch((e) => console.error("Template signup error:", e));
         // Show resources as a popup on the page — fire and forget
