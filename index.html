@@ -794,7 +794,7 @@
       /* Step container */
       .fo-steps {
         width: 100%;
-        max-width: 480px;
+        max-width: 600px;
       }
 
       .fo-step {
@@ -935,10 +935,24 @@
         box-shadow: 0 40px 120px rgba(0, 0, 0, 0.65);
         animation: slideUp 0.38s ease;
       }
-      #template-overlay .fo-close {
+      .tf-card .fo-close {
         position: absolute;
         top: 16px;
         right: 18px;
+      }
+      .rc-group {
+        margin-bottom: 16px;
+        text-align: left;
+      }
+      .rc-label {
+        font-size: 14px;
+        font-weight: 700;
+        color: rgba(255, 255, 255, 0.88);
+        margin-bottom: 9px;
+        letter-spacing: -0.01em;
+      }
+      .rc-group .tf-field {
+        margin-bottom: 0;
       }
       .tf-step {
         display: none;
@@ -2788,120 +2802,71 @@
     <!-- ═══════════════════════ FORM OVERLAY ═══════════════════════ -->
     <div id="form-overlay">
       <canvas id="fo-fireworks"></canvas>
-      <!-- Thin progress bar top -->
-      <div
-        style="
-          position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
-          height: 3px;
-          background: rgba(255, 255, 255, 0.06);
-          z-index: 901;
-        "
-      >
-        <div
-          id="fo-fill"
-          style="
-            height: 100%;
-            background: var(--red);
-            width: 0%;
-            transition: width 0.4s ease;
-            border-radius: 0 2px 2px 0;
-          "
-        ></div>
-      </div>
-
-      <!-- Close -->
-      <button class="fo-close" onclick="closeForm()">✕</button>
 
       <div class="fo-steps">
-        <!-- STEP 0: Name -->
-        <div class="fo-step active" id="fo-0">
-          <div class="fo-q">What shall I call you?</div>
-          <input
-            class="fo-input"
-            id="fo-name"
-            type="text"
-            placeholder="First name"
-            autocomplete="given-name"
-            oninput="checkName()"
-          />
-          <div class="fo-error" id="fo-err-0"></div>
-          <button class="fo-btn" id="fo-btn-0" onclick="foContinue()">
-            Continue →
-          </button>
-        </div>
+        <!-- CAPTURE: single-screen card -->
+        <div class="fo-step active" id="fo-capture">
+          <div class="tf-card">
+            <button class="fo-close" onclick="closeForm()">✕</button>
 
-        <!-- STEP 1: Email -->
-        <div class="fo-step" id="fo-1">
-          <div class="fo-q">
-            <span id="fo-name-disp" style="font-weight: 900"></span>, where
-            should we send the template?
+            <div class="rc-group">
+              <div class="rc-label">What shall we call you?</div>
+              <div class="tf-field">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="8" r="4"></circle>
+                  <path d="M4 21c0-4 4-6 8-6s8 2 8 6"></path>
+                </svg>
+                <input id="fo-name" type="text" placeholder="First name" autocomplete="given-name" oninput="clearRoastErr()" onkeydown="if(event.key==='Enter')document.getElementById('fo-email').focus()" />
+              </div>
+            </div>
+
+            <div class="rc-group">
+              <div class="rc-label">Where's the template going?</div>
+              <div class="tf-field">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="5" width="18" height="14" rx="2"></rect>
+                  <path d="M3 7l9 6 9-6"></path>
+                </svg>
+                <input id="fo-email" type="email" placeholder="you@you.com" autocomplete="email" oninput="clearRoastErr()" />
+              </div>
+            </div>
+
+            <div class="rc-group">
+              <div class="rc-label">Which resume is getting roasted?</div>
+              <div
+                class="fo-upload-zone"
+                id="fo-drop"
+                ondragover="event.preventDefault();this.classList.add('drag')"
+                ondragleave="this.classList.remove('drag')"
+                ondrop="handleDrop(event)"
+              >
+                <input
+                  type="file"
+                  accept=".pdf,.doc,.docx,.rtf,.odt,.pages,.txt"
+                  id="fo-file"
+                  onchange="handleFile(this)"
+                />
+                <div id="fo-upload-icon" class="fo-upload-icon">📄</div>
+                <div id="fo-upload-main" class="fo-upload-main">Drop your resume here</div>
+                <div id="fo-upload-sub" class="fo-upload-sub">PDF, DOC, or DOCX</div>
+                <div class="fo-upload-filename" id="fo-upload-filename" style="display: none"></div>
+              </div>
+            </div>
+
+            <div class="fo-error" id="fo-err"></div>
+
+            <label class="tf-checkrow">
+              <input type="checkbox" id="fo-newsletter" checked />
+              <span class="tf-checkbox">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M5 13l4 4L19 7"></path>
+                </svg>
+              </span>
+              <span class="tf-check-label">I want Wilson's weekly emails that help me get jobs faster.</span>
+            </label>
+
+            <button class="tf-submit" id="fo-submit" onclick="submitRoast()">Submit</button>
           </div>
-          <input
-            class="fo-input"
-            id="fo-email"
-            type="email"
-            placeholder="your@email.com"
-            autocomplete="email"
-            oninput="checkEmail()"
-          />
-          <div class="fo-error" id="fo-err-1"></div>
-          <button class="fo-btn" id="fo-btn-1" onclick="foContinue()">
-            Continue →
-          </button>
-        </div>
-
-        <!-- STEP 2: Upload + Analysis -->
-        <div class="fo-step" id="fo-2">
-          <div class="fo-q" id="fo-upload-q">Upload your resume.</div>
-
-          <div
-            class="fo-upload-zone"
-            id="fo-drop"
-            ondragover="event.preventDefault();this.classList.add('drag')"
-            ondragleave="this.classList.remove('drag')"
-            ondrop="handleDrop(event)"
-          >
-            <input
-              type="file"
-              accept=".pdf,.doc,.docx,.rtf,.odt,.pages,.txt"
-              id="fo-file"
-              onchange="handleFile(this)"
-            />
-            <div
-              id="fo-upload-icon"
-              style="font-size: 32px; margin-bottom: 10px"
-            >
-              📄
-            </div>
-            <div
-              id="fo-upload-main"
-              style="font-size: 15px; font-weight: 600; margin-bottom: 4px"
-            >
-              Drop your resume here
-            </div>
-            <div
-              id="fo-upload-sub"
-              style="font-size: 12px; color: rgba(255, 255, 255, 0.3)"
-            >
-              PDF, DOC, or DOCX
-            </div>
-            <div
-              class="fo-upload-filename"
-              id="fo-upload-filename"
-              style="
-                display: none;
-                font-size: 13px;
-                font-weight: 600;
-                margin-top: 8px;
-              "
-            ></div>
-          </div>
-          <div class="fo-upload-status" id="fo-upload-status"></div>
-
-          <div class="fo-error" id="fo-err-2"></div>
         </div>
 
         <!-- STEP 3: Queue confirmation -->
@@ -3381,21 +3346,33 @@
     <!-- ═══════════════════════ JS ═══════════════════════ -->
     <script>
       /* ── State ── */
-      let foStep = 0;
       let foName = "";
       let QUEUE_COUNT = 11;
 
       /* ── Form open/close ── */
       function openForm() {
-        foStep = 0;
-        document.getElementById("fo-0").classList.add("active");
-        document.getElementById("fo-1").classList.remove("active");
-        document.getElementById("fo-2").classList.remove("active");
+        document.getElementById("fo-capture").classList.add("active");
         const s3 = document.getElementById("fo-3");
         s3.classList.remove("active");
         s3.classList.remove("q-live");
         document.getElementById("fo-queue-num").textContent = "0";
-        document.getElementById("fo-fill").style.width = "0%";
+        // Reset capture fields
+        document.getElementById("fo-name").value = "";
+        document.getElementById("fo-email").value = "";
+        document.getElementById("fo-err").textContent = "";
+        document.getElementById("fo-newsletter").checked = true;
+        foPendingFile = null;
+        document.getElementById("fo-file").value = "";
+        resetUploadZone();
+        // Reset queue CTA to hidden so it re-reveals on the next submission
+        const cw = document.getElementById("fo-calendly-wrap");
+        if (cw) {
+          cw.style.opacity = "0";
+          cw.style.pointerEvents = "none";
+        }
+        const btn = document.getElementById("fo-submit");
+        btn.disabled = false;
+        btn.textContent = "Submit";
         document.getElementById("form-overlay").classList.add("open");
         document.body.style.overflow = "hidden";
         setTimeout(() => document.getElementById("fo-name").focus(), 80);
@@ -3472,126 +3449,137 @@
         document.body.style.overflow = "";
       }
 
-      /* ── foContinue ── */
-      function foContinue() {
-        if (foStep === 0) {
-          const val = document.getElementById("fo-name").value.trim();
-          if (!val) {
-            document.getElementById("fo-err-0").textContent =
-              "Please enter your first name.";
-            document.getElementById("fo-name").focus();
-            return;
-          }
-          foName = val;
-          document.getElementById("fo-name-disp").textContent = val;
-          const nameField = document.getElementById("tr-name-field");
-          if (nameField) nameField.textContent = val;
-          document.getElementById("fo-err-0").textContent = "";
-        }
+      /* ── Clear inline error on input ── */
+      function clearRoastErr() {
+        document.getElementById("fo-err").textContent = "";
+      }
 
-        if (foStep === 1) {
-          const email = document.getElementById("fo-email").value.trim();
-          const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-          if (!email) {
-            document.getElementById("fo-err-1").textContent =
-              "Please enter your email address.";
-            document.getElementById("fo-email").focus();
-            return;
-          }
-          if (!valid) {
-            document.getElementById("fo-err-1").textContent =
-              "That doesn't look like a valid email, try again.";
-            document.getElementById("fo-email").focus();
-            return;
-          }
-          document.getElementById("fo-err-1").textContent = "";
-          document.getElementById("fo-upload-q").textContent =
-            `Last one. Upload your resume.`;
-        }
+      /* ── Submit the roast (single-screen) ── */
+      function submitRoast() {
+        const name = document.getElementById("fo-name").value.trim();
+        const email = document.getElementById("fo-email").value.trim();
+        const errEl = document.getElementById("fo-err");
 
-        if (foStep === 2) {
-          document.getElementById("fo-queue-num").textContent = "0";
-          goToStep(3);
-          fetch("/api/queue-count")
-            .then((r) => r.json())
-            .then((d) => {
-              QUEUE_COUNT = d.count;
-            })
-            .catch(() => {})
-            .finally(() => {
-              setTimeout(() => {
-                document.getElementById("fo-3").classList.add("q-live");
-                countUp(
-                  document.getElementById("fo-queue-num"),
-                  QUEUE_COUNT,
-                  1800,
-                );
-                setTimeout(launchFireworks, 200);
-                // Preload Calendly in the background so the popup opens instantly
-                if (!document.getElementById("calendly-prefetch")) {
-                  const link = document.createElement("link");
-                  link.id = "calendly-prefetch";
-                  link.rel = "prefetch";
-                  link.href = "https://calendly.com/wyedoyoudothis/resume_roast";
-                  document.head.appendChild(link);
-                }
-                setTimeout(() => {
-                  const wrap = document.getElementById("fo-calendly-wrap");
-                  wrap.style.opacity = "1";
-                  wrap.style.pointerEvents = "auto";
-                }, 1000);
-              }, 80);
-            });
+        if (!name) {
+          errEl.textContent = "Please enter your first name.";
+          document.getElementById("fo-name").focus();
           return;
         }
-
-        goToStep(foStep + 1);
-      }
-
-      /* ── Input validation → button state ── */
-      function checkName() {
-        const val = document.getElementById("fo-name").value.trim();
-        document
-          .getElementById("fo-btn-0")
-          .classList.toggle("ready", val.length > 0);
-      }
-      function checkEmail() {
-        const val = document.getElementById("fo-email").value.trim();
-        const ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
-        document.getElementById("fo-btn-1").classList.toggle("ready", ok);
-        if (ok) document.getElementById("fo-err-1").textContent = "";
-      }
-
-      /* ── Enter key forwarding ── */
-      document.addEventListener("keydown", (e) => {
-        if (
-          e.key === "Enter" &&
-          document.getElementById("form-overlay").classList.contains("open")
-        ) {
-          if (foStep < 2) foContinue();
+        const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        if (!email) {
+          errEl.textContent = "Please enter your email address.";
+          document.getElementById("fo-email").focus();
+          return;
         }
-      });
-
-      function goToStep(n) {
-        document.getElementById("fo-" + foStep).classList.remove("active");
-        foStep = n;
-        const pct = [0, 33, 66, 100][n] ?? 100;
-        document.getElementById("fo-fill").style.width = pct + "%";
-        const next = document.getElementById("fo-" + foStep);
-        if (next) {
-          next.classList.add("active");
-          next.style.animation = "slideUp 0.35s ease";
-          const inp = next.querySelector("input:not([type=file])");
-          if (inp) setTimeout(() => inp.focus(), 80);
+        if (!valid) {
+          errEl.textContent = "That doesn't look like a valid email, try again.";
+          document.getElementById("fo-email").focus();
+          return;
         }
+        const fileInput = document.getElementById("fo-file");
+        const fileToSend =
+          foPendingFile || (fileInput.files.length ? fileInput.files[0] : null);
+        if (!fileToSend) {
+          errEl.textContent = "Please upload your resume.";
+          return;
+        }
+        errEl.textContent = "";
+        foName = name;
+
+        const btn = document.getElementById("fo-submit");
+        btn.disabled = true;
+        btn.textContent = "Submitting...";
+
+        const newsletter = document.getElementById("fo-newsletter").checked;
+        const fd = new FormData();
+        fd.append("name", name);
+        fd.append("email", email);
+        fd.append("newsletter", newsletter ? "1" : "");
+        fd.append("resume", fileToSend);
+        fetch("/api/submit", { method: "POST", body: fd }).catch((e) =>
+          console.error("Submit error:", e),
+        );
+
+        const nameField = document.getElementById("tr-name-field");
+        if (nameField) nameField.textContent = name;
+
+        showQueue();
+      }
+
+      /* ── Reveal the queue confirmation screen ── */
+      function showQueue() {
+        document.getElementById("fo-capture").classList.remove("active");
+        const s3 = document.getElementById("fo-3");
+        s3.classList.add("active");
+        s3.style.animation = "slideUp 0.35s ease";
+        document.getElementById("fo-queue-num").textContent = "0";
+        fetch("/api/queue-count")
+          .then((r) => r.json())
+          .then((d) => {
+            QUEUE_COUNT = d.count;
+          })
+          .catch(() => {})
+          .finally(() => {
+            setTimeout(() => {
+              s3.classList.add("q-live");
+              countUp(
+                document.getElementById("fo-queue-num"),
+                QUEUE_COUNT,
+                1800,
+              );
+              setTimeout(launchFireworks, 200);
+              // Preload Calendly in the background so the popup opens instantly
+              if (!document.getElementById("calendly-prefetch")) {
+                const link = document.createElement("link");
+                link.id = "calendly-prefetch";
+                link.rel = "prefetch";
+                link.href = "https://calendly.com/wyedoyoudothis/resume_roast";
+                document.head.appendChild(link);
+              }
+              setTimeout(() => {
+                const wrap = document.getElementById("fo-calendly-wrap");
+                wrap.style.opacity = "1";
+                wrap.style.pointerEvents = "auto";
+              }, 1000);
+            }, 80);
+          });
       }
 
       /* ── File handling ── */
       let foPendingFile = null;
+      function resetUploadZone() {
+        const drop = document.getElementById("fo-drop");
+        const icon = document.getElementById("fo-upload-icon");
+        const main = document.getElementById("fo-upload-main");
+        const sub = document.getElementById("fo-upload-sub");
+        const fname = document.getElementById("fo-upload-filename");
+        const fileInput = document.getElementById("fo-file");
+        drop.classList.remove("scanning", "success");
+        icon.textContent = "📄";
+        main.style.display = "block";
+        sub.style.display = "block";
+        fname.style.display = "none";
+        fname.style.color = "";
+        fname.textContent = "";
+        fileInput.disabled = false;
+      }
+      function showFilePicked(filename) {
+        const drop = document.getElementById("fo-drop");
+        const main = document.getElementById("fo-upload-main");
+        const sub = document.getElementById("fo-upload-sub");
+        const fname = document.getElementById("fo-upload-filename");
+        drop.classList.remove("scanning");
+        drop.classList.add("success");
+        main.style.display = "none";
+        sub.style.display = "none";
+        fname.style.display = "block";
+        fname.textContent = filename;
+        clearRoastErr();
+      }
       function handleFile(input) {
         if (!input.files.length) return;
         foPendingFile = input.files[0];
-        startUpload(foPendingFile.name);
+        showFilePicked(foPendingFile.name);
       }
       function handleDrop(e) {
         e.preventDefault();
@@ -3605,58 +3593,7 @@
           dt.items.add(file);
           document.getElementById("fo-file").files = dt.files;
         } catch (_) {}
-        startUpload(file.name);
-      }
-
-      function startUpload(filename) {
-        const drop = document.getElementById("fo-drop");
-        const icon = document.getElementById("fo-upload-icon");
-        const main = document.getElementById("fo-upload-main");
-        const sub = document.getElementById("fo-upload-sub");
-        const fname = document.getElementById("fo-upload-filename");
-        const status = document.getElementById("fo-upload-status");
-
-        // Show filename, hide the prompt text
-        main.style.display = "none";
-        sub.style.display = "none";
-        fname.style.display = "block";
-        fname.textContent = filename;
-
-        // Disable file input during scan
-        document.getElementById("fo-file").disabled = true;
-
-        // Fire submit immediately — fire-and-forget, don't block the animation
-        const fd = new FormData();
-        fd.append("name", foName);
-        fd.append("email", document.getElementById("fo-email").value.trim());
-        const fileInput = document.getElementById("fo-file");
-        const fileToSend = foPendingFile || (fileInput.files.length ? fileInput.files[0] : null);
-        if (fileToSend) fd.append("resume", fileToSend);
-        fetch("/api/submit", { method: "POST", body: fd }).catch(e => console.error("Submit error:", e));
-
-        // Phase 1: RED — scanning
-        drop.classList.add("scanning");
-        icon.textContent = "📄";
-        status.textContent = "Scanning resume...";
-
-        setTimeout(() => {
-          // Phase 2: still red — "Wow, this is really bad."
-          status.textContent = "Wow, this is really bad.";
-
-          setTimeout(() => {
-            // Phase 3: GREEN — "Just kidding"
-            drop.classList.remove("scanning");
-            drop.classList.add("success");
-            icon.textContent = "📄";
-            fname.style.color = "rgba(0,220,80,0.9)";
-            status.textContent = "Just kidding.";
-
-            // Advance to queue screen immediately — submit already in flight
-            setTimeout(() => {
-              foContinue();
-            }, 500);
-          }, 2000);
-        }, 2000);
+        showFilePicked(file.name);
       }
 
       /* ── Template reveal ── */

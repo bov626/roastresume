@@ -334,7 +334,7 @@ function startPolling(submissionId) {
    PUBLIC: Form submission
 ──────────────────────────────────────────── */
 app.post("/api/submit", resumeUpload.single("resume"), async (req, res) => {
-  const { name, email } = req.body;
+  const { name, email, newsletter } = req.body;
   if (!name || !email)
     return res
       .status(400)
@@ -370,28 +370,31 @@ app.post("/api/submit", resumeUpload.single("resume"), async (req, res) => {
     return res.status(500).json({ ok: false, error: "Database error" });
   }
 
-  const firstName = name.trim().split(" ")[0];
-  const lastName = name.trim().split(" ").slice(1).join(" ") || "";
-  try {
-    await fetch(
-      `https://api.beehiiv.com/v2/publications/${process.env.BEEHIIV_PUBLICATION_ID}/subscriptions`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${process.env.BEEHIIV_API_KEY}`,
+  const wantsNewsletter = newsletter === "1" || newsletter === true || newsletter === "true";
+  if (wantsNewsletter) {
+    const firstName = name.trim().split(" ")[0];
+    const lastName = name.trim().split(" ").slice(1).join(" ") || "";
+    try {
+      await fetch(
+        `https://api.beehiiv.com/v2/publications/${process.env.BEEHIIV_PUBLICATION_ID}/subscriptions`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${process.env.BEEHIIV_API_KEY}`,
+          },
+          body: JSON.stringify({
+            email,
+            first_name: firstName,
+            last_name: lastName,
+            reactivate_existing: true,
+            send_welcome_email: true,
+          }),
         },
-        body: JSON.stringify({
-          email,
-          first_name: firstName,
-          last_name: lastName,
-          reactivate_existing: true,
-          send_welcome_email: true,
-        }),
-      },
-    );
-  } catch (e) {
-    console.error("Beehiiv error:", e.message);
+      );
+    } catch (e) {
+      console.error("Beehiiv error:", e.message);
+    }
   }
 
   try {
