@@ -403,6 +403,48 @@ app.post("/api/submit", resumeUpload.single("resume"), async (req, res) => {
   res.json({ ok: true });
 });
 
+/* Template-only signup: deliver the template + capture in Beehiiv, no roast queue */
+app.post("/api/template-signup", async (req, res) => {
+  const { name, email } = req.body;
+  if (!name || !email)
+    return res
+      .status(400)
+      .json({ ok: false, error: "Name and email required" });
+
+  const firstName = name.trim().split(" ")[0];
+  const lastName = name.trim().split(" ").slice(1).join(" ") || "";
+
+  try {
+    await fetch(
+      `https://api.beehiiv.com/v2/publications/${process.env.BEEHIIV_PUBLICATION_ID}/subscriptions`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${process.env.BEEHIIV_API_KEY}`,
+        },
+        body: JSON.stringify({
+          email,
+          first_name: firstName,
+          last_name: lastName,
+          reactivate_existing: true,
+          send_welcome_email: true,
+        }),
+      },
+    );
+  } catch (e) {
+    console.error("Beehiiv error:", e.message);
+  }
+
+  try {
+    await sendResourcesEmail(email);
+  } catch (e) {
+    console.error("Resources email error:", e.message);
+  }
+
+  res.json({ ok: true });
+});
+
 app.get("/api/queue-count", async (req, res) => {
   const { count } = await supabase
     .from("submissions")
