@@ -271,6 +271,16 @@
         font-size: 12px;
         color: var(--muted);
       }
+      .cta-note-link {
+        color: var(--muted);
+        text-decoration: underline;
+        text-underline-offset: 3px;
+        cursor: pointer;
+        transition: color 0.2s ease;
+      }
+      .cta-note-link:hover {
+        color: #fff;
+      }
 
       .scroll-indicator {
         margin-top: 28px;
@@ -2412,7 +2422,9 @@
         </svg>
       </button>
 
-      <p class="cta-note">No credit card. No catch.</p>
+      <p class="cta-note">
+        <a href="/resources" class="cta-note-link">I just want the template</a>
+      </p>
 
       <a href="#how-it-works" class="scroll-indicator" style="opacity: 1">
         <div class="scroll-mouse"></div>
