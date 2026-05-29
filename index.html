@@ -1275,6 +1275,62 @@
         color: rgba(255, 255, 255, 0.3);
       }
 
+      /* ── Mobile form sizing ── */
+      @media (max-width: 600px) {
+        .tf-card {
+          padding: 30px 20px;
+          border-radius: 18px;
+        }
+        .tf-q {
+          font-size: 19px;
+          white-space: normal;
+          margin-bottom: 18px;
+        }
+        .rc-label {
+          display: none;
+        }
+        .rc-group {
+          margin-bottom: 10px;
+        }
+        .tf-field {
+          padding: 12px 16px;
+          margin-bottom: 10px;
+          gap: 10px;
+        }
+        .tf-field svg {
+          width: 17px;
+          height: 17px;
+        }
+        .tf-field input {
+          font-size: 15px;
+        }
+        .tf-check-label {
+          font-size: 12.5px;
+        }
+        .tf-checkbox {
+          width: 19px;
+          height: 19px;
+        }
+        #fo-capture .tf-submit,
+        #template-overlay .tf-submit {
+          font-size: 15px;
+          padding: 11px 34px;
+        }
+        .fo-upload-zone {
+          padding: 22px 16px;
+        }
+        .fo-upload-icon {
+          font-size: 26px;
+          margin-bottom: 8px;
+        }
+        .fo-upload-main {
+          font-size: 14px;
+        }
+        .fo-upload-sub {
+          font-size: 11px;
+        }
+      }
+
       /* Upload scanning state */
       .fo-upload-zone.scanning {
         background: rgba(180, 0, 0, 0.15);
