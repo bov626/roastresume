@@ -956,6 +956,10 @@
       .rc-group .tf-field {
         margin-bottom: 0;
       }
+      #fo-capture .tf-checkrow {
+        justify-content: flex-start;
+        text-align: left;
+      }
       .tf-step {
         display: none;
         flex-direction: column;
@@ -2813,6 +2817,8 @@
           <div class="tf-card">
             <button class="fo-close" onclick="closeForm()">✕</button>
 
+            <div class="tf-q">What are we roasting?</div>
+
             <div class="rc-group">
               <div class="rc-label">What shall we call you?</div>
               <div class="tf-field">
@@ -2836,7 +2842,6 @@
             </div>
 
             <div class="rc-group">
-              <div class="rc-label">Which resume is getting roasted?</div>
               <div
                 class="fo-upload-zone"
                 id="fo-drop"
