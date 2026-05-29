@@ -987,7 +987,7 @@
         text-align: center;
       }
       .tf-submit {
-        align-self: flex-start;
+        align-self: center;
         background: var(--red);
         color: #fff;
         font-size: 18px;
@@ -1048,6 +1048,61 @@
       .tf-done-sub span {
         color: #fff;
         font-weight: 600;
+      }
+
+      /* ── Resources popup (iframe modal) ── */
+      #resources-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 1000;
+        background: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+      }
+      #resources-overlay.open {
+        display: flex;
+      }
+      .ro-modal {
+        position: relative;
+        width: min(1100px, 96vw);
+        height: min(880px, 92vh);
+        background: #0a0a0a;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 18px;
+        overflow: hidden;
+        box-shadow: 0 40px 120px rgba(0, 0, 0, 0.7);
+        animation: slideUp 0.4s ease;
+      }
+      .ro-modal iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+        display: block;
+      }
+      .ro-close {
+        position: absolute;
+        top: 14px;
+        right: 16px;
+        z-index: 2;
+        width: 38px;
+        height: 38px;
+        border-radius: 999px;
+        border: none;
+        background: rgba(0, 0, 0, 0.55);
+        color: #fff;
+        font-size: 18px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.2s;
+      }
+      .ro-close:hover {
+        background: rgba(217, 30, 30, 0.85);
       }
 
       /* Upload zone */
@@ -2882,6 +2937,14 @@
       </div>
     </div>
 
+    <!-- ═══════════════════════ RESOURCES POPUP ═══════════════════════ -->
+    <div id="resources-overlay">
+      <div class="ro-modal">
+        <button class="ro-close" onclick="closeResources()" aria-label="Close">✕</button>
+        <iframe id="ro-frame" title="Your resume resources"></iframe>
+      </div>
+    </div>
+
     <!-- ═══════════════════════ TEMPLATE REVEAL ═══════════════════════ -->
     <div id="template-reveal">
       <button class="tr-exit" onclick="exitTemplate()">← Back</button>
@@ -3323,8 +3386,19 @@
           body: JSON.stringify({ name, email }),
           keepalive: true,
         }).catch((e) => console.error("Template signup error:", e));
-        // Send them straight to the resources page — fire and forget
-        window.location.href = "/resources";
+        // Show resources as a popup on the page — fire and forget
+        openResources();
+      }
+      function openResources() {
+        const frame = document.getElementById("ro-frame");
+        if (!frame.src) frame.src = "/resources";
+        document.getElementById("template-overlay").classList.remove("open");
+        document.getElementById("resources-overlay").classList.add("open");
+        document.body.style.overflow = "hidden";
+      }
+      function closeResources() {
+        document.getElementById("resources-overlay").classList.remove("open");
+        document.body.style.overflow = "";
       }
 
       /* ── foContinue ── */
