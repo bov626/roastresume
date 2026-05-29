@@ -3321,11 +3321,10 @@
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ name, email }),
+          keepalive: true,
         }).catch((e) => console.error("Template signup error:", e));
-        // Show confirmation immediately — fire and forget
-        document.getElementById("tf-email-disp").textContent = email;
-        document.getElementById("tf-form").classList.remove("active");
-        document.getElementById("tf-done").classList.add("active");
+        // Send them straight to the resources page — fire and forget
+        window.location.href = "/resources";
       }
 
       /* ── foContinue ── */
