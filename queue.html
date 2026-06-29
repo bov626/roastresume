@@ -250,14 +250,20 @@
         letter-spacing: -0.01em;
         box-shadow: 0 4px 28px rgba(217, 30, 30, 0.32);
         transition: transform 0.15s, box-shadow 0.15s;
-        margin-bottom: 26px;
       }
       .fo-community-btn:hover {
         transform: translateY(-1px);
         box-shadow: 0 6px 32px rgba(217, 30, 30, 0.42);
       }
       .fo-community-shot {
+        display: block;
         width: 100%;
+        margin-bottom: 24px;
+        border-radius: 12px;
+        transition: transform 0.15s, box-shadow 0.15s;
+      }
+      .fo-community-shot:hover {
+        transform: translateY(-2px);
       }
       .fo-community-shot img {
         width: 100%;
@@ -311,6 +317,17 @@
       <div class="fo-q-skip-line">Skip the queue. Join the community:</div>
 
       <div class="fo-community-wrap">
+        <a
+          class="fo-community-shot"
+          href="https://www.skool.com/remote/about"
+          target="_blank"
+        >
+          <img
+            src="/assets/the-job-lab.png?v=2"
+            alt="The Job Lab free community"
+            loading="lazy"
+          />
+        </a>
         <ul class="fo-community-list">
           <li>Weekly live resume roasts</li>
           <li>Line-by-line resume guide</li>
@@ -323,13 +340,6 @@
         >
           Join the community →
         </a>
-        <div class="fo-community-shot">
-          <img
-            src="/assets/the-job-lab.png"
-            alt="The Job Lab free community"
-            loading="lazy"
-          />
-        </div>
       </div>
     </div>
 
