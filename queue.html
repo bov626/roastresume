@@ -9,14 +9,6 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
       rel="stylesheet"
     />
-    <link
-      href="https://assets.calendly.com/assets/external/widget.css"
-      rel="stylesheet"
-    />
-    <script
-      src="https://assets.calendly.com/assets/external/widget.js"
-      async
-    ></script>
     <style>
       * {
         box-sizing: border-box;
@@ -197,7 +189,7 @@
         font-weight: 800;
         color: #fff;
         letter-spacing: -0.01em;
-        margin-bottom: 4px;
+        margin-bottom: 14px;
         text-align: center;
         opacity: 0;
         transform: translateY(16px);
@@ -206,20 +198,74 @@
         animation: qFadeUp 0.52s ease 1.2s both;
       }
 
-      .fo-calendly-wrap {
+      .fo-community-wrap {
         width: 100%;
-        margin-top: 12px;
+        max-width: 480px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
         opacity: 0;
         transform: translateY(16px);
       }
-      .q-live .fo-calendly-wrap {
+      .q-live .fo-community-wrap {
         animation: qFadeUp 0.6s ease 1.35s both;
       }
-      .calendly-inline-widget {
-        min-width: 100%;
-        height: 700px;
+      .fo-community-list {
+        list-style: none;
+        text-align: left;
+        margin: 0 0 22px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .fo-community-list li {
+        position: relative;
+        padding-left: 24px;
+        font-size: 15px;
+        line-height: 1.5;
+        color: rgba(255, 255, 255, 0.55);
+      }
+      .fo-community-list li::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 9px;
+        width: 12px;
+        height: 2px;
+        background: var(--red);
+        border-radius: 2px;
+      }
+      .fo-community-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--red);
+        color: #fff;
+        font-family: "Inter", sans-serif;
+        font-size: 16px;
+        font-weight: 700;
+        padding: 15px 34px;
         border-radius: 10px;
-        overflow: hidden;
+        text-decoration: none;
+        letter-spacing: -0.01em;
+        box-shadow: 0 4px 28px rgba(217, 30, 30, 0.32);
+        transition: transform 0.15s, box-shadow 0.15s;
+        margin-bottom: 26px;
+      }
+      .fo-community-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 32px rgba(217, 30, 30, 0.42);
+      }
+      .fo-community-shot {
+        width: 100%;
+      }
+      .fo-community-shot img {
+        width: 100%;
+        display: block;
+        border-radius: 12px;
+        border: 1px solid #1a1a1a;
+        box-shadow: 0 24px 80px rgba(0, 0, 0, 0.9),
+          0 0 40px rgba(217, 30, 30, 0.08);
       }
 
       @keyframes qFadeUp {
@@ -230,13 +276,12 @@
       }
 
       @media (max-width: 600px) {
-        .fo-calendly-wrap {
-          margin-top: 16px;
-        }
         .fo-q-skip-line {
-          margin-bottom: 8px;
-          font-size: clamp(11px, 3.4vw, 14px);
-          white-space: nowrap;
+          margin-bottom: 12px;
+          font-size: clamp(13px, 4.4vw, 17px);
+        }
+        .fo-community-list li {
+          font-size: 14px;
         }
       }
     </style>
@@ -263,13 +308,28 @@
 
       <div class="fo-q-sub">For now, check your email for the template.</div>
 
-      <div class="fo-q-skip-line">Skip the queue. Get roasted live. For Free</div>
+      <div class="fo-q-skip-line">Skip the queue. Join the community:</div>
 
-      <div class="fo-calendly-wrap">
-        <div
-          class="calendly-inline-widget"
-          data-url="https://calendly.com/wyedoyoudothis/resume_roast"
-        ></div>
+      <div class="fo-community-wrap">
+        <ul class="fo-community-list">
+          <li>Weekly live resume roasts</li>
+          <li>Line-by-line resume guide</li>
+          <li>And much more. All free.</li>
+        </ul>
+        <a
+          class="fo-community-btn"
+          href="https://www.skool.com/remote/about"
+          target="_blank"
+        >
+          Join the community →
+        </a>
+        <div class="fo-community-shot">
+          <img
+            src="/assets/the-job-lab.png"
+            alt="The Job Lab free community"
+            loading="lazy"
+          />
+        </div>
       </div>
     </div>
 
