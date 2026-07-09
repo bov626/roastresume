@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Roast Lab — Resume Autopsy</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <!-- ══════════════ HERO ══════════════ -->
+    <div class="hero">
+      <span class="lab-badge">Job Lab community · resume autopsy</span>
+      <h1>Your resume is<br /><span class="hl">probably sh*t.</span></h1>
+      <p>
+        Community members get the full scan: <span id="issue-total">38</span> fatal mistakes and a score. Join free, then upload.
+      </p>
+      <button class="cta-btn" onclick="openModal()">
+        <span>ROAST MY RESUME</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+
+    <!-- ══════════════ CAPTURE MODAL ══════════════ -->
+    <div id="overlay">
+      <div class="card" id="capture-card">
+        <button class="x" onclick="closeModal()">✕</button>
+
+        <div id="gate-panel" hidden>
+          <div class="q">Members only.</div>
+          <p class="gate-copy">
+            The resume scan is for Job Lab community members. Join free on Skool, grab your access
+            code from the classroom, then come back here.
+          </p>
+          <a
+            class="gate-skool"
+            id="gate-skool-link"
+            href="https://www.skool.com/remote/about"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Join the free community →
+          </a>
+          <label class="gate-label" for="gate-code">Member access code</label>
+          <input class="gate-input" id="gate-code" type="text" autocomplete="off" placeholder="Paste code from Skool" />
+          <div class="err" id="gate-err"></div>
+          <button class="submit" id="gate-unlock-btn" type="button">Unlock scan</button>
+        </div>
+
+        <div id="upload-panel">
+        <div class="q">Drop a resume.<br />We'll tell you what's wrong.</div>
+
+        <div class="drop" id="drop" ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')" ondrop="handleDrop(event)">
+          <input type="file" id="f-file" accept=".pdf,application/pdf" onchange="handleFile(this)" />
+          <div id="drop-icon" class="drop-icon">📄</div>
+          <div id="drop-main" class="drop-main">Drop your resume here</div>
+          <div id="drop-sub" class="drop-sub">PDF only</div>
+          <div class="drop-filename" id="drop-filename" style="display:none"></div>
+        </div>
+
+        <div class="err" id="err"></div>
+        <button class="submit" id="submit-btn" onclick="startRoast()">Scan my resume</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="community-gate.js"></script>
+    <script src="roast-engine.js"></script>
+    <script>
+      const el = document.getElementById("issue-total");
+      if (el && window.ROAST) el.textContent = String(window.ROAST.ISSUES.length);
+    </script>
+    <script src="app.js"></script>
+  </body>
+</html>

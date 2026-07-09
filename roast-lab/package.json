@@ -1,0 +1,16 @@
+{
+  "name": "roast-lab",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Local, zero-backend prototype for the resume roast: button -> modal -> scan -> verdict.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^5.2.1",
+    "multer": "^2.0.2",
+    "pdf-parse": "^1.1.1",
+    "pdfjs-dist": "^4.7.76"
+  }
+}

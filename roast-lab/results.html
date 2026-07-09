@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Your Resume Roast</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <!-- ══════════════ SCANNING PHASE ══════════════ -->
+    <div class="scan-page" id="scan-phase">
+      <div class="scan-wrap">
+        <div class="doc-viewer">
+          <div class="doc-stack" id="scan-doc-stack">
+            <div class="doc-stack-ghost" id="scan-stack-ghost" aria-hidden="true"></div>
+            <div class="doc-frame" id="doc-frame">
+              <div class="laser"></div>
+              <canvas id="doc-canvas" class="doc-canvas" style="display: none"></canvas>
+              <div class="doc-fallback" id="doc-fallback">
+                <div class="big">📄</div>
+                <div id="doc-fallback-name" style="margin-top: 8px; font-weight: 600"></div>
+              </div>
+            </div>
+          </div>
+          <div class="doc-pager" id="scan-pager" hidden>
+            <button type="button" class="doc-pager-btn" id="scan-prev" aria-label="Previous page">←</button>
+            <span class="doc-pager-label" id="scan-page-label">Page 1 of 1</span>
+            <button type="button" class="doc-pager-btn" id="scan-next" aria-label="Next page">→</button>
+          </div>
+          <div class="doc-multipage-note" id="scan-multipage-note" hidden>
+            Full PDF is analyzed. Preview pages below.
+          </div>
+        </div>
+        <div class="scan-panel">
+          <div class="scan-title">Running the autopsy… 30 seconds please</div>
+          <div class="scan-sub" id="scan-sub">
+            Reading your resume line by line, the way a recruiter would.
+          </div>
+          <div class="scan-bar"><span id="scan-fill"></span></div>
+          <ul class="checklist" id="checklist"></ul>
+        </div>
+      </div>
+      <a
+        class="scan-ad"
+        href="https://www.skool.com/remote"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <div class="scan-ad-image">
+          <img
+            src="assets/skool-resume-blueprint.png"
+            alt="Resume Blueprint course inside The Job Lab Skool community"
+            loading="lazy"
+          />
+        </div>
+        <div class="scan-ad-body">
+          <p class="scan-ad-copy">
+            Your score's going to sting. The fix won't. Grab the exact 10-part blueprint we use to
+            build incredible resumes. For free.
+          </p>
+        </div>
+        <span class="scan-ad-cta">Get the blueprint</span>
+      </a>
+    </div>
+
+    <!-- ══════════════ RESULTS PHASE ══════════════ -->
+    <div class="results" id="results-phase">
+      <div class="results-banner">
+        <p class="results-queue">You're <b id="queue-pos">#12</b> in the roast queue.</p>
+        <h1 id="banner-title">Your resume sucks.</h1>
+        <div class="sub" id="banner-sub">
+          Your video roast from Wilson is on the way.<br />
+          While you wait, we found <b id="found-count">0</b> errors.
+        </div>
+        <div class="score-ring" id="score-ring">
+          <div class="score-num"><b id="score-val">0</b><span>/ 100</span></div>
+        </div>
+      </div>
+
+      <div class="results-main">
+        <div class="results-doc">
+          <div class="doc-viewer">
+            <div class="doc-stack" id="results-doc-stack">
+              <div class="doc-stack-ghost" id="results-stack-ghost" aria-hidden="true"></div>
+              <div class="doc-frame" id="doc-frame-results">
+                <div class="doc-preview-wrap">
+                  <canvas id="doc-canvas-results" class="doc-canvas" style="display: none"></canvas>
+                  <div class="doc-fallback doc-fallback-overlay" id="doc-fallback-results" style="display: none">
+                    <div class="big">📄</div>
+                    <div id="doc-fallback-name-results" style="margin-top: 8px; font-weight: 600"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="doc-pager" id="results-pager" hidden>
+              <button type="button" class="doc-pager-btn" id="results-prev" aria-label="Previous page">←</button>
+              <span class="doc-pager-label" id="results-page-label">Page 1 of 1</span>
+              <button type="button" class="doc-pager-btn" id="results-next" aria-label="Next page">→</button>
+            </div>
+            <div class="doc-multipage-note" id="results-multipage-note" hidden>
+              Claude read the full PDF. Flip pages to see what we scanned.
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="issues-head">
+            <span class="count" id="issues-count">0</span> problems, ranked by how much they're hurting you
+          </div>
+          <div class="issues-sub">Red = auto-reject. Orange = major. Yellow = clean it up.</div>
+          <div class="issues" id="issues"></div>
+        </div>
+      </div>
+
+      <div class="results-bottom">
+        <div class="pitch">
+          <h2>Want help fixing every one of these?</h2>
+          <div class="pitch-sub">
+            Join the free Job Lab community on Skool. You'll learn what each mistake means and how
+            to rewrite it to be irresistable.
+          </div>
+          <div class="pitch-ctas">
+            <a
+              class="btn-primary"
+              href="https://www.skool.com/remote/about"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Join the free community →
+            </a>
+          </div>
+          <button class="restart" onclick="window.location.href='index.html'">
+            ← Scan another resume
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- pdf.js for rendering the actual uploaded page -->
+    <script type="module">
+      import * as pdfjsLib from "https://cdn.jsdelivr.net/npm/pdfjs-dist@4.7.76/build/pdf.min.mjs";
+      pdfjsLib.GlobalWorkerOptions.workerSrc =
+        "https://cdn.jsdelivr.net/npm/pdfjs-dist@4.7.76/build/pdf.worker.min.mjs";
+      window.__pdfjs = pdfjsLib;
+      window.dispatchEvent(new Event("pdfjs-ready"));
+    </script>
+
+    <script src="community-gate.js"></script>
+    <script src="roast-engine.js"></script>
+    <script src="results.js"></script>
+  </body>
+</html>
